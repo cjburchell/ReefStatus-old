@@ -1,0 +1,335 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="strOk">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strClose">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDefault">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strCancel">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strYes">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strNo">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strFontFamily">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFontSize">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFontTypeFace">NOT_TRANSLATED</system:String>
+    <system:String x:Key="stFontBold">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFontItalic">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFontUnderline">NOT_TRANSLATED</system:String>
+
+    <!--Connection Tab-->
+    <system:String x:Key="strType">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strNetwork">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strHostAddress">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strPort">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strComPort">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strCom">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDeviceAddress">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strPassword">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strGetAll">NOT_TRANSLATED</system:String>
+
+    <!--Data Points-->
+    <system:String x:Key="strTimeHeader">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strValueHeader">NOT_TRANSLATED</system:String>
+
+    <!--Data Settings-->
+    <system:String x:Key="strDataSettings">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDisplayName">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strUnits">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strColor">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strEMailonAlarm">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strEMailonConnection">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strEMailonReminder">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strEMailStatusEvery">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strSendShortMessage">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strEMailSettings">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMailServer">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strTo">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFrom">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strMailServerAuthentication">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMailServerRequiresAuthentication">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strUserName">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strTest">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strCodeHeader">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMessageHeader">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strSoftwareVersion">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strSoftwareDate">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strModel">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strSerialNumber">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDeviceAddressInfo">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAlarmInfo">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strModeInfo">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strReminders">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strLogEvery">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMinutes">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLimitDataPoints">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDatabase">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strConnection">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strArchiveEvery">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strStatus">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strRecords">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strSessionWrite">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strSessionDelete">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strCleanUp">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strOptions">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strConnectionTab">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLoggingTab">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strEMailTab">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strWebInterfaceTab">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strDisplay">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strView">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strEnter">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strEsc">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strMin">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMax">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAverage">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strStdDeviation">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strRefresh">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strDate">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strValue">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strUpdateUserValue">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strDuration">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strUpdateDosing">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strRateperDosing">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDosingperday">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strEnabled">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strSettings">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strProtededAccess">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strViewWebsite">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strReport">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDataPoints">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strGraph">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strRange">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strAll">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDay">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strWeek">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMonth">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strYear">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strProbes">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLevelSensors">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDigitalInputs">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strSPorts">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLPorts">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLights">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDosing">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strOtherParam">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strCurrentPumps">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strClearAlarm">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strStartWaterChange">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strUpdate">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAddDataItem">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strName">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMode">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strState">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strDelete">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strInfo">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strReefStatus">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAlarmReefStatus">NOT_TRANSLATED</system:String>
+
+
+    <system:String x:Key="strLogNow">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strProfiluxControl">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAbout">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strExit">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strRemote">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFeedPause">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMaintenance">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strManualSockets">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strManualIllumination">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strImportFromFile">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strImportFromProfilux">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strImportFromDatabase">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strExportData">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMenu">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strTools">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strCommands">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strOperations">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strImportData">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLayout">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strGrid">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strHome">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strDateTime">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strConvertingTable">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strWritingHeader">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strProcessing">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAddingRecordstodatabase">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strReminder">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strReminderEmailMessage">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strtooHigh">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strtooLow">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strTimeout">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strAlarmDetected">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAlarmCleared">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strReason">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strStatusUpdate">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAlarm">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strLastUpdate">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strClear">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strDosingUnits">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLog">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strNotEnabled">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAutoTopOff">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMinMaxControl">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strWaterChange">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLeekageDetection">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strWaterChangeAndAutoTopOff">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAutoTopOffWith2Sensors">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strReturnPump">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strOff">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strOn">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strNotUsed">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLevelSensor">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFeedingPause">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strInvert">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strSensor">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strTimer">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDecrease">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strIncrease">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strSubstrate">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strProbeAlarm">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strWater">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strCurrentPump">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strProgrammableLogic">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strVariableIllumination">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strTempPTC">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDigtialInput">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strThunderStorm">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFilter">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAlwaysOn">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAlwaysOff">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strThunder">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strNone">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strTabbed">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAuto">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strShowLog">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strOpenLogfile">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strStop">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strNormal">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDiagnostics">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLightTest">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strCanTransparent">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strReset">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strWaterChangefor">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strStarted">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strUpdated">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDosingRateTo ">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLevelSensorAlarm">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strCleared">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strThunderstormStarted">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strSetOperationMode">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMaintenanceMode">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDisabled">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFeedPauseSet">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strOperationModechanged">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strIsNotOverdue">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strIsOverdue">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strImport">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strUpdateGraph">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strCleaningUp">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strController">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strSelectController">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strOperationalHours">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strAdd">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strMoonPhase">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLongitude">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLatitude">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strWebSite">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strDataItem">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strViewGroup">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strAction">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strParameters">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strResetOperationalHours">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strResetOperationalHoursEvent">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strOpHoursOver">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strColorPickerCurrentPaletteCaption">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strColorPickerDerivedColorPalettesCaption">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strColorPickerRecentColorPaletteCaption">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strColorPickerAdvancedButtonCaption">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strReminderHeaderText">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strReminderHeaderDate">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strReminderDue">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strReminderReset">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strDousingRate">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strItemSettings">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strSavetoDatabase">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFW">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strCurrent">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strChart">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDailyAverage">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strWeeklyAverage">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMonthlyAverage">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strCalander">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMaxCalander">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMinCalander">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMaintenance1">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMaintenance2">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMaintenance3">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strMaintenance4">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="str0per">NOT_TRANSLATED</system:String>
+    <system:String x:Key="str100per">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strLightsOn">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strLightsOff">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strFile">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDays">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strHours">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strReady">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFilling">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strDraining">NOT_TRANSLATED</system:String>
+
+    <system:String x:Key="strThunderstorm">NOT_TRANSLATED</system:String>
+
+    
+</ResourceDictionary>

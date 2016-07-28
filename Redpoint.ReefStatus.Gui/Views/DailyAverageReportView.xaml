@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="RedPoint.ReefStatus.Gui.Views.DailyAverageReportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls;assembly=RedPoint.ReefStatus.Common.UI" 
+             xmlns:Views="clr-namespace:RedPoint.ReefStatus.Gui.Views" 
+             xmlns:DynamicDataDisplay="clr-namespace:Microsoft.Research.DynamicDataDisplay;assembly=DynamicDataDisplay" 
+             xmlns:d3="clr-namespace:Microsoft.Research.DynamicDataDisplay.Charts;assembly=DynamicDataDisplay" 
+             xmlns:Controls1="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit.Extended" 
+             xmlns:Converters="clr-namespace:RedPoint.ReefStatus.Gui.Converters" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Converters:ColourToBursh x:Key="colourToBursh"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+    
+    <Grid>     
+        <Views:ChartPlotter x:Name="chart" Margin="5"  LegendVisible="False" >
+            <Views:ChartPlotter.HorizontalAxis>
+                <d3:HorizontalDateTimeAxis Name="dateAxis"/>
+            </Views:ChartPlotter.HorizontalAxis>
+            <Views:ChartPlotter.Source>
+                <Views:ChartGraphItemCollection>
+                    <Views:ChartGraphItem Points="{Binding DailyPoints}" LineColour ="{Binding Item.Colour, Converter={StaticResource colourToBursh}}"/>
+                    <Views:ChartGraphItem Points="{Binding DailyMax}" LineColour ="{Binding Item.MaxColour, Converter={StaticResource colourToBursh}}"/>
+                    <Views:ChartGraphItem Points="{Binding DailyMin}" LineColour ="{Binding Item.MinColour, Converter={StaticResource colourToBursh}}"/>
+                </Views:ChartGraphItemCollection>
+            </Views:ChartPlotter.Source>
+
+            <DynamicDataDisplay:Header Content="{Binding Item.DisplayName}"/>
+            <DynamicDataDisplay:VerticalAxisTitle FontSize="12" Content="{Binding Item.Units}"/>
+            <DynamicDataDisplay:HorizontalAxisTitle FontSize="12" Content="{DynamicResource strDateTime}"/>
+        </Views:ChartPlotter >
+
+        <Border  Grid.Row="0" Background="#33000000" Visibility="{Binding LoadingData, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Controls:BizzySpinner Spin="{Binding LoadingData}" Height="40" Width="40" Margin="10"/>
+                <TextBlock VerticalAlignment="Center" Text="Loading..."/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

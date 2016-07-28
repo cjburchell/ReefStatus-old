@@ -1,0 +1,339 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+    <title>Reef Status</title>
+
+    <link rel="stylesheet" type="text/css" href="assets/reefstatus.css"/>
+    <style type="text/css">
+        #pagetitle
+        {
+            background-image: url(assets/bg_hd.gif);
+        }
+        #pagetitle h1
+        {
+            background-image: url(assets/title_h_bg.gif);
+        }
+    </style>
+    <style type="text/css">
+        /*margin and padding on body element
+          can introduce errors in determining
+          element position and are not recommended;
+          we turn them off as a foundation for YUI
+          CSS treatments. */body
+        {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="yui/fonts/fonts-min.css" />
+    <link rel="stylesheet" type="text/css" href="yui/tabview/assets/skins/sam/tabview.css" />
+    <link rel="stylesheet" type="text/css" href="yui/button/assets/skins/sam/button.css" />
+    <link rel="stylesheet" type="text/css" href="yui/datatable/assets/skins/sam/datatable.css" />
+    <link rel="stylesheet" type="text/css" href="yui/paginator/assets/skins/sam/paginator.css" />
+    <link rel="stylesheet" type="text/css" href="yui/container/assets/skins/sam/container.css" />
+
+    <script type="text/javascript" src="yui/yahoo-dom-event/yahoo-dom-event.js"></script>
+
+    <script type="text/javascript" src="yui/animation/animation-min.js"></script>
+
+    <script type="text/javascript" src="yui/connection/connection-min.js"></script>
+
+    <script type="text/javascript" src="yui/dragdrop/dragdrop-min.js"></script>
+
+    <script type="text/javascript" src="yui/element/element-min.js"></script>
+
+    <script type="text/javascript" src="yui/tabview/tabview-min.js"></script>
+
+    <script type="text/javascript" src="yui/button/button-min.js"></script>
+
+    <script type="text/javascript" src="yui/datasource/datasource-min.js"></script>
+
+    <script type="text/javascript" src="yui/datatable/datatable-min.js"></script>
+    
+    <script type="text/javascript" src="yui/paginator/paginator-min.js"></script>
+
+    <script type="text/javascript" src="yui/container/container-min.js"></script>
+
+    <script type="text/javascript" src="xml.js"></script>
+
+    <script type="text/javascript" src="access.js"></script>
+
+    <script type="text/javascript" src="reefstatus.js"></script>
+
+    <script type="text/javascript" src="commands.js"></script>
+    
+    <script type="text/javascript" src="datetimepicker_css.js"></script>
+
+    <!--[if IE]><script language="javascript" type="text/javascript" src="flot/excanvas.js"></script><![endif]--> 
+    <script type="text/javascript" src="jsr_class.js"></script>
+
+    <script type="text/javascript" src="flot/jquery.js"></script> 
+    <script type="text/javascript" src="flot/jquery.flot.js"></script> 
+    <script type="text/javascript" src="flot/jquery.flot.navigate.js"></script> 
+
+
+    <style type="text/css">
+        /* custom styles for this example */.yui-skin-sam .yui-dt-body
+        {
+            cursor: pointer;
+        }
+        /* when rows are selectable */#single
+        {
+            margin-top: 2em;
+        }
+        
+        .yui-skin-sam .yui-dt td.alarm { 
+            background-color: #CF202C; 
+        } 
+    </style>
+</head>
+<body class=" yui-skin-sam">
+    <div id="pagetitle">
+        <h1>
+            Reef Status</h1>
+    </div>
+    <div id="reefstatus" class="yui-navset">
+        <ul id='home' class="yui-nav">
+        </ul>
+        <div id='tabpages' class="yui-content">
+
+            
+
+            <div id="control">
+                <table style="width: auto; height: auto;">
+                    <tr>
+                        <td align="center" valign="top" bgcolor="#0000FF" style="font-family: 'Courier New'; font-weight: bold; color: #FFFFFF">
+                            <div id="DisplayText" align="left">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <table align="center">
+                                <tr>
+                                    <td align="center" valign="middle">
+                                        <input type="button" id="refreshButton" value="Refresh"/>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td align="center">
+                                        <button id="upButton" type="button"
+                                            style="width: 65px; height: 26px">
+                                                <img src="icons/up-icon.png"/>
+                                            </button>
+                                    </td>
+                                    <td align="center">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="middle">
+                                        <input id="enterButton" type="button" value="Enter"/>
+                                    </td>
+                                    <td align="center">
+                                        <button id="leftButton" type="button"
+                                            style="width: 65px; height: 26px">
+                                                <img src="icons/left-icon.png"/>
+                                            </button>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    
+                                    <td align="center">
+                                        <button id="rightButton" type="button"
+                                            style="width: 65px; height: 26px">
+                                                <img src="icons/right-icon.png"/>
+                                            </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="middle">
+                                        <input id="escButton" type="button" value="Esc"/>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td align="center">
+                                        <button id="downButton" type="button"
+                                            style="width: 65px; height: 26px">
+                                                <img src="icons/down-icon.png"/>
+                                            </button>
+                                    </td>
+                                    <td align="center">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div id="custom">
+                <table style="width: auto; height: auto;">
+            	    <tr>
+            		    <td valign="top"><div id="customGraphList"></div></td>
+            		    <td valign="top">
+            		      <table style="width: auto; height: auto;">
+            		      <tr>
+            		          <td>
+            		              <table style="width: auto; height: auto;">
+            		              <tr>
+            		              <td colspan = "2"><h3>Range</h3></td>
+            		              <td colspan = "2"><h3>Size</h3></td>
+            		              </tr>
+            		              <tr>
+            		              <td>Start</td><td><input id = "customStartTime" type="text"/><a href="javascript: NewCssCal('customStartTime','yyyymmmdd','arrow',true,12)"><img src="images/cal.gif" width="16" height="16" alt="Pick a date"/></a></td>
+            		              <td> Width</td><td><input id = "customImageWidth" type="text" value = '640'/></td>
+            		              </tr>
+            		              <tr>
+            		              <td>End</td><td><input id = "customEndTime" type="text"/><a href="javascript: NewCssCal('customEndTime','yyyymmmdd','arrow',true,12)"><img src="images/cal.gif" width="16" height="16" alt="Pick a date"/></a></td>
+            		              <td>Hight</td><td><input id = "customImageHight" type="text" value = '480'/></td>
+            		              </tr>
+            		              <tr>
+            		                  <td><input id="applyButton" type = "button" value = "Apply"/></td>
+            		              </tr>
+            		              </table>
+            		          </td>
+            	         </tr>
+            	         <tr><td><div id = "customGraph"></div></td></tr>
+            		      </table>
+            		    </td>
+            	    </tr>
+                </table>
+            </div>
+            
+            <div id="settings"></div>
+
+        </div>
+    </div>
+
+
+
+    <hr />
+    <a href="iphonenew.html">iPhone</a> <a href="ipadnew.html">iPad</a> <a href="mobile.html">Mobile</a> <a href="http://reefstatus.codeplex.com">Reef Status</a> <a href="http://www.aquariumcomputer.com/Forum/index.php">ProfiLux Support Forum</a>
+
+    <script type="text/javascript">
+        function updateHomeMenu() {
+                var tabPagesEnd = document.getElementById('tabpages').innerHTML;
+                var tabPages = '<div id="info"></div>'
+                var infoText = '<li class="selected"><a href="#info" onclick="updateInfo()"><em><Table cellspacing="3"><tr><td><img src="icons/info-icon.png" /></td><td valign=middle><b>Info</b></td></tr></Table></em></a></li>';
+                var infoXmlDoc = OpenXml("command/info);
+                if (infoXmlDoc != null) {
+                    var x = infoXmlDoc.getElementsByTagName("ControllerInfo);
+                    var reminderCount = x[0].getElementsByTagName("ReminderCount")[0].childNodes[0].nodeValue;
+                    var probeCount = x[0].getElementsByTagName("ProbeCount")[0].childNodes[0].nodeValue;
+                    var levelSensorCount = x[0].getElementsByTagName("LevelSensorCount")[0].childNodes[0].nodeValue;
+                    var digitalInputCount = x[0].getElementsByTagName("DigitalInputCount")[0].childNodes[0].nodeValue;
+                    var sPortCount = x[0].getElementsByTagName("SPortCount")[0].childNodes[0].nodeValue;
+                    var lPortCount = x[0].getElementsByTagName("LPortCount")[0].childNodes[0].nodeValue;
+                    var lightCount = x[0].getElementsByTagName("LightCount")[0].childNodes[0].nodeValue;
+                    var dosingPumpCount = x[0].getElementsByTagName("DosingPumpCount")[0].childNodes[0].nodeValue;
+                    var userValueCount = x[0].getElementsByTagName("UserValueCount")[0].childNodes[0].nodeValue;
+
+                    if (probeCount != '0') {
+                        infoText += '<li><a href="#probe" onclick="updateProbes()"><em><Table cellspacing="3"><tr><td><img src="icons/thermometer.png" /></td><td valign=middle><b>Probes</b></td></tr></Table></em></a></li>';
+                        tabPages += '<div id="probe"></div>'
+                    }
+                    if (levelSensorCount != '0') {
+                        infoText += '<li><a href="#level" onclick="updateLevelSensors()"><em><Table cellspacing="3"><tr><td><img src="icons/WaterBottle.png" /></td><td valign=middle><b>Level Sensors</b></td></tr></Table></em></a></li>';
+                        tabPages += '<div id="level"></div>'
+                    }
+                    if (digitalInputCount != '0') {
+                        infoText += '<li><a href="#digitalinputs" onclick="updateDigitalInputs()"><em><Table cellspacing="3"><tr><td><img src="icons/green_button-32.png" /></td><td valign=middle><b>Digital Inputs</b></td></tr></Table></em></a></li>';
+                        tabPages += '<div id="digitalinputs"></div>'
+                    }
+                    if (sPortCount != '0') {
+                        infoText += '<li><a href="#sport" onclick="updateSPorts()"><em><Table cellspacing="3"><tr><td><img src="icons/powerplug.png" /></td><td valign=middle><b>Sockets</b></td></tr></Table></em></a></li>';
+                        tabPages += '<div id="sport"></div>'
+                    }
+                    if (lPortCount != '0') {
+                        infoText += '<li><a href="#lport" onclick="updateLPorts()"><em><Table cellspacing="3"><tr><td><img src="icons/diagram-icon.png" /></td><td valign=middle><b>1-10V Ports</b></td></tr></Table></em></a></li>';
+                        tabPages += '<div id="lport"></div>'
+                    }
+                    if (lightCount != '0') {
+                        infoText += '<li><a href="#lights" onclick = "updateLights()"><em><Table cellspacing="3"><tr><td><img src="icons/light.png" /></td><td valign=middle><b>Lights</b></td></tr></Table></em></a></li>';
+                        tabPages += '<div id="lights"></div>'
+                    }
+                    if (dosingPumpCount != '0') {
+                        infoText += '<li><a href="#dosing" onclick = "updateDosing()"><em><Table cellspacing="3"><tr><td><img src="icons/science.png" /></td><td valign=middle><b>Dosing</b></td></tr></Table></em></a></li>';
+                        tabPages += '<div id="dosing"></div>'
+                    }
+                    if (userValueCount != '0') {
+                        infoText += '<li><a href="#user" onclick="updateUserValues()"><em><Table cellspacing="3"><tr><td><img src="icons/ph.png" /></td><td valign=middle><b>User Data</b></td></tr></Table></em></a></li>';
+                        tabPages += '<div id="user"></div>'
+                    }
+                }
+
+                infoText += '<li><a href="#control" onclick="startRefreshText()"><em><Table cellspacing="3"><tr><td><img src="icons/monitor-icon.png" /></td><td valign=middle><b>Control</b></td></tr></Table></em></a></li>';
+                infoText += '<li><a href="#custom" onclick="updateCustomGraphList()"><em><Table cellspacing="3"><tr><td><img src="icons/search-icon.png" /></td><td valign=middle><b>Custom Graph</b></td></tr></Table></em></a></li>';
+                infoText += '<li><a href="#settings" onclick="updateSettings()"><em><Table cellspacing="3"><tr><td><img src="icons/gear-icon.png" /></td><td valign=middle><b>Settings</b></td></tr></Table></em></a></li>';
+                tabPages += tabPagesEnd;
+
+                document.getElementById('home').innerHTML = infoText;
+                document.getElementById('tabpages').innerHTML = tabPages;
+            }
+
+        (function () {
+            updateHomeMenu();
+
+            var tabView = new YAHOO.widget.TabView('reefstatus', { orientation: "top" });
+
+            var upButton = new YAHOO.widget.Button("upButton);
+            upButton.on("click", up);
+
+            var leftButton = new YAHOO.widget.Button("leftButton);
+            leftButton.on("click", left);
+
+            var rightButton = new YAHOO.widget.Button("rightButton);
+            rightButton.on("click", right);
+
+            var downButton = new YAHOO.widget.Button("downButton);
+            downButton.on("click", down);
+
+            var escButton = new YAHOO.widget.Button("escButton);
+            escButton.on("click", esc);
+            escButton.setStyle('width', 64);
+
+            var enterButton = new YAHOO.widget.Button("enterButton);
+            enterButton.on("click", enter);
+            enterButton.setStyle('width', 64);
+
+            var refreshButton = new YAHOO.widget.Button("refreshButton);
+            refreshButton.on("click", refreshDisplay);
+            refreshButton.setStyle('width', 64);
+
+            updateInfo();
+
+        })();
+
+        function enter() {
+            keyCommand('enter');
+        }
+
+        function esc() {
+            keyCommand('esc');
+        }
+
+        function up() {
+            keyCommand('up');
+        }
+
+        function down() {
+            keyCommand('down');
+        }
+
+        function left() {
+            keyCommand('left');
+        }
+
+        function right() {
+            keyCommand('right');
+        }
+    </script>
+
+</body>
+</html>

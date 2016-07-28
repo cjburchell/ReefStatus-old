@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{48E89F6D-DD7C-4AFB-B99B-98896EC51B3C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>RedPoint.ReefStatus.Common.Mono</RootNamespace>
+    <AssemblyName>Redpoint.Reefstatus.Common.Mono</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG Mono</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <DefineConstants>Mono</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data.Linq">
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions">
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+    </Reference>
+    <Reference Include="System.Core">
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="ZedGraph, Version=5.1.5.28844, Culture=neutral, PublicKeyToken=02a83cbd123fcd60">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\ZedGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase">
+    </Reference>
+    <Reference Include="HttpServer, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d7063c47c583695a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\HttpServer.dll</HintPath>
+    </Reference>
+    <Reference Include="HttpServer.MVC, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d7063c47c583695a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\HttpServer.MVC.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=3.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.Mono.cs" />
+    <Compile Include="Communication\Connection.cs" />
+    <Compile Include="Communication\ConnectionException.cs" />
+    <Compile Include="Communication\IConnection.cs" />
+    <Compile Include="Communication\NetworkConnection.cs" />
+    <Compile Include="Communication\NetworkException.cs" />
+    <Compile Include="Communication\PortConnection.cs" />
+    <Compile Include="Communication\PortException.cs" />
+    <Compile Include="ReefStatusException.cs" />
+    <Compile Include="ProfiLux\BaseInfo.cs" />
+    <Compile Include="ProfiLux\BasicProtocol.cs" />
+    <Compile Include="ProfiLux\Controler.cs" />
+    <Compile Include="ProfiLux\DataPoint.cs" />
+    <Compile Include="ProfiLux\DeviceInfo.cs" />
+    <Compile Include="ProfiLux\DigitalInput.cs" />
+    <Compile Include="ProfiLux\DosingPump.cs" />
+    <Compile Include="ProfiLux\ErrorCodeException.cs" />
+    <Compile Include="ProfiLux\IBasicProtocol.cs" />
+    <Compile Include="ProfiLux\Info.cs" />
+    <Compile Include="ProfiLux\IProfilux.cs" />
+    <Compile Include="ProfiLux\ItemDataRow.cs" />
+    <Compile Include="ProfiLux\LevelSensor.cs" />
+    <Compile Include="ProfiLux\Light.cs" />
+    <Compile Include="ProfiLux\LPort.cs" />
+    <Compile Include="ProfiLux\ProbeSensor.cs" />
+    <Compile Include="ProfiLux\ProfiLux.cs" />
+    <Compile Include="ProfiLux\Profilux4Controler.cs" />
+    <Compile Include="ProfiLux\Profilux5Controler.cs" />
+    <Compile Include="ProfiLux\ProfiluxHttpProtocol.cs" />
+    <Compile Include="ProfiLux\ProfiLuxProtocol.cs" />
+    <Compile Include="ProfiLux\Protocol.cs" />
+    <Compile Include="ProfiLux\ProtocolException.cs" />
+    <Compile Include="ProfiLux\Reminder.cs" />
+    <Compile Include="ProfiLux\SensorInfo.cs" />
+    <Compile Include="ProfiLux\SPort.cs" />
+    <Compile Include="ProfiLux\Types.cs" />
+    <Compile Include="ProfiLux\UserInfo.cs" />
+    <Compile Include="UI\ViewModel\ViewModelBase.cs" />
+    <Compile Include="Settings\ConnectionSettings.cs" />
+    <Compile Include="UI\ViewModel\SafeObservableCollection.cs" />
+    <Compile Include="IUpdateProgress.cs" />
+    <Compile Include="UI\IProgressCallback.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="Language.cs" />
+    <Compile Include="LogMessage.cs" />
+    <Compile Include="Commands\CommandThread.cs" />
+    <Compile Include="Commands\ICommandReply.cs" />
+    <Compile Include="Commands\IProtocolCommands.cs" />
+    <Compile Include="Settings\CustomGraphSettings.cs" />
+    <Compile Include="Settings\LoggingSettings.cs" />
+    <Compile Include="Settings\MailSettings.cs" />
+    <Compile Include="Settings\ReefStatusSettings.cs" />
+    <Compile Include="Settings\WebInterfaceSettings.cs" />
+    <Compile Include="Settings\WindowSettings.cs" />
+    <Compile Include="Core\DataService.cs" />
+    <Compile Include="ListCollectionView.cs" />
+    <Compile Include="UI\ViewModel\ObservableViewModelCollection.cs" />
+    <Compile Include="Database\IDataAccess.cs" />
+    <Compile Include="Database\DatabaseConnection.cs" />
+    <Compile Include="Database\Stats.cs" />
+    <Compile Include="Database\DataLog.cs" />
+    <Compile Include="Database\DataAccess.cs" />
+    <Compile Include="Database\DataAccessException.cs" />
+    <Compile Include="WebServer\ControlerInfo.cs" />
+    <Compile Include="WebServer\Reminder.cs" />
+    <Compile Include="WebServer\WebData.cs" />
+    <Compile Include="WebServer\WebGraphData.cs" />
+    <Compile Include="UI\ExportToFile.cs" />
+    <Compile Include="UI\ImportFromFile.cs" />
+    <Compile Include="UI\ImportFromProfilux.cs" />
+    <Compile Include="UI\ErrorWindow.cs" />
+    <Compile Include="UI\ErrorWindow.Designer.cs" />
+    <Compile Include="Graphs\CustomPlot.cs" />
+    <Compile Include="Graphs\DataPlot.cs" />
+    <Compile Include="WebServer\CommandController.cs" />
+    <Compile Include="WebServer\WebInterface.cs" />
+    <Compile Include="WebServer\WebSession.cs" />
+    <Compile Include="WebServer\SessionBase.cs" />
+    <Compile Include="WebServer\SessionProvider.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Core\" />
+    <Folder Include="Database\" />
+    <Folder Include="Graphs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UI\ErrorWindow.resx" />
+  </ItemGroup>
+</Project>

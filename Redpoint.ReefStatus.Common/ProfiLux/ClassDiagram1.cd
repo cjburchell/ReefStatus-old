@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RedPoint.ReefStatus.Common.ProfiLux.BasicProtocol" Collapsed="true">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ProfiLux\BasicProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedPoint.ReefStatus.Common.ProfiLux.Controler" Collapsed="true">
+    <Position X="4.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAKgAEAACWQCAATAAEAAQAAAEgCAQQACAEABREA=</HashCode>
+      <FileName>ProfiLux\Controler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedPoint.ReefStatus.Common.ProfiLux.ProfiLux" Collapsed="true">
+    <Position X="2.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAsABAIEBIACAQBAAAAEUAAAgCEAAACAGAAAQAAAIAA=</HashCode>
+      <FileName>ProfiLux\ProfiLux.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedPoint.ReefStatus.Common.ProfiLux.Profilux4Controler" Collapsed="true">
+    <Position X="4.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>lAAQAgBAmBAAAAAABAAACAAAQAABAAAgCgECJACACEA=</HashCode>
+      <FileName>ProfiLux\Profilux4Controler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RedPoint.ReefStatus.Common.ProfiLux.Profilux5Controler" Collapsed="true">
+    <Position X="6" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>lAQQAABgmBAAAAoAhEwQCAAAQACDAoQgCgESJmCACEA=</HashCode>
+      <FileName>ProfiLux\Profilux5Controler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RedPoint.ReefStatus.Common.ProfiLux.Protocol" Collapsed="true">
+    <Position X="5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MAQTAAAEEAAAAARAAAQACYABAEEAAAQAACBAAACAAAA=</HashCode>
+      <FileName>ProfiLux\Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RedPoint.ReefStatus.Common.ProfiLux.ProfiluxHttpProtocol" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQAAAAAEKAAAABAAAAAAAIAAAIAAAgAAAAABAAAIAA=</HashCode>
+      <FileName>ProfiLux\ProfiluxHttpProtocol.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RedPoint.ReefStatus.Common.ProfiLux.ProfiLuxProtocol" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQAAAAAEKAgABFAAAAAAAIAAAAAAAACAAAAAAAAIAA=</HashCode>
+      <FileName>ProfiLux\ProfiLuxProtocol.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="RedPoint.ReefStatus.Common.ProfiLux.IProfilux" Collapsed="true">
+    <Position X="0.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>tAQRAABEmBAAAARABAQACQABQAEBAAAgCiFCJAAACEA=</HashCode>
+      <FileName>ProfiLux\IProfilux.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="RedPoint.ReefStatus.Common.ProfiLux.IBasicProtocol" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MAQAAAAAEIAAAABAAAAAAAIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ProfiLux\IBasicProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

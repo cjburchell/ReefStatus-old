@@ -1,0 +1,29 @@
+﻿<Controls:CustomWindow x:Class="RedPoint.ReefStatus.Gui.Views.RegistrationView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                       xmlns:Controls="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls;assembly=RedPoint.ReefStatus.Common.UI" Style="{DynamicResource DefaultToolWindow}"
+        Title="Register Reef Status"
+        Topmost="True" IsSizable="False" SizeToContent="WidthAndHeight">
+    <StackPanel>
+        <Grid HorizontalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" Margin="5" Text="{DynamicResource strName}"/>
+            <TextBox Grid.Column="1" Margin="0,5,5,5" Text="{Binding Name, Mode=TwoWay}" MinWidth="200"/>
+            <TextBlock VerticalAlignment="Center" Margin="5,0,5,5"  Grid.Row="1" Text="{DynamicResource strEMailTab}"/>
+            <TextBox  Grid.Row="1" Grid.Column="1" Margin="0,0,5,5" Text="{Binding Email, Mode=TwoWay}" MinWidth="200"/>
+        </Grid>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Click="Close_Click" Style="{DynamicResource TextButton}" Command="{Binding RegisterCommand}" Content="Register" Margin="5,0,5,5"/>
+            <Button Click="Close_Click" Style="{DynamicResource TextButton}" Command="{Binding DoNotRegisterCommand}" Content="Do Not Register" Margin="0,0,5,5"/>
+            <Button Click="Close_Click" Style="{DynamicResource TextButton}" Content="Register Later" Margin="0,0,5,5"/>
+        </StackPanel>
+    </StackPanel>
+</Controls:CustomWindow>

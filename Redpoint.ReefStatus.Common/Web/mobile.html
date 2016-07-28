@@ -1,0 +1,109 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Reef Status</title>
+    
+    <link rel="stylesheet" type="text/css" href="assets/reefstatus.css"/>
+    <style type="text/css">
+        #pagetitle
+        {
+            background-image: url(assets/bg_hd.gif);
+        }
+        #pagetitle h1
+        {
+            background-image: url(assets/title_h_bg.gif);
+        }
+    </style>
+    <style type="text/css">
+        /*margin and padding on body element
+          can introduce errors in determining
+          element position and are not recommended;
+          we turn them off as a foundation for YUI
+          CSS treatments. */body
+        {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="yui/fonts/fonts-min.css" />
+    <link rel="stylesheet" type="text/css" href="yui/tabview/assets/skins/sam/tabview.css" />
+    <link rel="stylesheet" type="text/css" href="yui/button/assets/skins/sam/button.css" />
+    <link rel="stylesheet" type="text/css" href="yui/datatable/assets/skins/sam/datatable.css" />
+    <link rel="stylesheet" type="text/css" href="yui/paginator/assets/skins/sam/paginator.css" />
+
+    <style type="text/css">
+        /* custom styles for this example */.yui-skin-sam .yui-dt-body
+        {
+            cursor: pointer;
+        }
+        /* when rows are selectable */#single
+        {
+            margin-top: 2em;
+        }
+    </style>
+
+    <script type="application/javascript" src="xml.js"></script>
+    <script type="application/javascript" src="access.js"></script>
+    <script type="application/javascript" src="mobile.js"></script>
+    <script type="application/javascript" src="commands.js"></script>
+
+    <script type="application/javascript">
+        function updateHomeMenu() {
+            var infoText = '<tr><td><a href="info.html"><img src="/icons/info-icon.png"/><b>Info</b></a></td></tr>';
+            var infoXmlDoc = OpenXml("command/info);
+            if (infoXmlDoc != null) {
+                var x = infoXmlDoc.getElementsByTagName("ControllerInfo);
+                var reminderCount = x[0].getElementsByTagName("ReminderCount")[0].childNodes[0].nodeValue;
+                var probeCount = x[0].getElementsByTagName("ProbeCount")[0].childNodes[0].nodeValue;
+                var levelSensorCount = x[0].getElementsByTagName("LevelSensorCount")[0].childNodes[0].nodeValue;
+                var digitalInputCount = x[0].getElementsByTagName("DigitalInputCount")[0].childNodes[0].nodeValue;
+                var sPortCount = x[0].getElementsByTagName("SPortCount")[0].childNodes[0].nodeValue;
+                var lPortCount = x[0].getElementsByTagName("LPortCount")[0].childNodes[0].nodeValue;
+                var lightCount = x[0].getElementsByTagName("LightCount")[0].childNodes[0].nodeValue;
+                var dosingPumpCount = x[0].getElementsByTagName("DosingPumpCount")[0].childNodes[0].nodeValue;
+                var userValueCount = x[0].getElementsByTagName("UserValueCount")[0].childNodes[0].nodeValue;
+
+                if (probeCount != '0') {
+                    infoText += '<tr><td><a href="list.html?type=Probes"><img src="/icons/thermometer.png"/>Probes</a></td></tr>';
+                }
+                if (levelSensorCount != '0') {
+                    infoText += '<tr><td><a href="list.html?type=Level_Sensors"><img src="/icons/WaterBottle.png"/>Level Sensors</a></td></tr>';
+                }
+                if (digitalInputCount != '0') {
+                    infoText += '<tr><td><a href="list.html?type=DigitalInputs"><img src="/icons/green_button-32.png"/>Digital Inputs</a></td></tr>';
+                }
+                if (sPortCount != '0') {
+                    infoText += '<tr><td><a href="list.html?type=S_Ports"><img src="/icons/powerplug.png"/>Sockets></a></td></tr>';
+                }
+                if (lPortCount != '0') {
+                    infoText += '<tr><td><a href="list.html?type=L_Ports"><img src="/icons/diagram-icon.png"/>1-10V Ports</a></td></tr>';
+                }
+                if (lightCount != '0') {
+                    infoText += '<tr><td><a href="list.html?type=Lights"><img src="/icons/science.png"/>Lights</a></td></tr>';
+                }
+                if (dosingPumpCount != '0') {
+                    infoText += '<tr><td><a href="list.html?type=Dosing"><img src="/icons/light.png"/>Dosing</a></td></tr>';
+                }
+                if (userValueCount != '0') {
+                    infoText += '<tr><td><a href="list.html?type=User_Data"><img src="/icons/ph.png"/>User Data</a></td></tr>';
+                }
+            }
+
+            infoText += '<tr><td><a href="control.html"><img src="/icons/monitor-icon.png"/>Control</a></td></tr>';
+            infoText += '<tr><td><a href="links.html">Links</a></td></tr>';
+
+            document.getElementById('home').innerHTML = infoText;
+        }
+        </script>
+</head>
+<body onload='updateHomeMenu()'>
+    <div id="pagetitle">
+        <h1>
+            Reef Status</h1>
+    </div>
+    <div id="reefstatus">
+        <table id="home">
+        </table>
+    </div>
+</body>
+</html>

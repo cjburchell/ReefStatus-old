@@ -1,0 +1,510 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:Controls="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls" 
+    xmlns:Converters="clr-namespace:RedPoint.ReefStatus.Common.UI.Converters">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../Animations/HoverFade.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="PressedBorder" TargetType="{x:Type Border}">
+        <Setter Property="Visibility" Value="Hidden"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Setter Property="Visibility" Value="Visible"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="HoverBorder" TargetType="{x:Type Border}">
+        <Setter Property="Opacity" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeIn}"/>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeOut}"/>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="HoverControl" TargetType="{x:Type UserControl}">
+        <Setter Property="Opacity" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeIn}"/>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeOut}"/>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PressedPath" TargetType="{x:Type Path}">
+        <Setter Property="Visibility" Value="Hidden"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Setter Property="Visibility" Value="Visible"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="HoverPath" TargetType="{x:Type Path}">
+        <Setter Property="Opacity" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeIn}"/>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeOut}"/>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PressedEllipse" TargetType="{x:Type Ellipse}">
+        <Setter Property="Visibility" Value="Hidden"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Setter Property="Visibility" Value="Visible"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="HoverEllipse" TargetType="{x:Type Ellipse}">
+        <Setter Property="Opacity" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeIn}"/>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeOut}"/>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <Style TargetType="{x:Type Controls:ThemeBorder}" x:Key="DefaultThemeBorderStyle" >
+        <Setter Property="PressedBorder" Value="{DynamicResource PressedBrush}"/>
+        <Setter Property="PressedThemeLevel" Value="{DynamicResource PressedThemeLevel}"/>
+        <Setter Property="PressedBackground" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="HoverBorder" Value="{DynamicResource ThemeColor05}"/>
+        <Setter Property="HoverBackground" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="HoverThemeLevel" Value="{DynamicResource HoverThemeLevel}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Controls:ThemeBorder}">
+                    <Grid>
+                        <Border CornerRadius="{TemplateBinding CornerRadius}" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" />
+
+                        <Border CornerRadius="{TemplateBinding CornerRadius}" 
+                                Background="{TemplateBinding BackgroundThemeLevel}" 
+                                BorderBrush="{TemplateBinding BorderThemeLevel}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" />
+
+                        <Border x:Name="Hover" 
+                                Style="{DynamicResource HoverBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding HoverBorder}"
+                                Background ="{TemplateBinding HoverBackground}"/>
+
+                        <Border x:Name="HoverThemeLevel" 
+                                Style="{DynamicResource HoverBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding HoverBorderThemeLevel}"
+                                Background ="{TemplateBinding HoverThemeLevel}"/>
+
+                        <Border x:Name="Pressed" 
+                                Style="{DynamicResource PressedBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding PressedBorder}"
+                                Background ="{TemplateBinding PressedBackground}"/>
+
+                        <Border x:Name="PressedThemeLevel" 
+                                Style="{DynamicResource PressedBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding PressedBorderThemeLevel}"
+                                Background ="{TemplateBinding PressedThemeLevel}"/>
+
+                        <!-- Content Presenter is where the text content etc is placed by the control -->
+                        <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+                        <Grid Margin="{TemplateBinding BorderThickness}">
+                            <ContentPresenter x:Name="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter Property="Tag" Value="Show" TargetName="Hover"/>
+                            <Setter Property="Tag" Value="Show" TargetName="HoverThemeLevel"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                            <Setter Property="Tag" Value="Show" TargetName="PressedThemeLevel"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                            <Setter Property="Tag" Value="Hidden" TargetName="Hover"/>
+                            <Setter Property="Tag" Value="Hidden" TargetName="HoverThemeLevel"/>
+                        </Trigger>
+
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                            <Setter Property="Tag" Value="Show" TargetName="PressedThemeLevel"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                            <Setter Property="Tag" Value="Hidden" TargetName="Hover"/>
+                            <Setter Property="Tag" Value="Hidden" TargetName="HoverThemeLevel"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style TargetType="{x:Type Controls:ThemeBorder}" x:Key="SimpleThemeBorderStyle" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Controls:ThemeBorder}">
+                    <Grid>
+                        <Border CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" />
+
+                        <Border CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding BackgroundThemeLevel}" BorderBrush="{TemplateBinding BorderThemeLevel}" BorderThickness="{TemplateBinding BorderThickness}" />
+                        <!-- Content Presenter is where the text content etc is placed by the control -->
+                        <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+                        <Grid Margin="{TemplateBinding BorderThickness}">
+                            <ContentPresenter x:Name="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Controls:ThemeBorder}" BasedOn="{StaticResource DefaultThemeBorderStyle}">
+    </Style>
+
+    <ControlTemplate x:Key="LargeArrowThemeBorderTemplate" TargetType="{x:Type Controls:ThemeBorder}">
+        <Grid>
+            <Border CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" />
+            <Border CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding BackgroundThemeLevel}" BorderBrush="{TemplateBinding BorderThemeLevel}" BorderThickness="{TemplateBinding BorderThickness}" />
+
+            <Border x:Name="Hover" 
+                                Style="{DynamicResource HoverBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding HoverBorder}"
+                                Background ="{TemplateBinding HoverBackground}"/>
+
+            <Border x:Name="HoverThemeLevel" 
+                                Style="{DynamicResource HoverBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding HoverBorderThemeLevel}"
+                                Background ="{TemplateBinding HoverThemeLevel}"/>
+
+            <Border x:Name="Pressed" 
+                                Style="{DynamicResource PressedBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding PressedBorder}"
+                                Background ="{TemplateBinding PressedBackground}"/>
+
+            <Border x:Name="PressedThemeLevel" 
+                                Style="{DynamicResource PressedBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding PressedBorderThemeLevel}"
+                                Background ="{TemplateBinding PressedThemeLevel}"/>
+
+            <!-- Content Presenter is where the text content etc is placed by the control -->
+            <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+            <Grid Margin="{TemplateBinding BorderThickness}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="9*"/>
+                    <ColumnDefinition Width="*" MinWidth="20"/>
+                </Grid.ColumnDefinitions>
+                <Viewbox Grid.Column="1">
+                    <Controls:Arrow x:Name="Arrow" Direction="Down" Margin="5"/>
+                </Viewbox>
+                <ContentPresenter x:Name="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Show" TargetName="HoverThemeLevel"/>
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                <Setter Property="Tag" Value="Show" TargetName="PressedThemeLevel"/>
+                <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="HoverThemeLevel"/>
+            </Trigger>
+
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                <Setter Property="Tag" Value="Show" TargetName="PressedThemeLevel"/>
+                <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="HoverThemeLevel"/>
+            </Trigger>
+
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="CircleThemeBorderTemplate" TargetType="{x:Type Controls:ThemeBorder}">
+        <ControlTemplate.Resources>
+            <Converters:ThicknessToDoubleConverter x:Key="ThicknessToDoubleConverter"/>
+        </ControlTemplate.Resources>
+        <Grid>
+            <Ellipse Fill="{TemplateBinding Background}" 
+            Stroke="{TemplateBinding BorderBrush}" 
+            StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}"/>
+
+            <Ellipse Fill="{TemplateBinding BackgroundThemeLevel}" 
+            Stroke="{TemplateBinding BorderThemeLevel}" 
+            StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}" />
+
+            <Ellipse x:Name="Hover" 
+                                Style="{DynamicResource HoverEllipse}" 
+                                StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}"
+                                Stroke ="{TemplateBinding HoverBorder}"
+                                Fill ="{TemplateBinding HoverBackground}"/>
+
+            <Ellipse x:Name="HoverThemeLevel" 
+                                Style="{DynamicResource HoverEllipse}" 
+                                StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}"
+                                Stroke ="{TemplateBinding HoverBorderThemeLevel}"
+                                Fill ="{TemplateBinding HoverThemeLevel}"/>
+
+            <Ellipse x:Name="Pressed" 
+                                Style="{DynamicResource PressedEllipse}" 
+                                StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}"
+                                Stroke ="{TemplateBinding PressedBorder}"
+                                Fill ="{TemplateBinding PressedBackground}"/>
+
+            <Ellipse x:Name="PressedThemeLevel" 
+                                Style="{DynamicResource PressedEllipse}" 
+                                StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}"
+                                Stroke ="{TemplateBinding HoverBorderThemeLevel}"
+                                Fill ="{TemplateBinding PressedThemeLevel}"/>
+
+            <!-- Content Presenter is where the text content etc is placed by the control -->
+            <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+            <Grid Margin="{TemplateBinding BorderThickness}">
+                <ContentPresenter x:Name="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Show" TargetName="HoverThemeLevel"/>
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                <Setter Property="Tag" Value="Show" TargetName="PressedThemeLevel"/>
+                <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="HoverThemeLevel"/>
+            </Trigger>
+
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                <Setter Property="Tag" Value="Show" TargetName="PressedThemeLevel"/>
+                <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="HoverThemeLevel"/>
+            </Trigger>
+
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="CromeCircle" TargetType="{x:Type Controls:ThemeBorder}" BasedOn="{StaticResource DefaultThemeBorderStyle}">
+        <Setter Property="Template" Value="{DynamicResource CircleThemeBorderTemplate}"/>
+    </Style>
+
+    <Style x:Key="ControlThemeBorderStyle" TargetType="{x:Type Controls:ThemeBorder}"  BasedOn="{StaticResource DefaultThemeBorderStyle}">
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="BackgroundThemeLevel" Value="{DynamicResource ControlBackgroudGradiant}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="BorderThemeLevel" Value="{DynamicResource ThemeColor05}"/>
+
+        <Setter Property="PressedThemeLevel" Value="{DynamicResource PressedThemeLevel}"/>
+        <Setter Property="PressedBackground" Value="{DynamicResource ThemeBaseColorBrush}"/>
+
+        <Setter Property="HoverBackground" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="HoverThemeLevel" Value="{DynamicResource HoverThemeLevel}"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{DynamicResource InactiveBackgroundColor}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource InactiveBorderColor}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ArrowThemeBorderStyle" TargetType="{x:Type Controls:ThemeBorder}" BasedOn="{StaticResource ControlThemeBorderStyle}">
+        <Setter Property="Template" Value="{DynamicResource LargeArrowThemeBorderTemplate}"/>
+    </Style>
+
+    <Style x:Key="ControlCircleThemeBorderStyle" TargetType="{x:Type Controls:ThemeBorder}" BasedOn="{StaticResource ControlThemeBorderStyle}">
+        <Setter Property="Template" Value="{DynamicResource CircleThemeBorderTemplate}"/>
+    </Style>
+
+    <Style x:Key="FlatThemeBorderStyle" TargetType="{x:Type Controls:ThemeBorder}"  BasedOn="{StaticResource DefaultThemeBorderStyle}">
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BackgroundThemeLevel" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="BorderThemeLevel" Value="Transparent"/>
+
+        <Setter Property="PressedThemeLevel" Value="{DynamicResource PressedThemeLevel}"/>
+        <Setter Property="PressedBackground" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="PressedBorder" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="PressedBorderThemeLevel" Value="{DynamicResource ThemeColor05}"/>
+
+        <Setter Property="HoverBackground" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="HoverThemeLevel" Value="{DynamicResource HoverThemeLevel}"/>
+        <Setter Property="HoverBorder" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="HoverBorderThemeLevel" Value="{DynamicResource ThemeColor05}"/>
+    </Style>
+
+    <Style x:Key="FlatCircleThemeBorderStyle" TargetType="{x:Type Controls:ThemeBorder}" BasedOn="{StaticResource FlatThemeBorderStyle}">
+        <Setter Property="Template" Value="{DynamicResource CircleThemeBorderTemplate}"/>
+    </Style>
+
+    <Style x:Key="NoHoverThemeLevelStyle" TargetType="{x:Type Controls:ThemeBorder}"  BasedOn="{StaticResource SimpleThemeBorderStyle}">
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="BackgroundThemeLevel" Value="{DynamicResource ThemeColor11}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="BorderThemeLevel" Value="{DynamicResource ThemeColor05}"/>
+
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Background" Value="{DynamicResource InactiveBackgroundColor}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource InactiveBorderColor}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="BorderThemeLevelStyle" TargetType="{x:Type Controls:ThemeBorder}"  BasedOn="{StaticResource SimpleThemeBorderStyle}">
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="BackgroundThemeLevel" Value="{DynamicResource ThemeColor0}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="BorderThemeLevel" Value="{DynamicResource ThemeColor05}"/>
+    </Style>
+
+    <ControlTemplate x:Key="SmallArrowThemeBorderTemplate" TargetType="{x:Type Controls:ThemeBorder}">
+        <Grid>
+            <Border CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" />
+
+            <Border CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding BackgroundThemeLevel}" BorderBrush="{TemplateBinding BorderThemeLevel}" BorderThickness="{TemplateBinding BorderThickness}" />
+
+            <Border x:Name="Hover" 
+                                Style="{DynamicResource HoverBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding HoverBorder}"
+                                Background ="{TemplateBinding HoverBackground}"/>
+
+            <Border x:Name="HoverThemeLevel" 
+                                Style="{DynamicResource HoverBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding HoverBorderThemeLevel}"
+                                Background ="{TemplateBinding HoverThemeLevel}"/>
+
+            <Border x:Name="Pressed" 
+                                Style="{DynamicResource PressedBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding PressedBorder}"
+                                Background ="{TemplateBinding PressedBackground}"/>
+
+            <Border x:Name="PressedThemeLevel" 
+                                Style="{DynamicResource PressedBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding PressedBorderThemeLevel}"
+                                Background ="{TemplateBinding PressedThemeLevel}"/>
+
+            <!-- Content Presenter is where the text content etc is placed by the control -->
+            <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+            <Grid Margin="{TemplateBinding BorderThickness}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="9*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Grid.Column="1" Width="6" Height="6" Margin="5">
+                    <Rectangle.Fill>
+                        <DrawingBrush Stretch="Uniform">
+                            <DrawingBrush.Drawing>
+                                <DrawingGroup>
+                                    <DrawingGroup.Children>
+                                        <GeometryDrawing Brush="{DynamicResource ThemeColor11}" Geometry="F1 M 12.867,0.160002L 0.16,0.18363L 6.53394,11.1764L 12.867,0.160002 Z ">
+                                            <GeometryDrawing.Pen>
+                                                <Pen Thickness="0.32" LineJoin="Round" Brush="{DynamicResource ThemeColor11}"/>
+                                            </GeometryDrawing.Pen>
+                                        </GeometryDrawing>
+                                    </DrawingGroup.Children>
+                                </DrawingGroup>
+                            </DrawingBrush.Drawing>
+                        </DrawingBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <ContentPresenter x:Name="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Show" TargetName="HoverThemeLevel"/>
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                <Setter Property="Tag" Value="Show" TargetName="PressedThemeLevel"/>
+                <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+            </Trigger>
+
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+            </Trigger>
+
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="FlatWithArrowThemeBorderStyle" TargetType="{x:Type Controls:ThemeBorder}" BasedOn="{StaticResource FlatThemeBorderStyle}">
+        <Setter Property="Template" Value="{DynamicResource SmallArrowThemeBorderTemplate}"/>
+    </Style>
+
+
+
+</ResourceDictionary>

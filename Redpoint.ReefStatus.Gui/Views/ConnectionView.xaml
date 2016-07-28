@@ -1,0 +1,93 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:Settings="clr-namespace:RedPoint.ReefStatus.Common.Settings;assembly=RedPoint.ReefStatus.Common" xmlns:Controls="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls;assembly=RedPoint.ReefStatus.Common.UI" xmlns:Controls1="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit.Extended" x:Class="RedPoint.ReefStatus.Gui.Views.ConnectionView">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type System:Enum}" x:Key="ConnectionTypeValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="Settings:ConnectionType" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+  
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width ="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height ="Auto"/>
+            <RowDefinition Height ="Auto"/>
+            <RowDefinition Height ="Auto"/>
+            <RowDefinition Height ="Auto"/>
+            <RowDefinition Height ="Auto"/>
+            <RowDefinition Height ="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Margin="5" Text="{DynamicResource strName}" VerticalAlignment="Center"/>
+        <TextBox Grid.Column="1" Margin="0,5,5,5" Text="{Binding Name}" HorizontalAlignment="Left" MinWidth="200"/>
+        <TextBlock Grid.Row="1" Text="{DynamicResource strType}" VerticalAlignment="Center" Margin="5,0,5,5"/>
+        <ComboBox Grid.Row="1" HorizontalAlignment="Left" Margin="0,0,5,5" MinWidth="100" Grid.Column="1" SelectedItem="{Binding Connection.ConnectionType}" ItemsSource="{Binding Source={StaticResource ConnectionTypeValues}}" VerticalAlignment="Center"/>
+        <GroupBox Margin="5,0,5,5" Visibility="{Binding Connection.IsNetwork, Converter={StaticResource BoolToVis}}" Header="{DynamicResource strNetwork}" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Padding="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width ="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height ="Auto"/>
+                    <RowDefinition Height ="Auto"/>
+                    <RowDefinition Height ="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Margin="5" VerticalAlignment="Center" Text="{DynamicResource strHostAddress}" Grid.Row="0" Grid.Column="0"/>
+                <TextBox Margin="0,5,5,5" MinWidth="200" Text="{Binding Connection.Address}" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <TextBlock Margin="5,0,5,5" VerticalAlignment="Center" Text="{DynamicResource strPort}" Grid.Row="1" Grid.Column="0"/>
+                <Controls1:IntegerUpDown Margin="0,0,5,5" Grid.Row="1" Grid.Column="1" Value="{Binding Connection.Port, Mode=TwoWay}" MinWidth="50" HorizontalAlignment="Left"/>
+                <TextBlock Margin="5,0,5,5" Text="{DynamicResource strPassword}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Connection.ConnectionType}" Value="Web">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <PasswordBox Margin="0,0,5,5" MinWidth="80" MaxWidth="90" HorizontalAlignment="Left"
+                     PasswordChar="*"
+                     Controls:PasswordBoxAssistant.BindPassword="true"
+                     Controls:PasswordBoxAssistant.BoundPassword="{Binding Path=Connection.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">
+                    <PasswordBox.Style>
+                        <Style TargetType="{x:Type PasswordBox}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Connection.ConnectionType}" Value="Web">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </PasswordBox.Style>
+                </PasswordBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Margin="5,0,5,5" Visibility="{Binding Connection.IsPort, Converter={StaticResource BoolToVis}}" Header="{DynamicResource strComPort}" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Padding="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width ="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="5" Text="{DynamicResource strCom}" VerticalAlignment="Center"/>
+                <Controls1:IntegerUpDown Grid.Column="1" Margin="0,5,5,5" Minimum="1" Maximum="20" Value="{Binding Connection.ComPort, Mode=TwoWay}" HorizontalAlignment="Left"/>
+            </Grid>
+        </GroupBox>
+        <TextBlock Margin="5,0,5,5" VerticalAlignment="Center" Text="{DynamicResource strDeviceAddress}" Grid.Row="4" Grid.Column="0"/>
+        <Controls1:IntegerUpDown Grid.Row="4" Grid.Column="1" Margin="0,0,5,5" Minimum="1" Maximum="16" Value="{Binding Connection.ControllerAddress, Mode=TwoWay}" HorizontalAlignment="Left" />
+        <CheckBox Margin="5,0,5,5" IsChecked="{Binding Connection.GetAll}" Grid.Row="5" Grid.ColumnSpan="2">
+            <TextBlock VerticalAlignment="Center" Text="{DynamicResource strGetAll}"/>
+        </CheckBox>
+    </Grid>
+</UserControl>

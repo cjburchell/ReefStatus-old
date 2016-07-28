@@ -1,0 +1,63 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                    xmlns:Controls="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls" mc:Ignorable="d">
+    
+    <ResourceDictionary.MergedDictionaries>
+    	<ResourceDictionary Source="../Animations/HoverFade.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    <Style x:Key="RoundDeleteButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="MinHeight" Value="{DynamicResource TouchScreenItemSize}"/>
+        <Setter Property="MinWidth" Value="{DynamicResource TouchScreenItemSize}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeBaseForgroundLevel1}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Controls:ThemeBorder 
+                        Style="{DynamicResource FlatCircleThemeBorderStyle}" 
+                        IsPressed="{TemplateBinding IsPressed}" 
+                        IsHighlighted="{TemplateBinding IsMouseOver}"
+                        HoverBackground="{DynamicResource CloseHoverBackground}"
+                        HoverThemeLevel="Transparent">
+                            <Viewbox Margin="1">
+                                <Canvas Width="96" Height="96">
+                                    <Path x:Name="Path" Width="58.6595" Height="58.7458" Canvas.Left="18.5799" Canvas.Top="18.4797" Stretch="Fill" Fill="{TemplateBinding Foreground}" Data="F1 M 25.078,18.9995L 47.8873,41.7756L 70.7244,18.8221C 71.177,18.3672 71.9127,18.3654 72.3675,18.8179L 76.897,23.3244C 77.3519,23.777 77.3537,24.5127 76.9012,24.9675L 54.0529,47.9323L 76.8735,70.7197C 77.3276,71.1731 77.3281,71.9087 76.8747,72.3628L 72.3595,76.8846C 71.9061,77.3387 71.1704,77.3392 70.7164,76.8858L 47.9069,54.1096L 25.275,76.8568C 24.8224,77.3117 24.0868,77.3135 23.6319,76.861L 19.1024,72.3545C 18.6475,71.9019 18.6457,71.1662 19.0982,70.7114L 41.7413,47.9529L 18.9208,25.1657C 18.4667,24.7123 18.4662,23.9766 18.9196,23.5225L 23.4349,19.0007C 23.8883,18.5466 24.6239,18.5461 25.078,18.9995 Z "/>
+                                </Canvas>
+                            </Viewbox>
+                        </Controls:ThemeBorder>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SolidRoundDeleteButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeBaseForgroundLevel1}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid d:DesignWidth="16" d:DesignHeight="16">
+                        <Controls:ThemeBorder 
+                        Style="{DynamicResource ControlCircleThemeBorderStyle}" 
+                        BorderThickness="2"
+                        BackgroundThemeLevel="{DynamicResource ThemeColor05}"
+                        IsPressed="{TemplateBinding IsPressed}" 
+                        IsHighlighted="{TemplateBinding IsMouseOver}"
+                        HoverBackground="{DynamicResource CloseHoverBackground}"
+                        BorderThemeLevel="{DynamicResource ThemeColor13}"
+                        HoverThemeLevel="Transparent">
+                            <Viewbox Margin="1">
+                                <Canvas Width="96" Height="96">
+                                    <Path x:Name="Path" Width="58.6595" Height="58.7458" Canvas.Left="18.5799" Canvas.Top="18.4797" Stretch="Fill" Fill="{DynamicResource ThemeColor13}" Data="F1 M 25.078,18.9995L 47.8873,41.7756L 70.7244,18.8221C 71.177,18.3672 71.9127,18.3654 72.3675,18.8179L 76.897,23.3244C 77.3519,23.777 77.3537,24.5127 76.9012,24.9675L 54.0529,47.9323L 76.8735,70.7197C 77.3276,71.1731 77.3281,71.9087 76.8747,72.3628L 72.3595,76.8846C 71.9061,77.3387 71.1704,77.3392 70.7164,76.8858L 47.9069,54.1096L 25.275,76.8568C 24.8224,77.3117 24.0868,77.3135 23.6319,76.861L 19.1024,72.3545C 18.6475,71.9019 18.6457,71.1662 19.0982,70.7114L 41.7413,47.9529L 18.9208,25.1657C 18.4667,24.7123 18.4662,23.9766 18.9196,23.5225L 23.4349,19.0007C 23.8883,18.5466 24.6239,18.5461 25.078,18.9995 Z "/>
+                                </Canvas>
+                            </Viewbox>
+                        </Controls:ThemeBorder>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

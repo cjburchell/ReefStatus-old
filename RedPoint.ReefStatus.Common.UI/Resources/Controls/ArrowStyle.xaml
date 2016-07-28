@@ -1,0 +1,77 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:Controls1="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls">
+
+    <Style TargetType="{x:Type Controls1:Arrow}">
+        <Setter Property="Background" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="BackgroundThemeLevel" Value="{DynamicResource ThemeColor1}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Controls1:Arrow}">
+
+                    <Viewbox>
+                        <Viewbox Height="18" Width="18" x:Name="Arrow" RenderTransformOrigin="0.5,0.5">
+
+                            <Grid Margin="2" RenderTransformOrigin="0.5,0.5">
+                                <Path Data="F1 M 12.867,0.160002L 0.16,0.18363L 6.53394,11.1764L 12.867,0.160002 Z " Fill="{TemplateBinding Background}" Stroke="Transparent" />
+                                <Path Data="F1 M 12.867,0.160002L 0.16,0.18363L 6.53394,11.1764L 12.867,0.160002 Z " Fill="{TemplateBinding BackgroundThemeLevel}" Stroke="{TemplateBinding BackgroundThemeLevel}"/>
+                                <Grid.RenderTransform>
+                                    <RotateTransform Angle="-90"/>
+                                </Grid.RenderTransform>
+                            </Grid>
+
+                            <!--<Grid>
+                                <Path Fill="{TemplateBinding Background}" Data="F1 M 10.686,31.505 C 10.214,31.505 9.773,31.324 9.441,30.994 L 6.335,27.884 C 5.649,27.199 5.649,26.080 6.335,25.394 L 15.723,16.004 L 6.335,6.616 C 6.003,6.283 5.822,5.840 5.822,5.367 C 5.822,4.898 6.005,4.455 6.337,4.125 L 9.441,1.019 C 9.773,0.687 10.216,0.505 10.688,0.505 C 11.160,0.505 11.603,0.687 11.934,1.019 L 25.672,14.756 C 26.000,15.087 26.184,15.530 26.184,16.004 C 26.184,16.480 26.000,16.922 25.672,17.254 L 11.932,30.994 C 11.599,31.324 11.158,31.505 10.686,31.505 L 10.686,31.505 Z"/>
+                                <Path Fill="{TemplateBinding Background}" Data="F1 M 10.688,0.005 C 10.084,0.005 9.517,0.240 9.090,0.664 L 5.982,3.771 C 5.101,4.653 5.101,6.088 5.982,6.969 L 15.018,16.004 L 5.982,25.041 C 5.556,25.466 5.322,26.035 5.322,26.640 C 5.322,27.244 5.556,27.812 5.982,28.238 L 9.087,31.345 C 9.515,31.771 10.083,32.005 10.687,32.005 C 11.291,32.005 11.858,31.771 12.284,31.347 L 26.024,17.608 C 26.452,17.180 26.686,16.610 26.684,16.002 C 26.686,15.399 26.452,14.829 26.024,14.403 L 12.288,0.666 C 11.860,0.240 11.293,0.005 10.688,0.005 L 10.688,0.005 Z M 10.688,1.005 C 11.012,1.005 11.335,1.127 11.580,1.373 L 25.317,15.110 C 25.563,15.356 25.684,15.680 25.684,16.004 C 25.684,16.331 25.563,16.655 25.317,16.901 L 11.578,30.638 C 11.333,30.882 11.010,31.005 10.687,31.005 C 10.363,31.005 10.040,30.882 9.795,30.638 L 6.689,27.531 C 6.199,27.041 6.199,26.238 6.689,25.748 L 16.432,16.004 L 6.689,6.262 C 6.199,5.771 6.199,4.969 6.689,4.479 L 9.797,1.373 C 10.042,1.127 10.365,1.005 10.688,1.005" />                 
+                            
+                                <Path Fill="{TemplateBinding BackgroundThemeLevel}" Data="F1 M 10.686,31.505 C 10.214,31.505 9.773,31.324 9.441,30.994 L 6.335,27.884 C 5.649,27.199 5.649,26.080 6.335,25.394 L 15.723,16.004 L 6.335,6.616 C 6.003,6.283 5.822,5.840 5.822,5.367 C 5.822,4.898 6.005,4.455 6.337,4.125 L 9.441,1.019 C 9.773,0.687 10.216,0.505 10.688,0.505 C 11.160,0.505 11.603,0.687 11.934,1.019 L 25.672,14.756 C 26.000,15.087 26.184,15.530 26.184,16.004 C 26.184,16.480 26.000,16.922 25.672,17.254 L 11.932,30.994 C 11.599,31.324 11.158,31.505 10.686,31.505 L 10.686,31.505 Z"/>
+                                <Path Fill="{TemplateBinding BackgroundThemeLevel}" Data="F1 M 10.688,0.005 C 10.084,0.005 9.517,0.240 9.090,0.664 L 5.982,3.771 C 5.101,4.653 5.101,6.088 5.982,6.969 L 15.018,16.004 L 5.982,25.041 C 5.556,25.466 5.322,26.035 5.322,26.640 C 5.322,27.244 5.556,27.812 5.982,28.238 L 9.087,31.345 C 9.515,31.771 10.083,32.005 10.687,32.005 C 11.291,32.005 11.858,31.771 12.284,31.347 L 26.024,17.608 C 26.452,17.180 26.686,16.610 26.684,16.002 C 26.686,15.399 26.452,14.829 26.024,14.403 L 12.288,0.666 C 11.860,0.240 11.293,0.005 10.688,0.005 L 10.688,0.005 Z M 10.688,1.005 C 11.012,1.005 11.335,1.127 11.580,1.373 L 25.317,15.110 C 25.563,15.356 25.684,15.680 25.684,16.004 C 25.684,16.331 25.563,16.655 25.317,16.901 L 11.578,30.638 C 11.333,30.882 11.010,31.005 10.687,31.005 C 10.363,31.005 10.040,30.882 9.795,30.638 L 6.689,27.531 C 6.199,27.041 6.199,26.238 6.689,25.748 L 16.432,16.004 L 6.689,6.262 C 6.199,5.771 6.199,4.969 6.689,4.479 L 9.797,1.373 C 10.042,1.127 10.365,1.005 10.688,1.005" /> 
+                            </Grid>-->
+                        </Viewbox>
+                    </Viewbox>
+
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="Direction" Value="Up">
+                            <Setter Property="RenderTransform" TargetName="Arrow">
+                                <Setter.Value>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="-90"/>
+                                    </TransformGroup>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+
+                        <Trigger Property="Direction" Value="Left">
+                            <Setter Property="RenderTransform" TargetName="Arrow">
+                                <Setter.Value>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="180"/>
+                                    </TransformGroup>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+
+                        <Trigger Property="Direction" Value="Down">
+                            <Setter Property="RenderTransform" TargetName="Arrow">
+                                <Setter.Value>
+                                    <TransformGroup>
+                                        <RotateTransform Angle="90"/>
+                                    </TransformGroup>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Opacity" Value="0.3"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="ReefStatusDatabase">
+  <DataContextMoniker Name="/ReefStatusDatabaseDataContext" />
+  <nestedChildShapes>
+    <classShape Id="1cce3460-1ac4-4541-8d8d-f04fb5f3a411" absoluteBounds="0.75, 1.25, 2, 1.5891951497395831">
+      <DataClassMoniker Name="/ReefStatusDatabaseDataContext/DataLog" />
+      <nestedChildShapes>
+        <elementListCompartment Id="addf1796-f4cd-45ef-829f-a06ef4efc859" absoluteBounds="0.76500000000000012, 1.71, 1.9700000000000002, 1.0291951497395833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="1a39cf37-e17d-4d92-abf3-faa2c27352a6" absoluteBounds="3.5, 2.5, 2, 1.0961531575520833">
+      <DataClassMoniker Name="/ReefStatusDatabaseDataContext/DataType" />
+      <nestedChildShapes>
+        <elementListCompartment Id="0cb8238d-3b16-48c4-a9cc-18f8b14f59f4" absoluteBounds="3.5149999999999997, 2.96, 1.9700000000000002, 0.53615315755208326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(3.5 : 2.66959757486979); (2.75 : 2.66959757486979)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/ReefStatusDatabaseDataContext/DataType/DataType_DataLog" />
+      <nodes>
+        <classShapeMoniker Id="1a39cf37-e17d-4d92-abf3-faa2c27352a6" />
+        <classShapeMoniker Id="1cce3460-1ac4-4541-8d8d-f04fb5f3a411" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

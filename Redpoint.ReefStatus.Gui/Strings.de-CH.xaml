@@ -1,0 +1,343 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+  
+    <system:String x:Key="strOk">Ok</system:String>
+    <system:String x:Key="strClose">Schließen</system:String>
+    <system:String x:Key="strDefault">Standard</system:String>
+    <system:String x:Key="strCancel">Abbrechen</system:String>
+    <system:String x:Key="strYes">Ja</system:String>
+    <system:String x:Key="strNo">Nein</system:String>
+  
+    <system:String x:Key="strFontFamily">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFontSize">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFontTypeFace">NOT_TRANSLATED</system:String>
+    <system:String x:Key="stFontBold">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFontItalic">NOT_TRANSLATED</system:String>
+    <system:String x:Key="strFontUnderline">NOT_TRANSLATED</system:String>
+  
+  <!--Connection Tab-->
+    <system:String x:Key="strType">Verbindungsart</system:String>
+    <system:String x:Key="strNetwork">Netzwerk</system:String>
+    <system:String x:Key="strHostAddress">IP-Adresse</system:String>
+    <system:String x:Key="strPort">Port</system:String>
+    <system:String x:Key="strComPort">COM Port</system:String>
+    <system:String x:Key="strCom">COM</system:String>
+    <system:String x:Key="strDeviceAddress">Geräteadresse</system:String>
+    <system:String x:Key="strPassword">Kennwort</system:String>
+    <system:String x:Key="strGetAll">Alle Sensoren und Anschlüsse anzeigen</system:String>
+
+
+  <!--Data Points-->
+    <system:String x:Key="strTimeHeader">Zeit</system:String>
+    <system:String x:Key="strValueHeader">Wert</system:String>
+
+  <!--Data Settings-->
+    <system:String x:Key="strDataSettings">Verbindungseinstellungen Daten</system:String>
+    <system:String x:Key="strConnectionOptions">Verbindungseinstellungen</system:String>
+   <system:String x:Key="strDisplayName">Name</system:String>
+    <system:String x:Key="strUnits">Einheit</system:String>
+    <system:String x:Key="strColor">Farbe</system:String>
+
+    <system:String x:Key="strEMailonConnection">E-Mail bei verlorener Verbindung</system:String>
+    <system:String x:Key="strEMailonReminder">E-Mail bei Erinnerung</system:String>
+	<system:String x:Key="strEMailonAlarm">E-Mail bei Alarm</system:String>
+    <system:String x:Key="strEMailStatusEvery">E-Mail-Status jede(n)</system:String>
+    <system:String x:Key="strSendShortMessage">SMS senden</system:String>
+    <system:String x:Key="strEMailSettings">E-Mail-Einstellungen</system:String>
+    <system:String x:Key="strMailServer">Mail Server (SMTP)</system:String>
+    <system:String x:Key="strTo">an E-Mail-Adresse</system:String>
+    <system:String x:Key="strFrom">von E-Mail-Adresse</system:String>
+    <system:String x:Key="strMailServerAuthentication">Mail-Server-Authentifizierung</system:String>
+    <system:String x:Key="strMailServerRequiresAuthentication">Mail-Server erfordert Authentifizierung</system:String>
+    <system:String x:Key="strUserName">Benutzername</system:String>
+    <system:String x:Key="strTest">Test</system:String>
+
+    <system:String x:Key="strCodeHeader">Code</system:String>
+    <system:String x:Key="strMessageHeader">Nachricht</system:String>
+
+    <system:String x:Key="strSoftwareVersion">Software-Version:</system:String>
+    <system:String x:Key="strSoftwareDate">Datum der Software:</system:String>
+    <system:String x:Key="strModel">Modell:</system:String>
+    <system:String x:Key="strSerialNumber">Seriennummer:</system:String>
+    <system:String x:Key="strDeviceAddressInfo">Geräteadresse:</system:String>
+    <system:String x:Key="strAlarmInfo">Alarm:</system:String>
+    <system:String x:Key="strModeInfo">Modus:</system:String>
+    <system:String x:Key="strReminders">Erinnerungen</system:String>
+
+    <system:String x:Key="strLogEvery">Werte abfragen alle:</system:String>
+    <system:String x:Key="strMinutes">Minuten</system:String>
+    <system:String x:Key="strLimitDataPoints">max. Aufzeichnungsdauer:</system:String>
+    <system:String x:Key="strDatabase">Datenbank</system:String>
+    <system:String x:Key="strConnection">Pfad zur Datenbank</system:String>
+    <system:String x:Key="strArchiveEvery">archivieren jede(n)</system:String>
+    <system:String x:Key="strStatus">Status</system:String>
+    <system:String x:Key="strRecords">aufgezeichnete Datensätze:</system:String>
+    <system:String x:Key="strSessionWrite">Datensätze geschrieben</system:String>
+    <system:String x:Key="strSessionDelete">Datensätze gelöscht</system:String>
+    <system:String x:Key="strCleanUp">Aufzeichnungen löschen</system:String>
+
+    <system:String x:Key="strOptions">Einstellungen</system:String>
+    <system:String x:Key="strConnectionTab">Verbindung</system:String>
+    <system:String x:Key="strLoggingTab">Datenbank</system:String>
+    <system:String x:Key="strEMailTab">E-mail</system:String>
+    <system:String x:Key="strWebInterfaceTab">Web Interface</system:String>
+
+    <system:String x:Key="strDisplay">Anzeige</system:String>
+    <system:String x:Key="strView">View</system:String>
+    <system:String x:Key="strEnter">Enter</system:String>
+    <system:String x:Key="strEsc">Esc</system:String>
+
+    <system:String x:Key="strMin">Minimalwert</system:String>
+    <system:String x:Key="strMax">Maximalwert</system:String>
+    <system:String x:Key="strAverage">Mittelwert</system:String>
+    <system:String x:Key="strStdDeviation">Standardabweichung</system:String>
+    <system:String x:Key="strRefresh">Aktualisieren</system:String>
+
+    <system:String x:Key="strDate">Datum</system:String>
+    <system:String x:Key="strValue">Wert</system:String>
+
+    <system:String x:Key="strUpdateUserValue">WERT AKTUALISIEREN</system:String>
+
+    
+
+    <system:String x:Key="strUpdateDosing">Dosierung</system:String>
+    <system:String x:Key="strRateperDosing">Dosierrate</system:String>
+    <system:String x:Key="strDosingperday">Dosierung pro Tag</system:String>
+
+    <system:String x:Key="strEnabled">Enabled</system:String>
+    <system:String x:Key="strSettings">Einstellungen</system:String>
+    <system:String x:Key="strProtededAccess">geschützter Zugang</system:String>
+    <system:String x:Key="strViewWebsite">Web Interface anzeigen</system:String>
+    <system:String x:Key="strReport">Bericht</system:String>
+    <system:String x:Key="strDataPoints">Messpunkte</system:String>
+    <system:String x:Key="strGraph">Graphik</system:String>
+    <system:String x:Key="strRange">Bereich</system:String>
+
+    <system:String x:Key="strAll">Alle</system:String>
+    <system:String x:Key="strDay">Tag</system:String>
+    <system:String x:Key="strWeek">Woche</system:String>
+    <system:String x:Key="strMonth">Monat</system:String>
+    <system:String x:Key="strYear">Jahr</system:String>
+
+    <system:String x:Key="strProbes">Sonden</system:String>
+    <system:String x:Key="strLevelSensors">Niveausensoren</system:String>
+    <system:String x:Key="strDigitalInputs">Digitale Schalteingänge</system:String>
+    <system:String x:Key="strSPorts">Schaltsteckdosen</system:String>
+    <system:String x:Key="strLPorts">1-10V Anschlüsse</system:String>
+    <system:String x:Key="strLights">Beleuchtung</system:String>
+    <system:String x:Key="strDosing">Dosierpumpen</system:String>
+    <system:String x:Key="strOtherParam">Eigene Werte</system:String>
+    <system:String x:Key="strCurrentPumps">Strömungspumpen</system:String>
+	
+    <system:String x:Key="strClearAlarm">Alarm bestätigen</system:String>
+    <system:String x:Key="strStartWaterChange">Wasserwechsel durchführen</system:String>
+
+    <system:String x:Key="strUpdate">Aktualisieren</system:String>
+    <system:String x:Key="strAddDataItem">Neue Parameter anlegen</system:String>
+    <system:String x:Key="strName">Name</system:String>
+    <system:String x:Key="strMode">Modus</system:String>
+    <system:String x:Key="strState">Status</system:String>
+
+    <system:String x:Key="strDelete">Löschen</system:String>
+
+    <system:String x:Key="strInfo">Info</system:String>
+
+  <system:String x:Key="strReefStatus">Reef Status</system:String>
+    <system:String x:Key="strAlarmReefStatus">ALARM! - Reef Status</system:String>
+
+
+    <system:String x:Key="strLogNow">Log-Daten</system:String>
+    <system:String x:Key="strProfiluxControl">ProfiLux Control</system:String>
+    <system:String x:Key="strAbout">Über</system:String>
+    <system:String x:Key="strExit">Beenden</system:String>
+    <system:String x:Key="strRemote">Fernbedienung</system:String>
+    <system:String x:Key="strFeedPause">Futterpause</system:String>
+    <system:String x:Key="strMaintenance">Wartung</system:String>
+    <system:String x:Key="strManualSockets">Schaltsteckdosen manuell schalten</system:String>
+    <system:String x:Key="strManualIllumination">Beleuchtung manuell schalten</system:String>
+    <system:String x:Key="strImportFromFile">Importieren aus Datei</system:String>
+    <system:String x:Key="strImportFromProfilux">Importieren aus ProfiLux</system:String>
+    <system:String x:Key="strImportFromDatabase">Importieren aus einer Datenbanken</system:String>
+    <system:String x:Key="strExportData">Daten exportieren</system:String>
+    <system:String x:Key="strMenu">Menü</system:String>
+    <system:String x:Key="strTools">Tools</system:String>
+    <system:String x:Key="strCommands">Befehle</system:String>
+    <system:String x:Key="strOperations">???</system:String>
+    <system:String x:Key="strImportData">Daten importieren</system:String>
+    <system:String x:Key="strLayout">Layout</system:String>
+    <system:String x:Key="strGrid">Gitter</system:String>
+    <system:String x:Key="strHome">Home</system:String>
+
+    <system:String x:Key="strDateTime">Datum/Zeit</system:String>
+    <system:String x:Key="strConvertingTable">Konvertieren der Tabelle </system:String>
+
+    <system:String x:Key="strWritingHeader">Das Schreiben der Header </system:String>
+    <system:String x:Key="strProcessing">Verarbeitung </system:String>
+    <system:String x:Key="strAddingRecordstodatabase">Hinzufügen der Datenbank-Records</system:String>
+
+    <system:String x:Key="strReminder">Erinnerung:</system:String>
+    <system:String x:Key="strReminderEmailMessage">Reef Status erinnert Sie, dass die "{0}" jetzt fällig ist.</system:String>
+
+    <system:String x:Key="strtooHigh">{0} ist zu hoch</system:String>
+    <system:String x:Key="strtooLow">{0} ist zu niedrig</system:String>
+    <system:String x:Key="strTimeout">{0} ist abgelaufen</system:String>
+
+    <system:String x:Key="strAlarmDetected">Alarm! </system:String>
+    <system:String x:Key="strAlarmCleared">Alarm gelöscht</system:String>
+    <system:String x:Key="strReason">Grund: </system:String>
+    <system:String x:Key="strStatusUpdate">Status-Update</system:String>
+    <system:String x:Key="strAlarm">Alarm</system:String>
+
+    <system:String x:Key="strLastUpdate">Letzte Abfrage:</system:String>
+    <system:String x:Key="strClear">Deaktivieren</system:String>
+
+    <system:String x:Key="strDosingUnits">ml/Tag</system:String>
+    <system:String x:Key="strLog">Logdatei</system:String>
+
+    <system:String x:Key="strNotEnabled">Nicht aktiv</system:String>
+    <system:String x:Key="strAutoTopOff">Füllstandsregelung</system:String>
+    <system:String x:Key="strMinMaxControl">Min/Max-Regelung</system:String>
+    <system:String x:Key="strWaterChange">Wasserwechsel</system:String>
+    <system:String x:Key="strLeekageDetection">Leckage-Überwachung</system:String>
+    <system:String x:Key="strWaterChangeAndAutoTopOff">Wasserwechsel und Füllstandsregelung</system:String>
+    <system:String x:Key="strAutoTopOffWith2Sensors">Füllstandsregelung mit 2 Sensoren</system:String>
+    <system:String x:Key="strReturnPump">Rückförderpumpe</system:String>
+
+    <system:String x:Key="strOff">Aus</system:String>
+    <system:String x:Key="strOn">An</system:String>
+
+    <system:String x:Key="strNotUsed">Nicht verwendet</system:String>
+    <system:String x:Key="strLevelSensor">Niveausensor</system:String>
+    <system:String x:Key="strFeedingPause">Futterpause</system:String>
+
+    <system:String x:Key="strInvert">Umkehren</system:String>
+    <system:String x:Key="strSensor">Fühler</system:String>
+
+    <system:String x:Key="strTimer">Zeitschaltuhr</system:String>
+    <system:String x:Key="strDecrease">senken</system:String>
+    <system:String x:Key="strIncrease">erhöhen</system:String>
+    <system:String x:Key="strSubstrate">Bodenheizung</system:String>
+    <system:String x:Key="strProbeAlarm">Alarm</system:String>
+    <system:String x:Key="strWater">Wasser</system:String>
+    <system:String x:Key="strCurrentPump">Strömungspumpe</system:String>
+    <system:String x:Key="strProgrammableLogic">Programmierbare Logik</system:String>
+    <system:String x:Key="strVariableIllumination">Variable Beleuchtung</system:String>
+    <system:String x:Key="strTempPTC">Temperatur PTC</system:String>
+    <system:String x:Key="strDigtialInput">Digitale Schalteingänge</system:String>
+    <system:String x:Key="strThunderStorm">Gewitter</system:String>
+    <system:String x:Key="strFilter">Filter</system:String>
+    <system:String x:Key="strAlwaysOn">Immer an</system:String>
+    <system:String x:Key="strAlwaysOff">Immer aus</system:String>
+    <system:String x:Key="strThunder">Gewitter</system:String>
+
+    <system:String x:Key="strNone">Keiner</system:String>
+    <system:String x:Key="strTabbed">Register</system:String>
+    <system:String x:Key="strAuto">Auto</system:String>
+
+    <system:String x:Key="strShowLog">Zeige Log</system:String>
+    <system:String x:Key="strOpenLogfile">Öffnet die Protokolldatei</system:String>
+    <system:String x:Key="strStop">Halten</system:String>
+
+    <system:String x:Key="strNormal">Normal</system:String>
+    <system:String x:Key="strDiagnostics">Diagnose</system:String>
+    <system:String x:Key="strLightTest">Test Lichtszenarien</system:String>
+    <system:String x:Key="strCanTransparent">CAN Transparent</system:String>
+
+    <system:String x:Key="strReset">zurückgesetzt</system:String>
+
+    <system:String x:Key="strWaterChangefor">Wasser wechseln für </system:String>
+    <system:String x:Key="strStarted"> gestartet</system:String>
+    <system:String x:Key="strUpdated">Aktualisiert </system:String>
+    <system:String x:Key="strDosingRateTo "> Dosierrate zu </system:String>
+    <system:String x:Key="strLevelSensorAlarm">Niveausensor Alarm </system:String>
+    <system:String x:Key="strCleared"> gelöscht</system:String>
+    <system:String x:Key="strThunderstormStarted">Gewitter gestartet,für: </system:String>
+    <system:String x:Key="strSetOperationMode">Eingestellten Betriebsart zu </system:String>
+    <system:String x:Key="strMaintenanceMode1">Wartung </system:String>
+    <system:String x:Key="strDisabled">Deaktiviert</system:String>
+    <system:String x:Key="strFeedPauseSet">Futterpause gesetzt </system:String>
+    <system:String x:Key="strOperationModechanged">Betriebsart geändert werden, um</system:String>
+    <system:String x:Key="strIsNotOverdue">ist nicht fällig</system:String>
+    <system:String x:Key="strIsOverdue"> ist überfällig</system:String>
+
+    <system:String x:Key="strImport">Importieren</system:String>
+    <system:String x:Key="strUpdateGraph">Update Graph</system:String>
+
+    <system:String x:Key="strCleaningUp">Bereinigen</system:String>
+
+    <system:String x:Key="strController">Controller</system:String>
+    <system:String x:Key="strSelectController">Wählen Sie einen Controller</system:String>
+
+    <system:String x:Key="strOperationalHours">Im Betrieb: </system:String>
+
+    <system:String x:Key="strAdd">Hinzufügen</system:String>
+
+    <system:String x:Key="strMoonPhase">Mondphase:</system:String>
+    <system:String x:Key="strLongitude">Längengrad:</system:String>
+    <system:String x:Key="strLatitude">Breitengrad:</system:String>
+
+    <system:String x:Key="strWebSite">Webseite</system:String>
+	
+	<system:String x:Key="strDataItem">Datenauswertung/Aktionen</system:String>
+    <system:String x:Key="strViewGroup">Ansicht</system:String>
+    <system:String x:Key="strAction">Aktionen</system:String>
+    <system:String x:Key="strParameters">Parameter</system:String>
+    <system:String x:Key="strResetOperationalHours">zurücksetzen</system:String>
+    <system:String x:Key="strResetOperationalHoursEvent">Betriebszeiten für {0} Zurücksetzen</system:String>
+	<system:String x:Key="strOpHoursOver">{0} hat seine maximale Betriebszeit erreicht</system:String>
+
+	<system:String x:Key="strColorPickerCurrentPaletteCaption">Aktuelle Farbpalette</system:String>
+    <system:String x:Key="strColorPickerDerivedColorPalettesCaption">Standardfarben</system:String>
+    <system:String x:Key="strColorPickerRecentColorPaletteCaption">Letzte Farbauswahl</system:String>
+    <system:String x:Key="strColorPickerAdvancedButtonCaption">Erweiterte Farbauswahl</system:String>
+	
+	<system:String x:Key="strReminderHeaderText">Erinnerungstext</system:String>
+    <system:String x:Key="strReminderHeaderDate">Datum</system:String>
+
+    <system:String x:Key="strReminderDue">am:</system:String>
+    <system:String x:Key="strReminderReset">erledigt</system:String>
+	
+    <system:String x:Key="strDousingRate">Dosierrate</system:String>
+    <system:String x:Key="strItemSettings">Anpassen</system:String>
+    <system:String x:Key="strSavetoDatabase">Wert in der Datenbank sichern:</system:String>
+	<system:String x:Key="strDatabaseType">Datenbanktyp:</system:String>
+    <system:String x:Key="strReminderMaxHours">Ereigniserinnerung in Stunden</system:String>
+    <system:String x:Key="strCustomConverter">Benutzerdefinierter Wert</system:String>	
+    <system:String x:Key="strFW">FW:</system:String>
+    <system:String x:Key="strCurrent">Aktuell</system:String>
+	<system:String x:Key="strNominal">Normalwert</system:String>
+    <system:String x:Key="strHighRange">Maximalwert</system:String>
+    <system:String x:Key="strLowRange">Minimalwert</system:String>
+	
+	
+    <system:String x:Key="strChart">Chart</system:String>
+    <system:String x:Key="strDailyAverage">Tagesmittel</system:String>
+    <system:String x:Key="strWeeklyAverage">Wochenmittel</system:String>
+    <system:String x:Key="strMonthlyAverage">Monatsmittel</system:String>
+    <system:String x:Key="strCalander">Kalender</system:String>
+    <system:String x:Key="strMaxCalander">Maximalwert:</system:String>
+    <system:String x:Key="strMinCalander">Minimalwert:</system:String>
+    <system:String x:Key="strMaintenance1">Wartung 1</system:String>
+    <system:String x:Key="strMaintenance2">Wartung 2</system:String>
+    <system:String x:Key="strMaintenance3">Wartung 3</system:String>
+    <system:String x:Key="strMaintenance4">Wartung 4</system:String>
+	
+	<system:String x:Key="str0per">0%</system:String>
+    <system:String x:Key="str100per">100%</system:String>
+	
+   	<system:String x:Key="strLightsOn">Alle Leuchten an</system:String>
+    <system:String x:Key="strLightsOff">Alle Leuchten aus</system:String>
+
+    <system:String x:Key="strFile">Datei</system:String>
+    <system:String x:Key="strDays">Tage</system:String>
+    <system:String x:Key="strHours">Stunden</system:String>
+	
+	<system:String x:Key="strReady">READY</system:String>
+    <system:String x:Key="strFilling">FILLING</system:String>
+    <system:String x:Key="strDraining">DRAINING</system:String>
+	
+	<system:String x:Key="strThunderstorm">Gewitter</system:String>
+    <system:String x:Key="strDuration">Dauer</system:String>
+	
+</ResourceDictionary>

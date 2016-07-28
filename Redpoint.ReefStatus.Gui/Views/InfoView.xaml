@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="RedPoint.ReefStatus.Gui.Views.InfoView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Converters="clr-namespace:RedPoint.ReefStatus.Gui.Converters">
+    
+    <UserControl.Resources>
+        <Converters:DateTimeToShortDateString x:Key="dateTimeToShortDateString"/>
+        <Converters:EnumToFriendlyNameConverter x:Key="enumToFriendlyNameConverter"/>
+        <Converters:DoubleToLocation x:Key="doubleToLocation"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Margin="3" Grid.Row="0" Grid.Column="0" Text ="{DynamicResource strSoftwareVersion}"/>
+        <TextBlock Margin="3" Grid.Row="0" Grid.Column="1" Text ="{Binding SoftwareVersion}"/>
+
+        <TextBlock Margin="3" Grid.Row="1" Grid.Column="0" Text ="{DynamicResource strSoftwareDate}"/>
+        <TextBlock Margin="3" Grid.Row="1" Grid.Column="1" Text ="{Binding SoftwareDate, Converter={StaticResource dateTimeToShortDateString}}"/>
+
+        <TextBlock Margin="3" Grid.Row="2" Grid.Column="0" Text ="{DynamicResource strModel}"/>
+        <TextBlock Margin="3" Grid.Row="2" Grid.Column="1" Text ="{Binding Model}"/>
+        
+        <TextBlock Margin="3" Grid.Row="3" Grid.Column="0" Text ="{DynamicResource strSerialNumber}"/>
+        <TextBlock Margin="3" Grid.Row="3" Grid.Column="1" Text ="{Binding SerialNumber}"/>
+        
+        <TextBlock Margin="3" Grid.Row="4" Grid.Column="0" Text ="{DynamicResource strDeviceAddressInfo}"/>
+        <TextBlock Margin="3" Grid.Row="4" Grid.Column="1" Text ="{Binding DeviceAddress}"/>
+        
+        <TextBlock Margin="3" Grid.Row="5" Grid.Column="0" Text ="{DynamicResource strAlarmInfo}"/>
+        <TextBlock Margin="3" Grid.Row="5" Grid.Column="1" Text ="{Binding Alarm, Converter={StaticResource enumToFriendlyNameConverter}}"/>
+        
+        <TextBlock Margin="3" Grid.Row="6" Grid.Column="0" Text ="{DynamicResource strModeInfo}"/>
+        <TextBlock Margin="3" Grid.Row="6" Grid.Column="1" Text ="{Binding OperationMode, Converter={StaticResource enumToFriendlyNameConverter}}"/>
+
+        <TextBlock Margin="3" Grid.Row="7" Grid.Column="0" Text ="{DynamicResource strMoonPhase}"/>
+        <StackPanel Margin="3" Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
+            <TextBlock Text ="{Binding MoonPhase}"/>
+            <TextBlock Text ="%"/>
+        </StackPanel>
+
+        <TextBlock Margin="3" Grid.Row="8" Grid.Column="0" Text ="{DynamicResource strLongitude}"/>
+        <TextBlock Margin="3" Grid.Row="8" Grid.Column="1" Text ="{Binding Longitude, Converter={StaticResource doubleToLocation}}"/>
+
+        <TextBlock Margin="3" Grid.Row="9" Grid.Column="0" Text ="{DynamicResource strLatitude}"/>
+        <TextBlock Margin="3" Grid.Row="9" Grid.Column="1" Text ="{Binding Latitude, Converter={StaticResource doubleToLocation}}"/>
+
+        <TextBlock Margin="3" Grid.Row="10" Grid.Column="0" Text ="{DynamicResource strLastUpdate}"/>
+		<TextBlock Margin="3" Grid.Row="10" Grid.Column="1" Text ="{Binding LastUpdate}"/>
+    </Grid>
+</UserControl>

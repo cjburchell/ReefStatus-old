@@ -1,0 +1,509 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:Controls1="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls" 
+    xmlns:Converters="clr-namespace:RedPoint.ReefStatus.Common.UI.Converters">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="../Animations/HoverFade.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="PressedBorder" TargetType="{x:Type Border}">
+        <Setter Property="Visibility" Value="Hidden"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Setter Property="Visibility" Value="Visible"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="HoverBorder" TargetType="{x:Type Border}">
+        <Setter Property="Opacity" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeIn}"/>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeOut}"/>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="HoverControl" TargetType="{x:Type UserControl}">
+        <Setter Property="Opacity" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeIn}"/>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeOut}"/>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PressedPath" TargetType="{x:Type Path}">
+        <Setter Property="Visibility" Value="Hidden"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Setter Property="Visibility" Value="Visible"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="HoverPath" TargetType="{x:Type Path}">
+        <Setter Property="Opacity" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeIn}"/>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeOut}"/>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="ChromePressedEllipse" TargetType="{x:Type Ellipse}">
+        <Setter Property="Visibility" Value="Hidden"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Setter Property="Visibility" Value="Visible"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ChromeHoverEllipse" TargetType="{x:Type Ellipse}">
+        <Setter Property="Opacity" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="Tag" Value="Show">
+                <Trigger.EnterActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeIn}"/>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                    <BeginStoryboard Storyboard="{StaticResource HoverFadeOut}"/>
+                </Trigger.ExitActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+    <Style TargetType="{x:Type Controls1:Chrome}" x:Key="DefaultChromeStyle" >
+        <Setter Property="PressedBorder" Value="{DynamicResource PressedBrush}"/>
+        <Setter Property="PressedChrome" Value="{DynamicResource PressedChrome}"/>
+        <Setter Property="PressedBackground" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="HoverBorder" Value="{DynamicResource ThemeColor05}"/>
+        <Setter Property="HoverBackground" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="HoverChrome" Value="{DynamicResource HoverChrome}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Controls1:Chrome}">
+                    <Grid>
+                        <Border CornerRadius="{TemplateBinding CornerRadius}" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" />
+
+                        <Border CornerRadius="{TemplateBinding CornerRadius}" 
+                                Background="{TemplateBinding ChromeBackground}" 
+                                BorderBrush="{TemplateBinding ChromeBorder}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" />
+                        
+                        <Border x:Name="Hover" 
+                                Style="{DynamicResource HoverBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding HoverBorder}"
+                                Background ="{TemplateBinding HoverBackground}"/>
+
+                        <Border x:Name="HoverChrome" 
+                                Style="{DynamicResource HoverBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding HoverChromeBorder}"
+                                Background ="{TemplateBinding HoverChrome}"/>
+
+                        <Border x:Name="Pressed" 
+                                Style="{DynamicResource PressedBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding PressedBorder}"
+                                Background ="{TemplateBinding PressedBackground}"/>
+
+                        <Border x:Name="PressedChrome" 
+                                Style="{DynamicResource PressedBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding PressedChromeBorder}"
+                                Background ="{TemplateBinding PressedChrome}"/>
+
+                        <!-- Content Presenter is where the text content etc is placed by the control -->
+                        <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+                        <Grid Margin="{TemplateBinding BorderThickness}">
+                            <ContentPresenter x:Name="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter Property="Tag" Value="Show" TargetName="Hover"/>
+                            <Setter Property="Tag" Value="Show" TargetName="HoverChrome"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                            <Setter Property="Tag" Value="Show" TargetName="PressedChrome"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                            <Setter Property="Tag" Value="Hidden" TargetName="Hover"/>
+                            <Setter Property="Tag" Value="Hidden" TargetName="HoverChrome"/>
+                        </Trigger>
+
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                            <Setter Property="Tag" Value="Show" TargetName="PressedChrome"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                            <Setter Property="Tag" Value="Hidden" TargetName="Hover"/>
+                            <Setter Property="Tag" Value="Hidden" TargetName="HoverChrome"/>
+                        </Trigger>
+                        
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style TargetType="{x:Type Controls1:Chrome}" x:Key="SimpleChromeStyle" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Controls1:Chrome}">
+                    <Grid>
+                        <Border CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" />
+
+                        <Border CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding ChromeBackground}" BorderBrush="{TemplateBinding ChromeBorder}" BorderThickness="{TemplateBinding BorderThickness}" />
+                        <!-- Content Presenter is where the text content etc is placed by the control -->
+                        <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+                        <Grid Margin="{TemplateBinding BorderThickness}">
+                        <ContentPresenter x:Name="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type Controls1:Chrome}" BasedOn="{StaticResource DefaultChromeStyle}">
+    </Style>
+
+    <ControlTemplate x:Key="LargeArrowChromeTemplate" TargetType="{x:Type Controls1:Chrome}">
+        <Grid>
+            <Border CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" />
+            <Border CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding ChromeBackground}" BorderBrush="{TemplateBinding ChromeBorder}" BorderThickness="{TemplateBinding BorderThickness}" />
+
+            <Border x:Name="Hover" 
+                                Style="{DynamicResource HoverBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding HoverBorder}"
+                                Background ="{TemplateBinding HoverBackground}"/>
+
+            <Border x:Name="HoverChrome" 
+                                Style="{DynamicResource HoverBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding HoverChromeBorder}"
+                                Background ="{TemplateBinding HoverChrome}"/>
+
+            <Border x:Name="Pressed" 
+                                Style="{DynamicResource PressedBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding PressedBorder}"
+                                Background ="{TemplateBinding PressedBackground}"/>
+
+            <Border x:Name="PressedChrome" 
+                                Style="{DynamicResource PressedBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding PressedChromeBorder}"
+                                Background ="{TemplateBinding PressedChrome}"/>
+
+            <!-- Content Presenter is where the text content etc is placed by the control -->
+            <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+            <Grid Margin="{TemplateBinding BorderThickness}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="9*"/>
+                    <ColumnDefinition Width="*" MinWidth="20"/>
+                </Grid.ColumnDefinitions>
+                <Viewbox Grid.Column="1">
+                    <Controls1:Arrow x:Name="Arrow" Direction="Down" Margin="5"/>
+                </Viewbox>
+                <ContentPresenter x:Name="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Show" TargetName="HoverChrome"/>
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                <Setter Property="Tag" Value="Show" TargetName="PressedChrome"/>
+                <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="HoverChrome"/>
+            </Trigger>
+
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                <Setter Property="Tag" Value="Show" TargetName="PressedChrome"/>
+                <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="HoverChrome"/>
+            </Trigger>
+
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="ChromeCircleTemplate" TargetType="{x:Type Controls1:Chrome}">
+        <ControlTemplate.Resources>
+            <Converters:ThicknessToDoubleConverter x:Key="ThicknessToDoubleConverter"/>
+        </ControlTemplate.Resources>
+        <Grid>
+            <Ellipse Fill="{TemplateBinding Background}" 
+            Stroke="{TemplateBinding BorderBrush}" 
+            StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}"/>
+            
+            <Ellipse Fill="{TemplateBinding ChromeBackground}" 
+            Stroke="{TemplateBinding ChromeBorder}" 
+            StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}" />
+
+            <Ellipse x:Name="Hover" 
+                                Style="{DynamicResource ChromeHoverEllipse}" 
+                                StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}"
+                                Stroke ="{TemplateBinding HoverBorder}"
+                                Fill ="{TemplateBinding HoverBackground}"/>
+
+            <Ellipse x:Name="HoverChrome" 
+                                Style="{DynamicResource ChromeHoverEllipse}" 
+                                StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}"
+                                Stroke ="{TemplateBinding HoverChromeBorder}"
+                                Fill ="{TemplateBinding HoverChrome}"/>
+
+            <Ellipse x:Name="Pressed" 
+                                Style="{DynamicResource ChromePressedEllipse}" 
+                                StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}"
+                                Stroke ="{TemplateBinding PressedBorder}"
+                                Fill ="{TemplateBinding PressedBackground}"/>
+
+            <Ellipse x:Name="PressedChrome" 
+                                Style="{DynamicResource ChromePressedEllipse}" 
+                                StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}"
+                                Stroke ="{TemplateBinding HoverChromeBorder}"
+                                Fill ="{TemplateBinding PressedChrome}"/>
+
+            <!-- Content Presenter is where the text content etc is placed by the control -->
+            <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+            <Grid Margin="{TemplateBinding BorderThickness}">
+                <ContentPresenter x:Name="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Show" TargetName="HoverChrome"/>
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                <Setter Property="Tag" Value="Show" TargetName="PressedChrome"/>
+                <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="HoverChrome"/>
+            </Trigger>
+
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                <Setter Property="Tag" Value="Show" TargetName="PressedChrome"/>
+                <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="Hover"/>
+                <Setter Property="Tag" Value="Hidden" TargetName="HoverChrome"/>
+            </Trigger>
+
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="CromeCircle" TargetType="{x:Type Controls1:Chrome}" BasedOn="{StaticResource DefaultChromeStyle}">
+        <Setter Property="Template" Value="{DynamicResource ChromeCircleTemplate}"/>
+    </Style>
+    
+    <Style x:Key="ControlChromeStyle" TargetType="{x:Type Controls1:Chrome}"  BasedOn="{StaticResource DefaultChromeStyle}">
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="ChromeBackground" Value="{DynamicResource ControlBackgroudGradiant}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="ChromeBorder" Value="{DynamicResource ThemeColor05}"/>
+        
+        <Setter Property="PressedChrome" Value="{DynamicResource PressedChrome}"/>
+        <Setter Property="PressedBackground" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        
+        <Setter Property="HoverBackground" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="HoverChrome" Value="{DynamicResource HoverChrome}"/>
+        
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Background" Value="{DynamicResource InactiveBackgroundColor}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource InactiveBorderColor}"/>
+                </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="CromeWithArrowStyle" TargetType="{x:Type Controls1:Chrome}" BasedOn="{StaticResource ControlChromeStyle}">
+        <Setter Property="Template" Value="{DynamicResource LargeArrowChromeTemplate}"/>
+    </Style>
+
+    <Style x:Key="ControlChromeCircle" TargetType="{x:Type Controls1:Chrome}" BasedOn="{StaticResource ControlChromeStyle}">
+    	<Setter Property="Template" Value="{DynamicResource ChromeCircleTemplate}"/>
+    </Style>
+    
+    <Style x:Key="FlatChromeStyle" TargetType="{x:Type Controls1:Chrome}"  BasedOn="{StaticResource DefaultChromeStyle}">
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="ChromeBackground" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="ChromeBorder" Value="Transparent"/>
+        
+        <Setter Property="PressedChrome" Value="{DynamicResource PressedChrome}"/>
+        <Setter Property="PressedBackground" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="PressedBorder" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="PressedChromeBorder" Value="{DynamicResource ThemeColor05}"/>
+        
+        <Setter Property="HoverBackground" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="HoverChrome" Value="{DynamicResource HoverChrome}"/>
+        <Setter Property="HoverBorder" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="HoverChromeBorder" Value="{DynamicResource ThemeColor05}"/>
+    </Style>
+    
+    <Style x:Key="FlatChromeCircle" TargetType="{x:Type Controls1:Chrome}" BasedOn="{StaticResource FlatChromeStyle}">
+    	<Setter Property="Template" Value="{DynamicResource ChromeCircleTemplate}"/>
+    </Style>
+    
+    <Style x:Key="NoHoverChromeStyle" TargetType="{x:Type Controls1:Chrome}"  BasedOn="{StaticResource SimpleChromeStyle}">
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="ChromeBackground" Value="{DynamicResource ThemeColor11}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="ChromeBorder" Value="{DynamicResource ThemeColor05}"/>
+        
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Background" Value="{DynamicResource InactiveBackgroundColor}"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource InactiveBorderColor}"/>
+                </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <Style x:Key="ChromeBorderStyle" TargetType="{x:Type Controls1:Chrome}"  BasedOn="{StaticResource SimpleChromeStyle}">
+        <Setter Property="CornerRadius" Value="2"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="ChromeBackground" Value="{DynamicResource ThemeColor0}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ThemeBaseColorBrush}"/>
+        <Setter Property="ChromeBorder" Value="{DynamicResource ThemeColor05}"/>
+    </Style>
+    
+    <ControlTemplate x:Key="SmallArrowChromeTemplate" TargetType="{x:Type Controls1:Chrome}">
+                    <Grid>
+                        <Border CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" />
+
+                        <Border CornerRadius="{TemplateBinding CornerRadius}" Background="{TemplateBinding ChromeBackground}" BorderBrush="{TemplateBinding ChromeBorder}" BorderThickness="{TemplateBinding BorderThickness}" />
+
+                        <Border x:Name="Hover" 
+                                Style="{DynamicResource HoverBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding HoverBorder}"
+                                Background ="{TemplateBinding HoverBackground}"/>
+
+                        <Border x:Name="HoverChrome" 
+                                Style="{DynamicResource HoverBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding HoverChromeBorder}"
+                                Background ="{TemplateBinding HoverChrome}"/>
+
+                        <Border x:Name="Pressed" 
+                                Style="{DynamicResource PressedBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding PressedBorder}"
+                                Background ="{TemplateBinding PressedBackground}"/>
+
+                        <Border x:Name="PressedChrome" 
+                                Style="{DynamicResource PressedBorder}" 
+                                CornerRadius="{TemplateBinding CornerRadius}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush ="{TemplateBinding PressedChromeBorder}"
+                                Background ="{TemplateBinding PressedChrome}"/>
+
+                        <!-- Content Presenter is where the text content etc is placed by the control -->
+                        <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+                        <Grid Margin="{TemplateBinding BorderThickness}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="9*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Grid.Column="1" Width="6" Height="6" Margin="5">
+                                <Rectangle.Fill>
+                                    <DrawingBrush Stretch="Uniform">
+                                        <DrawingBrush.Drawing>
+                                            <DrawingGroup>
+                                                <DrawingGroup.Children>
+                                                    <GeometryDrawing Brush="{DynamicResource ThemeColor11}" Geometry="F1 M 12.867,0.160002L 0.16,0.18363L 6.53394,11.1764L 12.867,0.160002 Z ">
+                                                        <GeometryDrawing.Pen>
+                                                            <Pen Thickness="0.32" LineJoin="Round" Brush="{DynamicResource ThemeColor11}"/>
+                                                        </GeometryDrawing.Pen>
+                                                    </GeometryDrawing>
+                                                </DrawingGroup.Children>
+                                            </DrawingGroup>
+                                        </DrawingBrush.Drawing>
+                                    </DrawingBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <ContentPresenter x:Name="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter Property="Tag" Value="Show" TargetName="Hover"/>
+                            <Setter Property="Tag" Value="Show" TargetName="HoverChrome"/>
+                        </Trigger>
+
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                            <Setter Property="Tag" Value="Show" TargetName="PressedChrome"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Tag" Value="Show" TargetName="Pressed"/>
+                            <Setter Property="Foreground" Value="{DynamicResource PressedTextColor}"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+
+    <Style x:Key="FlatChromeWithArrowStyle" TargetType="{x:Type Controls1:Chrome}" BasedOn="{StaticResource FlatChromeStyle}">
+        <Setter Property="Template" Value="{DynamicResource SmallArrowChromeTemplate}"/>
+    </Style>
+
+
+</ResourceDictionary>

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Database Name="ReefStatus" Class="ReefStatusDatabaseDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=CBURCHELL\SQLEXPRESS;Initial Catalog=ReefStatus;Integrated Security=True;Pooling=False" SettingsObjectName="RedPoint.ReefStatus.Common.Properties.Settings" SettingsPropertyName="ReefStatusConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.DataLog" Member="DataLogs">
+    <Type Name="DataLog">
+      <Column Name="[Index]" Member="Index" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Time" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Value" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="Type" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Controller" Type="System.Int16" DbType="SmallInt NOT NULL" CanBeNull="false" />
+      <Association Name="DataType_DataLog" Member="DataType" ThisKey="Type" OtherKey="Index" Type="DataType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DataTypes" Member="DataTypes">
+    <Type Name="DataType">
+      <Column Name="[Index]" Member="Index" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Type" Type="System.String" DbType="NChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="DataType_DataLog" Member="DataLogs" ThisKey="Index" OtherKey="Type" Type="DataLog" />
+    </Type>
+  </Table>
+</Database>

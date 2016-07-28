@@ -1,0 +1,1762 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:RedPoint.ReefStatus.Gui.Converters"
+    xmlns:controls="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls;assembly=RedPoint.ReefStatus.Common.UI"
+    xmlns:views="clr-namespace:RedPoint.ReefStatus.Gui.Views"
+    xmlns:controls1="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit.Extended"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:profiLux="clr-namespace:RedPoint.ReefStatus.Common.ProfiLux;assembly=RedPoint.ReefStatus.Common"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:viewModels="clr-namespace:RedPoint.ReefStatus.Gui.ViewModels"
+    xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    mc:Ignorable="d"
+    x:Class="RedPoint.ReefStatus.Gui.Views.StatusView"
+    x:Name="statusView" d:DesignWidth="800" d:DesignHeight="568"
+    d:DataContext="{d:DesignInstance viewModels:ControllerViewModel}">
+    <UserControl.Resources>
+        <converters:EnumToFriendlyNameConverter x:Key="enumToFriendlyNameConverter" />
+        <converters:IntToTimeSpanString x:Key="intToTimeSpanString" />
+        <converters:DateTimeToShortDateString x:Key="dateTimeToShortDateString" />
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+        <converters:IntToTimeString x:Key="IntToTimeString" />
+        <converters:OperationModeToBool x:Key="operationModeToBool" />
+
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type system:Enum}" x:Key="GraphRangeTypeValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="profiLux:GraphRange" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <system:Double x:Key="buttonImageSize">28</system:Double>
+
+        <Style x:Key="SensorItemImage" TargetType="{x:Type Image}">
+            <Setter Property="Source" Value="{DynamicResource imgTemp}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsOverMaxOperationHours}" Value="True">
+                    <Setter Property="Source" Value="{StaticResource imgTemp_Warn}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsAlarmOn}" Value="On">
+                    <Setter Property="Source" Value="{StaticResource imgTemp_Alarm}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="LevelItemImage" TargetType="{x:Type Image}">
+            <Setter Property="Source" Value="{DynamicResource imgWater}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsAlarmOn}" Value="On">
+                    <Setter Property="Source" Value="{StaticResource imgWater_Alarm}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="LightItemImage" TargetType="{x:Type Image}">
+            <Setter Property="Source" Value="{DynamicResource imgSun}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsOverMaxOperationHours}" Value="True">
+                    <Setter Property="Source" Value="{DynamicResource imgSun_Warn}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <DataTemplate x:Key="graphView">
+            <views:ChartView />
+        </DataTemplate>
+
+        <DataTemplate x:Key="probeGraphView">
+            <views:ProbeChartView />
+        </DataTemplate>
+
+        <DataTemplate x:Key="sportGraphView">
+            <views:SPortChartView />
+        </DataTemplate>
+
+        <views:ViewTemplateSelector x:Key="viewTemplateSelector"
+                                    SPortGraphTemplate="{StaticResource sportGraphView}"
+                                    ProbeGraphTemplate="{StaticResource probeGraphView}"
+                                    GraphTemplate="{StaticResource graphView}" />
+
+        <DataTemplate x:Key="probeInfo">
+            <DataTemplate.Resources>
+
+            </DataTemplate.Resources>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" TextBlock.FontSize="{DynamicResource DefaultFontSize3}">
+                    <Viewbox>
+                        <Image Width="30" Height="30" Margin="2" Style="{DynamicResource SensorItemImage}" />
+                    </Viewbox>
+                    <TextBlock Margin="5" Text="{Binding DisplayName}" />
+                    <TextBlock Margin="0,5,5,5" Text="{Binding ValueWithUnits}" FontWeight="Bold" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,0,5,5" VerticalAlignment="Center" Text="{DynamicResource strOperationalHours}"
+                               FontSize="{DynamicResource DefaultFontSize2}" />
+                    <TextBlock Margin="0,0,5,5" VerticalAlignment="Center" FontWeight="Bold"
+                               Text="{Binding OperationHours, Converter={StaticResource intToTimeSpanString}}"
+                               FontSize="{DynamicResource DefaultFontSize2}" />
+                    <Button Margin="0,0,5,5" Style="{DynamicResource TextButton}"
+                            Content="{DynamicResource strResetOperationalHours}"
+                            Command="{Binding DataContext.ResetOperationalHoursCommand, ElementName=statusView}"
+                            CommandParameter="{Binding}" />
+                </StackPanel>
+
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="levelInfo">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" TextBlock.FontSize="{DynamicResource DefaultFontSize3}">
+                    <Viewbox>
+                        <Image Width="30" Height="30" Margin="2" Style="{DynamicResource LevelItemImage}" />
+                    </Viewbox>
+
+                    <TextBlock Margin="0,5,5,5" Text="{Binding DisplayName}" />
+                    <TextBlock Margin="0,5,5,5"
+                               Text="{Binding Value, Converter={StaticResource enumToFriendlyNameConverter}}"
+                               FontWeight="Bold" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,0,5,5" Text="{Binding Id}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <TextBlock Margin="0,0,5,5" FontWeight="Bold"
+                               Text="{Binding OpertationMode, Converter={StaticResource enumToFriendlyNameConverter}}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="alarmClearButton" Margin="5,0,0,5" Visibility="Collapsed"
+                            Style="{DynamicResource TextButton}" Content="{DynamicResource strClearAlarm}"
+                            Command="{Binding DataContext.ClearLevelAlarmCommand, ElementName=statusView}"
+                            CommandParameter="{Binding}" />
+                    <Button Margin="5,0,5,5" Style="{DynamicResource TextButton}"
+                            Content="{DynamicResource strStartWaterChange}"
+                            Command="{Binding DataContext.StartWaterChangeCommand, ElementName=statusView}"
+                            CommandParameter="{Binding}"
+                            Visibility="{Binding CanDoWaterChange, Converter={StaticResource booleanToVisibilityConverter}}" />
+                </StackPanel>
+
+            </StackPanel>
+
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsAlarmOn}" Value="On">
+                    <Setter Property="Visibility" Value="Visible" TargetName="alarmClearButton" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="digitalInputInfo">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" TextBlock.FontSize="{DynamicResource DefaultFontSize3}">
+                    <Viewbox>
+                        <Image Width="30" Height="30" Margin="2" Source="{DynamicResource imgVolt}" />
+                    </Viewbox>
+                    <TextBlock Margin="0,5,5,5" Text="{Binding DisplayName}" />
+                    <TextBlock Margin="0,5,5,5" FontWeight="Bold"
+                               Text="{Binding Value, Converter={StaticResource enumToFriendlyNameConverter}}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,0,5,5" Text="{DynamicResource strModeInfo}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <TextBlock Margin="0,0,5,5" FontWeight="Bold"
+                               Text="{Binding Function, Converter={StaticResource enumToFriendlyNameConverter}}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                </StackPanel>
+
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="sPortInputInfo" DataType="profiLux:SPort">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" TextBlock.FontSize="{DynamicResource DefaultFontSize3}">
+                    <Viewbox VerticalAlignment="Center">
+                        <Image Width="30" Height="30" Margin="2" Source="{DynamicResource imgPlug}" />
+                    </Viewbox>
+                    <TextBlock Margin="5" Text="{Binding DisplayName}" VerticalAlignment="Center" />
+                    <TextBlock Margin="0,5,5,5" x:Name="valueText" FontWeight="Bold"
+                               Text="{Binding Value, Converter={StaticResource enumToFriendlyNameConverter}}"
+                               VerticalAlignment="Center" />
+                    <CheckBox Margin="0,5,5,5" x:Name="activeCheckbox" Style="{DynamicResource CheckBoxStyle1}"
+                              VerticalAlignment="Center" IsChecked="{Binding IsActive}" Visibility="Collapsed" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,0,5,5" Text="{Binding Id}" VerticalAlignment="Center"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <TextBlock Margin="0,0,5,5" FontWeight="Bold" Text="{Binding Mode}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,0,5,5" Text="{DynamicResource strCurrent}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <TextBlock Margin="1,0,5,5" Text="{Binding Current, StringFormat=\{0:F1\}A}" FontWeight="Bold"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                </StackPanel>
+
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <ContentControl Content="{Binding ModeItem}" Style="{DynamicResource StatusButtonItemStyle}" VerticalAlignment="Center"/>
+                <ContentControl Content="{Binding ModeItem}" Style="{DynamicResource programableLogicInfoItemStyle}" VerticalAlignment="Center"/>
+              </StackPanel>
+
+            </StackPanel>
+
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding DataContext.Info.OperationMode, ElementName=statusView}"
+                             Value="ManualSockets">
+                    <Setter Property="Visibility" Value="Visible" TargetName="activeCheckbox" />
+                    <Setter Property="Visibility" Value="Collapsed" TargetName="valueText" />
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="lportInputInfo" DataType="profiLux:LPort">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" TextBlock.FontSize="{DynamicResource DefaultFontSize3}">
+                    <Viewbox>
+                        <Image Width="30" Height="30" Margin="2" Source="{DynamicResource imgLPort}" />
+                    </Viewbox>
+                    <TextBlock Margin="5" Text="{Binding DisplayName}" VerticalAlignment="Center" />
+                    <TextBlock Margin="0,5,5,5" FontWeight="Bold" Text="{Binding ValueWithUnits}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,0,5,5" Text="{Binding Id}" VerticalAlignment="Center"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <TextBlock Margin="0,0,5,5" FontWeight="Bold" Text="{Binding Mode}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                </StackPanel>
+
+              <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <ContentControl Content="{Binding ModeItem}" Style="{DynamicResource StatusButtonItemStyle}" VerticalAlignment="Center"/>
+                <ContentControl Content="{Binding ModeItem}" Style="{DynamicResource programableLogicInfoItemStyle}" VerticalAlignment="Center"/>
+              </StackPanel>
+              
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="lightInfo">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" TextBlock.FontSize="{DynamicResource DefaultFontSize3}">
+                    <Viewbox VerticalAlignment="Center">
+                        <Image Width="30" Height="30" Margin="2" Style="{DynamicResource LightItemImage}" />
+                    </Viewbox>
+
+                    <TextBlock Margin="5,5,5,5" Text="{Binding DisplayName}" VerticalAlignment="Center" />
+                    <TextBlock x:Name="valueText" Margin="0,5,5,5" FontWeight="Bold" Text="{Binding ValueWithUnits}"
+                               VerticalAlignment="Center" />
+                    <Slider Width="200" Minimum="0" Maximum="100" Margin="0,5,5,5" Value="{Binding LightValue}"
+                            Visibility="Collapsed" x:Name="slider" HorizontalAlignment="Left"
+                            VerticalAlignment="Center" />
+                    <CheckBox Margin="0,5,5,5" Style="{DynamicResource CheckBoxStyle1}" HorizontalAlignment="Left"
+                              IsChecked="{Binding IsLightOn}" Visibility="Collapsed" x:Name="checkbox"
+                              VerticalAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,0,5,5" Text="{Binding Id}" VerticalAlignment="Center"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <TextBlock Margin="0,0,5,5" VerticalAlignment="Center" Text="{DynamicResource strOperationalHours}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <TextBlock Margin="0,0,5,5" FontWeight="Bold" VerticalAlignment="Center"
+                               Text="{Binding OperationHours, Converter={StaticResource intToTimeSpanString}}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <Button Margin="0,0,5,5" Style="{DynamicResource TextButton}"
+                            Content="{DynamicResource strResetOperationalHours}"
+                            Command="{Binding DataContext.ResetOperationalHoursCommand, ElementName=statusView}"
+                            CommandParameter="{Binding}" />
+                </StackPanel>
+
+            </StackPanel>
+            <DataTemplate.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding DataContext.Info.OperationMode, ElementName=statusView}"
+                                   Value="ManualIllumination" />
+                        <Condition Binding="{Binding IsDimmable}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Visibility" Value="Visible" TargetName="slider" />
+                </MultiDataTrigger>
+
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding DataContext.Info.OperationMode, ElementName=statusView}"
+                                   Value="ManualIllumination" />
+                        <Condition Binding="{Binding IsDimmable}" Value="False" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Visibility" Value="Visible" TargetName="checkbox" />
+                    <Setter Property="Visibility" Value="Collapsed" TargetName="valueText" />
+                </MultiDataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="dosingPumpInfo">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" TextBlock.FontSize="{DynamicResource DefaultFontSize3}">
+                    <Viewbox>
+                        <Image Width="30" Height="30" Margin="2" Source="{DynamicResource imgDose}" />
+                    </Viewbox>
+                    <TextBlock Margin="5,5,5,5" Text="{Binding DisplayName}" VerticalAlignment="Center" />
+                    <Button Foreground="{DynamicResource ThemeBaseForgroundLevel2}" Margin="0,5,5,5"
+                            Style="{DynamicResource FlatButtonStyle}" Click="UpdateDosing_Click">
+                        <TextBlock FontWeight="Bold" Text="{Binding ValueWithUnits}"
+                                   TextBlock.FontSize="{DynamicResource DefaultFontSize3}" />
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,0,5,5" VerticalAlignment="Center" Text="{DynamicResource strDousingRate}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <TextBlock Margin="0,0,0,5" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding Rate}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <TextBlock Margin="0,0,0,5" FontWeight="Bold" VerticalAlignment="Center" Text="ml *"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <TextBlock Margin="0,0,5,5" FontWeight="Bold" VerticalAlignment="Center" Text="{Binding PerDay}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                </StackPanel>
+
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="currentPumpInfo">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" TextBlock.FontSize="{DynamicResource DefaultFontSize3}">
+                    <Viewbox>
+                        <Image Width="30" Height="30" Margin="2" Source="{DynamicResource imgWave}" />
+                    </Viewbox>
+                    <TextBlock Margin="5,5,5,5" Text="{Binding DisplayName}" VerticalAlignment="Center" />
+                    <TextBlock Margin="0,5,5,5" FontWeight="Bold" Text="{Binding ValueWithUnits}" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="userInfo">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" TextBlock.FontSize="{DynamicResource DefaultFontSize3}">
+                    <Viewbox>
+                        <Image Width="30" Height="30" Margin="2" Source="{DynamicResource imgBeeker}" />
+                    </Viewbox>
+                    <TextBlock Margin="5" Text="{Binding DisplayName}" VerticalAlignment="Center" />
+                    <Button Foreground="{DynamicResource ThemeBaseForgroundLevel2}" Margin="0,5,5,5"
+                            Style="{DynamicResource FlatButtonStyle}" Click="UpdateUserItem_Click">
+                        <TextBlock FontWeight="Bold" Text="{Binding ValueWithUnits}"
+                                   TextBlock.FontSize="{DynamicResource DefaultFontSize3}" />
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <Style x:Key="ReminderItemImage" TargetType="{x:Type Image}">
+            <Setter Property="Source" Value="{DynamicResource imgAlarm}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsOverdue}" Value="True">
+                    <Setter Property="Source" Value="{DynamicResource imgAlarm_Warn}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="programableLogicInfoItemStyle" TargetType="ContentControl">
+            <Setter Property="ContentTemplateSelector">
+                <Setter.Value>
+                    <views:SensorTemplateSelector>
+                        <views:SensorTemplateSelector.ProgramableLogicTemplate>
+                            <DataTemplate DataType="profiLux:ProgramableLogic">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" BorderThickness="1" BorderBrush="Black" Margin="5">
+                                        <StackPanel Margin="0,0,5,5">
+                                            <TextBlock Text="{Binding Input1Text}" HorizontalAlignment="Center" Margin="5,5,0,0"/>
+                                            <ContentControl Content="{Binding Input1Item}" Style="{DynamicResource StatusButtonItemStyle}"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Margin="5,0,5,5" Text="{Binding Function.LogicMode}" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                                    <Border Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" BorderThickness="1" BorderBrush="Black" Margin="5,0,5,5">
+                                        <StackPanel Margin="0,0,5,5">
+                                            <TextBlock Text="{Binding Input2Text}" HorizontalAlignment="Center" Margin="5,5,0,0"/>
+                                            <ContentControl Content="{Binding Input2Item}" Style="{DynamicResource StatusButtonItemStyle}"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding Input1Item}" Style="{DynamicResource programableLogicInfoItemStyle}" VerticalAlignment="Center"/>
+                                    <ContentControl Grid.Row="0" Grid.Column="1" Content="{Binding Input2Item}" Style="{DynamicResource programableLogicInfoItemStyle}" VerticalAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </views:SensorTemplateSelector.ProgramableLogicTemplate>
+
+                        <views:SensorTemplateSelector.DefaultTemplate>
+                            <DataTemplate>
+                            </DataTemplate>
+                        </views:SensorTemplateSelector.DefaultTemplate>
+                            
+                    </views:SensorTemplateSelector>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <DataTemplate x:Key="programableLogicInfo" DataType="{x:Type profiLux:ProgramableLogic}">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" TextBlock.FontSize="{DynamicResource DefaultFontSize3}">
+                    <Viewbox>
+                        <Image Width="30" Height="30" Margin="2" Source="{DynamicResource imgPuzzle}" />
+                    </Viewbox>
+                    <TextBlock Margin="5" Text="{Binding Name}" />
+                </StackPanel>
+                <ContentControl Content="{Binding .}" Style="{StaticResource programableLogicInfoItemStyle}"/>      
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="reminderInfo" DataType="profiLux:Reminder">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" TextBlock.FontSize="{DynamicResource DefaultFontSize3}">
+                    <Viewbox>
+                        <Image Width="30" Height="30" Margin="2" Style="{DynamicResource ReminderItemImage}" />
+                    </Viewbox>
+                    <TextBlock Margin="5" Text="{Binding Text}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5,0,5,5" VerticalAlignment="Center" Text="{DynamicResource strReminderDue}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <TextBlock Margin="0,0,5,5" FontWeight="Bold" VerticalAlignment="Center"
+                               Text="{Binding Next, Converter={StaticResource dateTimeToShortDateString}}"
+                               TextBlock.FontSize="{DynamicResource DefaultFontSize2}" />
+                    <Button Margin="0,0,5,5" Style="{DynamicResource TextButton}"
+                            Content="{DynamicResource strReminderReset}" Command="{Binding ResetCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+
+        <views:SensorTemplateSelector x:Key="SensorTemplateSelector"
+                                      ProbeTemplate="{StaticResource probeInfo}"
+                                      LevelTemplate="{StaticResource levelInfo}"
+                                      DigitalInputTemplate="{StaticResource digitalInputInfo}"
+                                      SPortTemplate="{StaticResource sPortInputInfo}"
+                                      LPortTemplate="{StaticResource lportInputInfo}"
+                                      LightTemplate="{StaticResource lightInfo}"
+                                      DosingPumpTemplate="{StaticResource dosingPumpInfo}"
+                                      CurrentPumpTemplate="{StaticResource currentPumpInfo}"
+                                      UserInfoTemplate="{StaticResource userInfo}"
+                                      ReminderTemplate="{StaticResource reminderInfo}"
+                                      ProgramableLogicTemplate="{StaticResource programableLogicInfo}"/>
+
+        <DataTemplate x:Key="emptyTabs" />
+
+        <DataTemplate x:Key="probeSettings">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <GroupBox Grid.Column="1" Header="Graph Settings"
+                          Visibility="{Binding SaveToDatabase, Converter={StaticResource booleanToVisibilityConverter}}"
+                          Margin="5,0,5,5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{DynamicResource strRange}" VerticalAlignment="Center" Margin="5" />
+                        <ComboBox Margin="0,5,5,5" MinWidth="100" Grid.Column="1" SelectedItem="{Binding Range}"
+                                  ItemsSource="{Binding Source={StaticResource GraphRangeTypeValues}}"
+                                  VerticalAlignment="Center" />
+
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Units}" VerticalAlignment="Center"
+                                   Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Column="1" Grid.Row="1" x:Name="ColourButton" Height="24"
+                                               Width="75" Margin="0,0,5,5" SelectedColor="{Binding MediaColour}"
+                                               HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource strMax}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Row="2" Grid.Column="1" Height="24" Width="75" Margin="0,0,5,5"
+                                               SelectedColor="{Binding MaxMediaColour}" HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="{DynamicResource strMin}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Row="3" Grid.Column="1" Height="24" Width="75" Margin="0,0,5,5"
+                                               SelectedColor="{Binding MinMediaColour}" HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="{DynamicResource strNominal}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5"
+                                   Visibility="{Binding ShowCenter, Converter={StaticResource booleanToVisibilityConverter}}" />
+                        <controls1:ColorPicker Width="75" Grid.Row="4" Grid.Column="1" x:Name="ColourButton3"
+                                               Height="24" Margin="0,0,5,5"
+                                               SelectedColor="{Binding NominalMediaColour}" HorizontalAlignment="Left"
+                                               Visibility="{Binding ShowCenter, Converter={StaticResource booleanToVisibilityConverter}}" />
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="{DynamicResource strHighRange}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5"
+                                   Visibility="{Binding ShowMax, Converter={StaticResource booleanToVisibilityConverter}}" />
+                        <controls1:ColorPicker Width="75" Grid.Row="5" Grid.Column="1" x:Name="ColourButton2"
+                                               Height="24" Margin="0,0,5,5"
+                                               SelectedColor="{Binding HighRangeMediaColour}"
+                                               HorizontalAlignment="Left"
+                                               Visibility="{Binding ShowMax, Converter={StaticResource booleanToVisibilityConverter}}" />
+
+                        <TextBlock Grid.Row="6" Grid.Column="0" Text="{DynamicResource strLowRange}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5"
+                                   Visibility="{Binding ShowMin, Converter={StaticResource booleanToVisibilityConverter}}" />
+                        <controls1:ColorPicker Width="75" Grid.Row="6" Grid.Column="1" x:Name="ColourButton4"
+                                               Height="24" Margin="0,0,5,5"
+                                               SelectedColor="{Binding LowRangeMediaColour}" HorizontalAlignment="Left"
+                                               Visibility="{Binding ShowMin, Converter={StaticResource booleanToVisibilityConverter}}" />
+
+                    </Grid>
+                </GroupBox>
+                <StackPanel>
+                    <CheckBox Margin="5,0,5,5" IsChecked="{Binding SaveToDatabase}"
+                              VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource strSavetoDatabase}" VerticalAlignment="Center" />
+                    </CheckBox>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Margin="5,0,5,5" IsChecked="{Binding EnableMaxOperationHours}"
+                                  VerticalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource strReminderMaxHours}" />
+                        </CheckBox>
+                        <controls1:IntegerUpDown Minimum="0" Grid.Column="1" Margin="0,0,5,5"
+                                                 Value="{Binding MaxOperationHours, Mode=TwoWay}"
+                                                 VerticalAlignment="Center"
+                                                 IsEnabled="{Binding EnableMaxOperationHours}" MinWidth="100"
+                                                 HorizontalAlignment="Left" />
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox VerticalAlignment="Center" Margin="5,0,5,5" IsChecked="{Binding UseCustomCoversion}">
+                            <TextBlock Text="{DynamicResource strCustomConverter}" VerticalAlignment="Center" />
+                        </CheckBox>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,5,5">
+                            <TextBlock VerticalAlignment="Center" Text="(( " IsEnabled="{Binding UseCustomCoversion}" />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding Value}"
+                                       IsEnabled="{Binding UseCustomCoversion}" />
+                            <TextBlock VerticalAlignment="Center" Text=" + " IsEnabled="{Binding UseCustomCoversion}" />
+                            <TextBox VerticalAlignment="Center" MinWidth="30"
+                                     Text="{Binding ConversionControl1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     IsEnabled="{Binding UseCustomCoversion}" />
+                            <TextBlock VerticalAlignment="Center" Text=") X " IsEnabled="{Binding UseCustomCoversion}" />
+                            <TextBox VerticalAlignment="Center" MinWidth="30"
+                                     Text="{Binding ConversionControl2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     IsEnabled="{Binding UseCustomCoversion}" />
+                            <TextBlock VerticalAlignment="Center" Text=") + " IsEnabled="{Binding UseCustomCoversion}" />
+                            <TextBox VerticalAlignment="Center" MinWidth="30"
+                                     Text="{Binding ConversionControl3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     IsEnabled="{Binding UseCustomCoversion}" />
+                            <TextBlock VerticalAlignment="Center" Text=" = " IsEnabled="{Binding UseCustomCoversion}" />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding ValueWithUnits}"
+                                       IsEnabled="{Binding UseCustomCoversion}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="lightSettings">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <GroupBox Grid.Column="1" Header="Graph Settings"
+                          Visibility="{Binding SaveToDatabase, Converter={StaticResource booleanToVisibilityConverter}}"
+                          Margin="5,0,5,5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{DynamicResource strRange}" VerticalAlignment="Center" Margin="5" />
+                        <ComboBox Margin="0,5,5,5" MinWidth="100" Grid.Column="1" SelectedItem="{Binding Range}"
+                                  ItemsSource="{Binding Source={StaticResource GraphRangeTypeValues}}"
+                                  VerticalAlignment="Center" />
+
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Units}" VerticalAlignment="Center"
+                                   Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Column="1" Grid.Row="1" x:Name="ColourButton" Height="24"
+                                               Width="75" Margin="0,0,5,5" SelectedColor="{Binding MediaColour}"
+                                               HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource strMax}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Row="2" Grid.Column="1" Height="24" Width="75" Margin="0,0,5,5"
+                                               SelectedColor="{Binding MaxMediaColour}" HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="{DynamicResource strMin}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Row="3" Grid.Column="1" Height="24" Width="75" Margin="0,0,5,5"
+                                               SelectedColor="{Binding MinMediaColour}" HorizontalAlignment="Left" />
+                    </Grid>
+                </GroupBox>
+                <StackPanel>
+                    <CheckBox Grid.Row="2" Margin="5,0,5,5" IsChecked="{Binding SaveToDatabase}"
+                              VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource strSavetoDatabase}" VerticalAlignment="Center" />
+                    </CheckBox>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Margin="5,0,5,5" IsChecked="{Binding EnableMaxOperationHours}"
+                                  VerticalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource strReminderMaxHours}" />
+                        </CheckBox>
+                        <controls1:IntegerUpDown Minimum="0" Grid.Column="1" Margin="0,0,5,5"
+                                                 Value="{Binding MaxOperationHours, Mode=TwoWay}"
+                                                 VerticalAlignment="Center"
+                                                 IsEnabled="{Binding EnableMaxOperationHours}" MinWidth="100"
+                                                 HorizontalAlignment="Left" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <Style x:Key="StatusButtonItemStyle" TargetType="ContentControl">
+            <Style.Resources>
+                <Style x:Key="ButtonItemType" BasedOn="{StaticResource BasicButton}" TargetType="Button">
+                    <Setter Property="Height" Value="70" />
+                    <Setter Property="Width" Value="200" />
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="Margin" Value="5,5,0,0" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Command" Value="{Binding DataContext.ShowItemCommand, ElementName=ItemsArea}" />
+                    <Setter Property="CommandParameter" Value="{Binding .}" />
+                </Style>
+
+                <DataTemplate DataType="{x:Type profiLux:Probe}">
+                    <Button Style="{StaticResource ButtonItemType}">
+                        <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="1" Width="30" Height="30" Margin="2"
+                                       Style="{DynamicResource SensorItemImage}" />
+                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{Binding DisplayName}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="5,0,5,5"
+                                           Text="{Binding ValueWithUnits}" FontWeight="Bold" />
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type profiLux:LevelSensor}">
+                    <Button Style="{StaticResource ButtonItemType}">
+                        <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="1" Width="30" Height="30" Margin="2"
+                                       Style="{DynamicResource LevelItemImage}" />
+                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{Binding DisplayName}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="5,0,5,5"
+                                           Text="{Binding Value, Converter={StaticResource enumToFriendlyNameConverter}}"
+                                           FontWeight="Bold" />
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type profiLux:SPort}">
+                    <Button Style="{StaticResource ButtonItemType}">
+                        <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="1" Width="30" Height="30" Margin="2"
+                                       Source="{DynamicResource imgPlug}" />
+
+                            <ContentControl Grid.Row="1" Grid.Column="1" Width="30" Height="30" Margin="2" Content="{Binding ModeItem}">
+                                <ContentControl.Resources>
+
+                                    <DataTemplate DataType="{x:Type profiLux:Probe}">
+                                        <Image Style="{DynamicResource SensorItemImage}" />
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type profiLux:Light}">
+                                        <Image Style="{DynamicResource LightItemImage}" />
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type profiLux:DosingPump}">
+                                        <Image Source="{DynamicResource imgDose}" />
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type profiLux:LevelSensor}">
+                                        <Image Style="{DynamicResource LevelItemImage}" />
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type profiLux:CurrentPump}">
+                                        <Image Source="{DynamicResource imgWave}" />
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type profiLux:ProgramableLogic}">
+                                        <Image Source="{DynamicResource imgPuzzle}" />
+                                    </DataTemplate>
+                                </ContentControl.Resources>
+
+                            </ContentControl>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{Binding DisplayName}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="5,0,5,5"
+                                           Text="{Binding ValueWithUnits}"
+                                           FontWeight="Bold" />
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type profiLux:LPort}">
+                    <Button Style="{StaticResource ButtonItemType}">
+                        <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="1" Width="30" Height="30" Margin="2"
+                                       Source="{DynamicResource imgLPort}" />
+                            <ContentControl Grid.Row="1" Grid.Column="1" Width="30" Height="30" Margin="2" Content="{Binding ModeItem}">
+                                <ContentControl.Resources>
+
+                                    <DataTemplate DataType="{x:Type profiLux:Probe}">
+                                        <Image Style="{DynamicResource SensorItemImage}" />
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type profiLux:Light}">
+                                        <Image Style="{DynamicResource LightItemImage}" />
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type profiLux:DosingPump}">
+                                        <Image Source="{DynamicResource imgDose}" />
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type profiLux:LevelSensor}">
+                                        <Image Style="{DynamicResource LevelItemImage}" />
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type profiLux:CurrentPump}">
+                                        <Image Source="{DynamicResource imgWave}" />
+                                    </DataTemplate>
+                                </ContentControl.Resources>
+
+                            </ContentControl>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{Binding DisplayName}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="5,0,5,5"
+                                           Text="{Binding ValueWithUnits}" FontWeight="Bold" />
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type profiLux:UserInfo}">
+                    <Button Style="{StaticResource ButtonItemType}">
+                        <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="1" Width="30" Height="30" Margin="2"
+                                       Source="{DynamicResource imgBeeker}" />
+                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{Binding DisplayName}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="5,0,5,5"
+                                           Text="{Binding ValueWithUnits}" FontWeight="Bold" />
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type profiLux:DigitalInput}">
+                    <Button Style="{StaticResource ButtonItemType}">
+                        <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="1" Width="30" Height="30" Margin="2"
+                                       Source="{DynamicResource imgVolt}" />
+                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{Binding DisplayName}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="5,0,5,5"
+                                           Text="{Binding Value, Converter={StaticResource enumToFriendlyNameConverter}}"
+                                           FontWeight="Bold" />
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type profiLux:Light}">
+                    <Button Style="{StaticResource ButtonItemType}">
+                        <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="1" Width="30" Height="30" Margin="2"
+                                       Style="{DynamicResource LightItemImage}" />
+                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{Binding DisplayName}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="5,0,5,5"
+                                           Text="{Binding ValueWithUnits}" FontWeight="Bold" />
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type profiLux:DosingPump}">
+                    <Button Style="{StaticResource ButtonItemType}">
+                        <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="1" Width="30" Height="30" Margin="2"
+                                       Source="{DynamicResource imgDose}" />
+                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{Binding DisplayName}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="5,0,5,5"
+                                           Text="{Binding ValueWithUnits}" FontWeight="Bold" />
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+
+
+                <DataTemplate DataType="{x:Type profiLux:CurrentPump}">
+                    <Button Style="{StaticResource ButtonItemType}">
+                        <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="1" Width="30" Height="30" Margin="2"
+                                       Source="{DynamicResource imgWave}" />
+                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{Binding DisplayName}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="5,0,5,5"
+                                           Text="{Binding ValueWithUnits}" FontWeight="Bold" />
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type profiLux:Reminder}">
+                    <Button Style="{StaticResource ButtonItemType}">
+                        <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="1" Width="30" Height="30" Margin="2"
+                                       Style="{DynamicResource ReminderItemImage}" />
+                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{Binding Text}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Margin="5,0,5,5"
+                                           Text="{Binding Next, Converter={StaticResource dateTimeToShortDateString}}" FontWeight="Bold" />
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+                
+                <DataTemplate DataType="{x:Type profiLux:ProgramableLogic}">
+                    <Button Style="{StaticResource ButtonItemType}">
+                        <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Image Grid.Column="1" Width="30" Height="30" Margin="2"
+                                       Source="{DynamicResource imgPuzzle}" />
+                            <TextBlock Grid.Row="0" Grid.Column="0" Margin="5" Text="{Binding Name}"/>
+                        </Grid>
+                    </Button>
+                </DataTemplate>
+
+
+            </Style.Resources>
+        </Style>
+
+        <DataTemplate x:Key="userSettings">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <GroupBox Grid.Column="1" Header="Graph Settings"
+                          Visibility="{Binding SaveToDatabase, Converter={StaticResource booleanToVisibilityConverter}}"
+                          Margin="5,0,5,5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{DynamicResource strRange}" VerticalAlignment="Center" Margin="5" />
+                        <ComboBox Margin="0,5,5,5" MinWidth="100" Grid.Column="1" SelectedItem="{Binding Range}"
+                                  ItemsSource="{Binding Source={StaticResource GraphRangeTypeValues}}"
+                                  VerticalAlignment="Center" />
+
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Units}" VerticalAlignment="Center"
+                                   Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Column="1" Grid.Row="1" x:Name="ColourButton" Height="24"
+                                               Width="75" Margin="0,0,5,5" SelectedColor="{Binding MediaColour}"
+                                               HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource strMax}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Row="2" Grid.Column="1" Height="24" Width="75" Margin="0,0,5,5"
+                                               SelectedColor="{Binding MaxMediaColour}" HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="{DynamicResource strMin}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Row="3" Grid.Column="1" Height="24" Width="75" Margin="0,0,5,5"
+                                               SelectedColor="{Binding MinMediaColour}" HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="{DynamicResource strNominal}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5"
+                                   Visibility="{Binding ShowCenter, Converter={StaticResource booleanToVisibilityConverter}}" />
+                        <controls1:ColorPicker Width="75" Grid.Row="4" Grid.Column="1" x:Name="ColourButton3"
+                                               Height="24" Margin="0,0,5,5"
+                                               SelectedColor="{Binding NominalMediaColour}" HorizontalAlignment="Left"
+                                               Visibility="{Binding ShowCenter, Converter={StaticResource booleanToVisibilityConverter}}" />
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="{DynamicResource strHighRange}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5"
+                                   Visibility="{Binding ShowMax, Converter={StaticResource booleanToVisibilityConverter}}" />
+                        <controls1:ColorPicker Width="75" Grid.Row="5" Grid.Column="1" x:Name="ColourButton2"
+                                               Height="24" Margin="0,0,5,5"
+                                               SelectedColor="{Binding HighRangeMediaColour}"
+                                               HorizontalAlignment="Left"
+                                               Visibility="{Binding ShowMax, Converter={StaticResource booleanToVisibilityConverter}}" />
+
+                        <TextBlock Grid.Row="6" Grid.Column="0" Text="{DynamicResource strLowRange}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5"
+                                   Visibility="{Binding ShowMin, Converter={StaticResource booleanToVisibilityConverter}}" />
+                        <controls1:ColorPicker Width="75" Grid.Row="6" Grid.Column="1" x:Name="ColourButton4"
+                                               Height="24" Margin="0,0,5,5"
+                                               SelectedColor="{Binding LowRangeMediaColour}" HorizontalAlignment="Left"
+                                               Visibility="{Binding ShowMin, Converter={StaticResource booleanToVisibilityConverter}}" />
+
+                    </Grid>
+                </GroupBox>
+                <StackPanel>
+                    <CheckBox Grid.Row="2" Margin="5,0,5,5" IsChecked="{Binding SaveToDatabase}"
+                              VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource strSavetoDatabase}" VerticalAlignment="Center" />
+                    </CheckBox>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Margin="5,0,5,5" IsChecked="{Binding ShowCenter}" VerticalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource strNominal}" />
+                        </CheckBox>
+                        <TextBox Grid.Column="1" Margin="0,0,5,5" Text="{Binding CenterValue, Mode=TwoWay}"
+                                 VerticalAlignment="Center" IsEnabled="{Binding ShowCenter}" MinWidth="100"
+                                 HorizontalAlignment="Left" />
+
+                        <CheckBox Margin="5,0,5,5" Grid.Row="1" IsChecked="{Binding ShowMax}"
+                                  VerticalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource strHighRange}" />
+                        </CheckBox>
+                        <TextBox Grid.Column="1" Grid.Row="1" Margin="0,0,5,5" Text="{Binding MaxRange, Mode=TwoWay}"
+                                 VerticalAlignment="Center" IsEnabled="{Binding ShowMax}" MinWidth="100"
+                                 HorizontalAlignment="Left" />
+
+                        <CheckBox Margin="5,0,5,5" Grid.Row="2" IsChecked="{Binding ShowMin}"
+                                  VerticalAlignment="Center">
+                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource strLowRange}" />
+                        </CheckBox>
+                        <TextBox Grid.Column="1" Grid.Row="2" Margin="0,0,5,5" Text="{Binding MinRange, Mode=TwoWay}"
+                                 VerticalAlignment="Center" IsEnabled="{Binding ShowMin}" MinWidth="100"
+                                 HorizontalAlignment="Left" />
+                    </Grid>
+                    <Button HorizontalAlignment="Left" Margin="5,0,5,5" Style="{DynamicResource TextButton}"
+                            Content="{DynamicResource strDelete}"
+                            Command="{Binding DataContext.DeleteCommand, ElementName=statusView}"
+                            CommandParameter="{Binding}" />
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="defaultTemplate">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <GroupBox Grid.Column="1" Header="Graph Settings"
+                          Visibility="{Binding SaveToDatabase, Converter={StaticResource booleanToVisibilityConverter}}"
+                          Margin="5,0,5,5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{DynamicResource strRange}" VerticalAlignment="Center" Margin="5" />
+                        <ComboBox Margin="0,5,5,5" MinWidth="100" Grid.Column="1" SelectedItem="{Binding Range}"
+                                  ItemsSource="{Binding Source={StaticResource GraphRangeTypeValues}}"
+                                  VerticalAlignment="Center" />
+
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Units}" VerticalAlignment="Center"
+                                   Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Column="1" Grid.Row="1" x:Name="ColourButton" Height="24"
+                                               Width="75" Margin="0,0,5,5" SelectedColor="{Binding MediaColour}"
+                                               HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource strMax}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Row="2" Grid.Column="1" Height="24" Width="75" Margin="0,0,5,5"
+                                               SelectedColor="{Binding MaxMediaColour}" HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="{DynamicResource strMin}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Row="3" Grid.Column="1" Height="24" Width="75" Margin="0,0,5,5"
+                                               SelectedColor="{Binding MinMediaColour}" HorizontalAlignment="Left" />
+                    </Grid>
+                </GroupBox>
+                <CheckBox Margin="5,0,5,5" IsChecked="{Binding SaveToDatabase}" VerticalAlignment="Top">
+                    <TextBlock Text="{DynamicResource strSavetoDatabase}" VerticalAlignment="Center" />
+                </CheckBox>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="sportSettings">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <GroupBox Grid.Column="1" Header="Graph Settings"
+                          Visibility="{Binding SaveToDatabase, Converter={StaticResource booleanToVisibilityConverter}}"
+                          Margin="5,0,5,5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{DynamicResource strRange}" VerticalAlignment="Center" Margin="5" />
+                        <ComboBox Margin="0,5,5,5" MinWidth="100" Grid.Column="1" SelectedItem="{Binding Range}"
+                                  ItemsSource="{Binding Source={StaticResource GraphRangeTypeValues}}"
+                                  VerticalAlignment="Center" />
+
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Units}" VerticalAlignment="Center"
+                                   Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Column="1" Grid.Row="1" x:Name="ColourButton" Height="24"
+                                               Width="75" Margin="0,0,5,5" SelectedColor="{Binding MediaColour}"
+                                               HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource strMax}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Row="2" Grid.Column="1" Height="24" Width="75" Margin="0,0,5,5"
+                                               SelectedColor="{Binding MaxMediaColour}" HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="{DynamicResource strMin}"
+                                   VerticalAlignment="Center" Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Row="3" Grid.Column="1" Height="24" Width="75" Margin="0,0,5,5"
+                                               SelectedColor="{Binding MinMediaColour}" HorizontalAlignment="Left" />
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Current" VerticalAlignment="Center"
+                                   Margin="5,0,5,5" />
+                        <controls1:ColorPicker Grid.Row="4" Grid.Column="1" x:Name="ColourButton2" Height="24"
+                                               Width="75" Margin="0,0,5,5" SelectedColor="{Binding CurrentMediaColour}"
+                                               HorizontalAlignment="Left" />
+
+                    </Grid>
+                </GroupBox>
+                <CheckBox Margin="5,0,5,5" IsChecked="{Binding SaveToDatabase}" VerticalAlignment="Top">
+                    <TextBlock Text="{DynamicResource strSavetoDatabase}" VerticalAlignment="Center" />
+                </CheckBox>
+            </Grid>
+        </DataTemplate>
+
+        <views:SensorTemplateSelector x:Key="CustomSettingsTemplateSelector"
+                                      DefaultTemplate="{StaticResource defaultTemplate}"
+                                      SPortTemplate="{StaticResource sportSettings}"
+                                      ProbeTemplate="{StaticResource probeSettings}"
+                                      UserInfoTemplate="{StaticResource userSettings}"
+                                      LightTemplate="{StaticResource lightSettings}" />
+
+        <DataTemplate x:Key="chartTabs">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton  Width="70" Height="60" Margin="5,5,0,5" x:Name="historyButton" Style="{StaticResource {x:Type ToggleButton}}">
+                        <StackPanel>
+                            <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                               Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgHistory}" />
+                            <TextBlock Text="History" Margin="3" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton Width="70" Height="60" Margin="5,5,0,5" x:Name="settingsButton" Style="{StaticResource {x:Type ToggleButton}}">
+                        <StackPanel>
+                            <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                               Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgOptions}" />
+                            <TextBlock Text="{DynamicResource strItemSettings}" Margin="3" />
+                        </StackPanel>
+                    </RadioButton>
+                    
+                </StackPanel>
+
+                <Grid Grid.Row="1" Margin="5,0,5,5" x:Name="settingsArea" Visibility="Collapsed">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource strDisplayName}" Margin="5"
+                                   VerticalAlignment="Center" />
+                    <TextBox Text="{Binding DisplayNameValue, Mode=TwoWay}" Grid.Row="0" Grid.Column="1"
+                                 Margin="0,5,5,5" VerticalAlignment="Center" />
+                    <Button Command="{Binding DefaultNameCommand}" Content="{DynamicResource strDefault}"
+                                Grid.Row="0" Grid.Column="2" Style="{DynamicResource TextButtonStyle}" Margin="0,5,5,5" />
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource strUnits}" Margin="5,0,5,5"
+                                   VerticalAlignment="Center" />
+                    <TextBox Text="{Binding Units, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"
+                                 Grid.Column="1" Margin="0,0,5,5" VerticalAlignment="Center" />
+                    <Button Command="{Binding DefaultUnitsCommand}" Content="{DynamicResource strDefault}"
+                                Grid.Row="1" Grid.Column="2" Style="{DynamicResource TextButtonStyle}" Margin="0,0,5,5" />
+
+                    <ContentControl Grid.ColumnSpan="3" Grid.Row="2" Content="{Binding}"
+                                        ContentTemplateSelector="{StaticResource CustomSettingsTemplateSelector}" />
+                </Grid>
+
+                <TabControl Grid.Row="1" Margin="5,0,5,5" x:Name="history" Visibility="Collapsed">
+                    <TabControl.ItemsSource>
+                        <CompositeCollection>
+                            <TabItem Header="{DynamicResource strChart}">
+                                <ContentControl Content="{Binding Graph}"
+                                                ContentTemplateSelector="{StaticResource viewTemplateSelector}" />
+                            </TabItem>
+
+                            <TabItem Header="{DynamicResource strDailyAverage}">
+                                <ContentControl Content="{Binding}">
+                                    <ContentControl.ContentTemplate>
+                                        <DataTemplate>
+                                            <views:DailyAverageReportView DataContext="{Binding Report}" />
+                                        </DataTemplate>
+                                    </ContentControl.ContentTemplate>
+                                </ContentControl>
+                            </TabItem>
+
+                            <TabItem Header="{DynamicResource strWeeklyAverage}">
+                                <ContentControl Content="{Binding}">
+                                    <ContentControl.ContentTemplate>
+                                        <DataTemplate>
+                                            <views:WeeklyAverageReportView DataContext="{Binding Report}" />
+                                        </DataTemplate>
+                                    </ContentControl.ContentTemplate>
+                                </ContentControl>
+                            </TabItem>
+
+                            <TabItem Header="{DynamicResource strMonthlyAverage}">
+                                <ContentControl Content="{Binding}">
+                                    <ContentControl.ContentTemplate>
+                                        <DataTemplate>
+                                            <views:MonthlyAverageReportView DataContext="{Binding Report}" />
+                                        </DataTemplate>
+                                    </ContentControl.ContentTemplate>
+                                </ContentControl>
+                            </TabItem>
+
+                            <TabItem Header="{DynamicResource strCalander}">
+                                <ContentControl Content="{Binding}">
+                                    <ContentControl.ContentTemplate>
+                                        <DataTemplate>
+                                            <views:CalendarView DataContext="{Binding Report}" />
+                                        </DataTemplate>
+                                    </ContentControl.ContentTemplate>
+                                </ContentControl>
+                            </TabItem>
+
+                            <TabItem Header="{DynamicResource strDataPoints}">
+                                <ContentControl Content="{Binding}">
+                                    <ContentControl.ContentTemplate>
+                                        <DataTemplate>
+                                            <views:DataPointsView DataContext="{Binding DataPoints}" />
+                                        </DataTemplate>
+                                    </ContentControl.ContentTemplate>
+                                </ContentControl>
+                            </TabItem>
+
+                        </CompositeCollection>
+                    </TabControl.ItemsSource>
+                </TabControl>
+
+                   
+            </Grid>
+
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding SaveToDatabase}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed" TargetName="historyButton" />
+                </DataTrigger>
+
+                <Trigger SourceName="historyButton" Property="IsChecked" Value="True">
+                    <Setter Property="Visibility" Value="Visible" TargetName="history" />
+                </Trigger>
+
+                <Trigger SourceName="settingsButton" Property="IsChecked" Value="True">
+                    <Setter Property="Visibility" Value="Visible" TargetName="settingsArea" />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <views:SensorTemplateSelector x:Key="TabAreaSelector"
+                                      ProbeTemplate="{StaticResource chartTabs}"
+                                      LevelTemplate="{StaticResource chartTabs}"
+                                      DigitalInputTemplate="{StaticResource chartTabs}"
+                                      SPortTemplate="{StaticResource chartTabs}"
+                                      LPortTemplate="{StaticResource chartTabs}"
+                                      LightTemplate="{StaticResource chartTabs}"
+                                      DosingPumpTemplate="{StaticResource chartTabs}"
+                                      CurrentPumpTemplate="{StaticResource chartTabs}"
+                                      UserInfoTemplate="{StaticResource chartTabs}"
+                                      ProgramableLogicTemplate="{StaticResource emptyTabs}"
+                                      ReminderTemplate="{StaticResource emptyTabs}"
+                                      DefaultTemplate="{StaticResource emptyTabs}" />
+
+    </UserControl.Resources>
+
+    <Grid Grid.IsSharedSizeScope="True">
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <WrapPanel x:Name="Buttons">
+                <Button ToolTip="{DynamicResource strFeedPause}" Width="70" Height="60" Margin="5,5,0,5"
+                        Command="{Binding FeedCommand}">
+                    <StackPanel>
+                        <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                               Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgFood}" />
+                        <TextBlock Text="{DynamicResource strFeedPause}" Margin="3" />
+                    </StackPanel>
+                </Button>
+                <ToggleButton Margin="5,5,0,5" Width="70" Height="60"
+                              IsChecked="{Binding Controller.Info.Maintenance[0].IsActive, Mode=OneWay}"
+                              Command="{Binding MaintenanceCommand}"
+                              CommandParameter="{Binding Controller.Info.Maintenance[0]}">
+                    <ToggleButton.ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource strMaintenance1}" />
+                            <TextBlock Text="{Binding Controller.Info.Maintenance[0].TimeLeft}"
+                                       Visibility="{Binding Controller.Info.Maintenance[0].IsActive, Converter={StaticResource booleanToVisibilityConverter}}" />
+                        </StackPanel>
+                    </ToggleButton.ToolTip>
+                    <StackPanel>
+                        <Grid>
+                            <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                                   Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgWrench}" />
+                            <ProgressBar Height="10" Width="{DynamicResource buttonImageSize}" Margin="3"
+                                         VerticalAlignment="Top" HorizontalAlignment="Center" Minimum="0"
+                                         Maximum="{Binding Controller.Info.Maintenance[0].Duration}"
+                                         Value="{Binding Controller.Info.Maintenance[0].TimeOn}"
+                                         Visibility="{Binding Controller.Info.Maintenance[0].IsActive, Converter={StaticResource booleanToVisibilityConverter}}" />
+                        </Grid>
+                        <TextBlock Text="{DynamicResource strMaintenance1}" Margin="3" />
+                    </StackPanel>
+                </ToggleButton>
+                <ToggleButton Width="70" Height="60"
+                              Visibility="{Binding Controller.Info.IsP3, Converter={StaticResource booleanToVisibilityConverter}}"
+                              Margin="5,5,0,5"
+                              IsChecked="{Binding Controller.Info.Maintenance[1].IsActive, Mode=OneWay}"
+                              Command="{Binding MaintenanceCommand}"
+                              CommandParameter="{Binding Controller.Info.Maintenance[1]}">
+                    <ToggleButton.ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource strMaintenance2}" />
+                            <TextBlock Text="{Binding Controller.Info.Maintenance[1].TimeLeft}"
+                                       Visibility="{Binding Controller.Info.Maintenance[1].IsActive, Converter={StaticResource booleanToVisibilityConverter}}" />
+                        </StackPanel>
+                    </ToggleButton.ToolTip>
+                    <StackPanel>
+                        <Grid>
+                            <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                                   Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgWrench}" />
+                            <ProgressBar Height="10" Width="{DynamicResource buttonImageSize}" Margin="3"
+                                         VerticalAlignment="Top" HorizontalAlignment="Center" Minimum="0"
+                                         Maximum="{Binding Controller.Info.Maintenance[1].Duration}"
+                                         Value="{Binding Controller.Info.Maintenance[1].TimeOn}"
+                                         Visibility="{Binding Controller.Info.Maintenance[1].IsActive, Converter={StaticResource booleanToVisibilityConverter}}" />
+
+                        </Grid>
+                        <TextBlock Text="{DynamicResource strMaintenance2}" Margin="3" />
+                    </StackPanel>
+                </ToggleButton>
+                <ToggleButton Width="70" Height="60"
+                              Visibility="{Binding Controller.Info.IsP3, Converter={StaticResource booleanToVisibilityConverter}}"
+                              Margin="5,5,0,5"
+                              IsChecked="{Binding Controller.Info.Maintenance[2].IsActive, Mode=OneWay}"
+                              Command="{Binding MaintenanceCommand}"
+                              CommandParameter="{Binding Controller.Info.Maintenance[2]}">
+                    <ToggleButton.ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource strMaintenance3}" />
+                            <TextBlock Text="{Binding Controller.Info.Maintenance[2].TimeLeft}"
+                                       Visibility="{Binding Controller.Info.Maintenance[2].IsActive, Converter={StaticResource booleanToVisibilityConverter}}" />
+                        </StackPanel>
+                    </ToggleButton.ToolTip>
+                    <StackPanel>
+                        <Grid>
+                            <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                                   Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgWrench}" />
+                            <ProgressBar Height="10" Width="{DynamicResource buttonImageSize}" Margin="3"
+                                         VerticalAlignment="Top" HorizontalAlignment="Center" Minimum="0"
+                                         Maximum="{Binding Controller.Info.Maintenance[2].Duration}"
+                                         Value="{Binding Controller.Info.Maintenance[2].TimeOn}"
+                                         Visibility="{Binding Controller.Info.Maintenance[2].IsActive, Converter={StaticResource booleanToVisibilityConverter}}" />
+
+                        </Grid>
+                        <TextBlock Text="{DynamicResource strMaintenance3}" Margin="3" />
+                    </StackPanel>
+                </ToggleButton>
+                <ToggleButton Width="70" Height="60"
+                              Visibility="{Binding Controller.Info.IsP3, Converter={StaticResource booleanToVisibilityConverter}}"
+                              Margin="5,5,0,5"
+                              IsChecked="{Binding Controller.Info.Maintenance[3].IsActive, Mode=OneWay}"
+                              Command="{Binding MaintenanceCommand}"
+                              CommandParameter="{Binding Controller.Info.Maintenance[3]}">
+                    <ToggleButton.ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource strMaintenance4}" />
+                            <TextBlock Text="{Binding Controller.Info.Maintenance[3].TimeLeft}"
+                                       Visibility="{Binding Controller.Info.Maintenance[3].IsActive, Converter={StaticResource booleanToVisibilityConverter}}" />
+                        </StackPanel>
+                    </ToggleButton.ToolTip>
+                    <StackPanel>
+                        <Grid>
+                            <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                                   Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgWrench}" />
+                            <ProgressBar Height="10" Width="{DynamicResource buttonImageSize}" Margin="3"
+                                         VerticalAlignment="Top" HorizontalAlignment="Center" Minimum="0"
+                                         Maximum="{Binding Controller.Info.Maintenance[3].Duration}"
+                                         Value="{Binding Controller.Info.Maintenance[3].TimeOn}"
+                                         Visibility="{Binding Controller.Info.Maintenance[3].IsActive, Converter={StaticResource booleanToVisibilityConverter}}" />
+                        </Grid>
+                        <TextBlock Text="{DynamicResource strMaintenance4}" Margin="3" />
+                    </StackPanel>
+                </ToggleButton>
+                <ToggleButton ToolTip="{DynamicResource strManualSockets}" Width="70" Height="60" Margin="5,5,0,5"
+                              IsChecked="{Binding Controller.Info.OperationMode, ConverterParameter=ManualSockets, Converter={StaticResource operationModeToBool}, Mode=OneWay}"
+                              Command="{Binding ManualCommand}">
+                    <StackPanel>
+                        <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                               Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgPlug}" />
+                        <TextBlock Text="{DynamicResource strManualSockets}" Margin="3" />
+                    </StackPanel>
+                </ToggleButton>
+                <ToggleButton ToolTip="{DynamicResource strManualIllumination}" Width="70" Height="60" Margin="5,5,0,5"
+                              IsChecked="{Binding Controller.Info.OperationMode, ConverterParameter=ManualIllumination, Converter={StaticResource operationModeToBool}, Mode=OneWay}"
+                              Command="{Binding ManualIlluminationCommand}">
+                    <StackPanel>
+                        <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                               Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgLight}" />
+                        <TextBlock Text="{DynamicResource strManualIllumination}" Margin="3" />
+                    </StackPanel>
+                </ToggleButton>
+                <Button ToolTip="{DynamicResource strThunderStorm}" Width="70" Height="60" Margin="5,5,0,5"
+                        Click="ThunderStorm_Click">
+                    <StackPanel>
+                        <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                               Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgStorm}" />
+                        <TextBlock Text="{DynamicResource strThunderStorm}" Margin="3" />
+                    </StackPanel>
+                </Button>
+                <ToggleButton ToolTip="{DynamicResource strLightTest}" Width="70" Height="60" Margin="5,5,0,5"
+                              IsChecked="{Binding Controller.Info.OperationMode, ConverterParameter=LightTest, Converter={StaticResource operationModeToBool}, Mode=OneWay}"
+                              Command="{Binding LightTestCommand}">
+                    <StackPanel>
+                        <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                               Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgSun}" />
+                        <TextBlock Text="{DynamicResource strLightTest}" Margin="3" />
+                    </StackPanel>
+                </ToggleButton>
+                <ToggleButton ToolTip="{DynamicResource strRemote}" Width="70" Height="60" Margin="5,5,0,5"
+                              IsChecked="{Binding Remote.IsActive, Mode=TwoWay}">
+                    <StackPanel>
+                        <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                               Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgScreen}" />
+                        <TextBlock Text="{DynamicResource strRemote}" Margin="3" />
+                    </StackPanel>
+                </ToggleButton>
+                <Button ToolTip="{DynamicResource strWebSite}" Width="70" Height="60" Margin="5,5,0,5"
+                        Tag="{Binding Controller.Connection.WebAddress}" x:Name="WebSiteButton"
+                        Click="WebSiteButton_Click"
+                        Visibility="{Binding Controller.Info.IsP3, Converter={StaticResource booleanToVisibilityConverter}}">
+                    <StackPanel>
+                        <Image Margin="3" Width="{DynamicResource buttonImageSize}"
+                               Height="{DynamicResource buttonImageSize}" Source="{DynamicResource imgGlobe}" />
+                        <TextBlock Text="{DynamicResource strWebSite}" Margin="3" />
+                    </StackPanel>
+                </Button>
+                <ToggleButton ToolTip="{DynamicResource strConnectionOptions}" Width="70" Height="60" Margin="5,5,0,5"
+                              IsChecked="{Binding ShowConnectionOptions, Mode=TwoWay}">
+                    <StackPanel>
+                        <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                               Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgOptions}" />
+                        <TextBlock Text="{DynamicResource strConnectionOptions}" Margin="3" />
+                    </StackPanel>
+                </ToggleButton>
+            </WrapPanel>
+
+            <controls:ThemeBorder Style="{DynamicResource NoHoverThemeLevelStyle}"
+                                  BackgroundThemeLevel="{DynamicResource ThemeColor13}"
+                                  Grid.Row="0" Grid.Column="1" Margin="0,5,5,5" VerticalAlignment="Top">
+                <StackPanel VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="3,3,0,3" Text="{Binding Controller.Info.Model}" FontWeight="Bold" />
+                        <TextBlock Margin="3,3,0,3" Text="{Binding Controller.Info.SerialNumber}" />
+                        <TextBlock Margin="3,3,0,3" Text="{DynamicResource strFW}" FontWeight="Bold" />
+                        <TextBlock Margin="3,3,0,3" Text="{Binding Controller.Info.SoftwareVersion}" FontWeight="Bold" />
+                        <TextBlock Margin="3,3,3,3"
+                                   Text="{Binding Controller.Info.SoftwareDate, Converter={StaticResource dateTimeToShortDateString}}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="3,3,0,3" Text="{DynamicResource strMoonPhase}" FontWeight="Bold" />
+                        <TextBlock Margin="3,3,0,3" Text="{Binding Controller.Info.MoonPhase}" />
+                        <TextBlock Margin="0,3,0,3" Text="%" />
+
+                        <TextBlock Margin="3,3,0,3" Text="{DynamicResource strModeInfo}" FontWeight="Bold" />
+                        <TextBlock Margin="3,3,0,3"
+                                   Text="{Binding Controller.Info.OperationMode, Converter={StaticResource enumToFriendlyNameConverter}}" />
+
+
+                        <!--<TextBlock Margin="0,3,0,3" Text ="Location: " FontWeight="Bold"/>
+                            <TextBlock Margin="0,3,0,3" Text ="{Binding Info.Longitude, Converter={StaticResource doubleToLocation}}"/>
+                            <TextBlock Margin="0,3,0,3" Text =","/>
+                            <TextBlock Margin="0,3,3,3" Text ="{Binding Info.Latitude, Converter={StaticResource doubleToLocation}}"/>-->
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="3,3,0,3" Text="{DynamicResource strLastUpdate}" FontWeight="Bold" />
+                        <TextBlock Margin="3,3,0,3" Text="{Binding Controller.Info.LastUpdate}" />
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="3,3,0,3" Text="{DynamicResource strConnectionTab}" FontWeight="Bold" />
+                        <TextBlock Margin="3,3,0,3" Text="{Binding Controller.Connection.NetworkConntectionText}" />
+                    </StackPanel>
+                </StackPanel>
+            </controls:ThemeBorder>
+
+            <Grid Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" x:Name="ItemsArea">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" BorderThickness="0,1,0,0">
+                    <ScrollViewer.Resources>
+                        <converters:ResourceKeyToStringConverter x:Key="resourceKeyToStringConverter"/>
+                        <CollectionViewSource x:Key="cvs" Source="{Binding Controller.Items}">
+                            <CollectionViewSource.GroupDescriptions>
+                                <PropertyGroupDescription PropertyName="Type"/>
+                            </CollectionViewSource.GroupDescriptions>
+                            <CollectionViewSource.SortDescriptions>
+                                <componentModel:SortDescription PropertyName="Type" />
+                                <componentModel:SortDescription PropertyName="DisplayName"/>
+                            </CollectionViewSource.SortDescriptions>
+                        </CollectionViewSource>
+                        <CollectionViewSource x:Key="reminders" Source="{Binding Controller.Info.Reminders}">
+                            <CollectionViewSource.GroupDescriptions>
+                                <PropertyGroupDescription PropertyName="Type"/>
+                            </CollectionViewSource.GroupDescriptions>
+                            <CollectionViewSource.SortDescriptions>
+                                <componentModel:SortDescription PropertyName="Type" />
+                                <componentModel:SortDescription PropertyName="Text"/>
+                            </CollectionViewSource.SortDescriptions>
+                        </CollectionViewSource>
+                    </ScrollViewer.Resources>
+                    <StackPanel>
+                    <ItemsControl ItemsSource="{Binding Source={StaticResource cvs}}" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ContentControl Content="{Binding .}" Style="{StaticResource StatusButtonItemStyle}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Margin="5,15,5,0" FontSize="{DynamicResource DefaultFontSize2}" FontWeight="Bold" Text="{Binding Name, Converter={StaticResource resourceKeyToStringConverter}}" />
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ItemsControl.GroupStyle>
+                    </ItemsControl>
+
+                    <ItemsControl ItemsSource="{Binding Source={StaticResource reminders}}" Margin="0,0,0,5" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <ContentControl Content="{Binding .}" Style="{StaticResource StatusButtonItemStyle}"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Margin="5,15,5,0" FontSize="{DynamicResource DefaultFontSize2}" FontWeight="Bold" Text="{Binding Name, Converter={StaticResource resourceKeyToStringConverter}}" />
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ItemsControl.GroupStyle>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
+            <Grid Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0"
+                  Visibility="{Binding DisplayItemArea, Converter={StaticResource booleanToVisibilityConverter}}">
+
+                <controls:ThemeBorder Margin="0"
+                                      Style="{DynamicResource NoHoverThemeLevelStyle}"
+                                      BorderThickness="0"
+                                      BackgroundThemeLevel="{DynamicResource ThemeColor10}" />
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Button Style="{StaticResource TextButtonStyle}" Content="Back" Margin="5"
+                            Command="{Binding BackCommand}" VerticalAlignment="Center" HorizontalAlignment="Left" />
+
+                    <Grid Grid.Row="1" DataContext="{Binding CurrentSelection}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+
+                        <ContentControl Grid.Row="0" Content="{Binding}"
+                                        ContentTemplateSelector="{StaticResource SensorTemplateSelector}" />
+
+                        <ContentControl Grid.Row="1" Content="{Binding}"
+                                        ContentTemplateSelector="{StaticResource TabAreaSelector}" />
+                    </Grid>
+                </Grid>
+            </Grid>
+            
+            <Border x:Name="Remote" Grid.Row="2" Grid.ColumnSpan="2" Grid.Column="0">
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Remote.IsActive}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <controls:ThemeBorder Margin="5,0,5,5"
+                                      Style="{DynamicResource NoHoverThemeLevelStyle}"
+                                      BackgroundThemeLevel="{DynamicResource ThemeColor10}">
+                    <views:Remote DataContext="{Binding Remote}" />
+                </controls:ThemeBorder>
+            </Border>
+            
+        </Grid>
+
+        <Border x:Name="ConnectionOptions" Background="#60000000">
+            <Border.Style>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ShowConnectionOptions}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <controls:ThemeBorder Margin="5,5,5,5"
+                                  VerticalAlignment="Center" HorizontalAlignment="Center"
+                                  Style="{DynamicResource NoHoverThemeLevelStyle}"
+                                  BackgroundThemeLevel="{DynamicResource ThemeColor10}">
+                <StackPanel>
+                    <TextBlock Margin="5,5,5,0" Text="{DynamicResource strConnectionOptions}" FontWeight="Bold"
+                               FontSize="{DynamicResource TitlebarFontSize}" />
+                    <views:ConnectionView DataContext="{Binding Controller}"/>
+                    <Button Content="{DynamicResource strClose}" Command="{Binding CloseConnectionOptions}"
+                            Style="{DynamicResource TextButtonStyle}" HorizontalAlignment="Right" Margin="0,0,5,5" />
+                </StackPanel>
+            </controls:ThemeBorder>
+        </Border>
+
+        <Border x:Name="LightTest" Background="#60000000">
+            <Border.Style>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Controller.Info.OperationMode}" Value="LightTest">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <controls:ThemeBorder Margin="5,5,5,5"
+                                  VerticalAlignment="Center" HorizontalAlignment="Center"
+                                  Style="{DynamicResource NoHoverThemeLevelStyle}"
+                                  BackgroundThemeLevel="{DynamicResource ThemeColor10}">
+                <StackPanel>
+                    <TextBlock Margin="5,5,5,0" Text="{DynamicResource strLightTest}" FontWeight="Bold"
+                               FontSize="{DynamicResource TitlebarFontSize}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" x:Name="ValueText" Margin="5" MinWidth="50"
+                                   HorizontalAlignment="Center" FontWeight="Bold"
+                                   Text="{Binding LightTestTimeValue, Converter={StaticResource IntToTimeString}}"
+                                   VerticalAlignment="Center" FontSize="{DynamicResource TitlebarFontSize}" />
+                        <Slider Grid.Column="1" Minimum="0" Maximum="1439" Margin="0,5,5,5" MinWidth="400"
+                                Value="{Binding LightTestTimeValue}" VerticalAlignment="Center" />
+                    </Grid>
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Button ToolTip="{DynamicResource strStop}" MaxWidth="90" Margin="5,5,5,5"
+                                    Command="{Binding StopLightTestCommand}">
+                                <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                                       Width="{DynamicResource buttonImageSize}" Source="{DynamicResource imgStop}" />
+                            </Button>
+                            <Button ToolTip="{DynamicResource strPlay}" MaxWidth="90" Margin="0,5,5,5"
+                                    Command="{Binding PlayLightTestCommand}">
+                                <Image Margin="3" Height="{DynamicResource buttonImageSize}"
+                                       Width="{DynamicResource buttonImageSize}">
+                                    <Image.Style>
+                                        <Style TargetType="{x:Type Image}">
+                                            <Setter Property="Source" Value="{DynamicResource imgPlay}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsPlayingLightTest}" Value="True">
+                                                    <Setter Property="Source" Value="{DynamicResource imgPause}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </Button>
+                        </StackPanel>
+                        <Button HorizontalAlignment="Right" Style="{DynamicResource TextButtonStyle}"
+                                Content="{DynamicResource strClose}" Command="{Binding LightTestCommand}"
+                                Margin="0,5,5,5" />
+                    </Grid>
+                </StackPanel>
+            </controls:ThemeBorder>
+        </Border>
+
+    </Grid>
+</UserControl>

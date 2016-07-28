@@ -1,0 +1,110 @@
+﻿<!DOCTYPE HTML>
+<html>
+    <head>
+	<title>Reef Status</title>
+    
+    <link rel="stylesheet" type="text/css" href="assets/reefstatus.css"/>
+    <style type="text/css">
+        #pagetitle
+        {
+            background-image: url(assets/bg_hd.gif);
+        }
+        #pagetitle h1
+        {
+            background-image: url(assets/title_h_bg.gif);
+        }
+    </style>
+    <style type="text/css">
+        /*margin and padding on body element
+          can introduce errors in determining
+          element position and are not recommended;
+          we turn them off as a foundation for YUI
+          CSS treatments. */body
+        {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="yui/fonts/fonts-min.css" />
+    <link rel="stylesheet" type="text/css" href="yui/tabview/assets/skins/sam/tabview.css" />
+    <link rel="stylesheet" type="text/css" href="yui/button/assets/skins/sam/button.css" />
+    <link rel="stylesheet" type="text/css" href="yui/datatable/assets/skins/sam/datatable.css" />
+    <link rel="stylesheet" type="text/css" href="yui/paginator/assets/skins/sam/paginator.css" />
+    <script type="application/javascript" src="xml.js"></script>
+    <script type="application/javascript" src="commands.js"></script>
+    <script type="application/javascript" src="access.js"></script>
+
+    <style type="text/css">
+        /* custom styles for this example */.yui-skin-sam .yui-dt-body
+        {
+            cursor: pointer;
+        }
+        /* when rows are selectable */#single
+        {
+            margin-top: 2em;
+        }
+    </style>
+    </head>
+    <body onload='startRefreshText()'>
+	    <div id="pagetitle">
+        <h1>
+            Reef Status Control</h1>
+    </div>
+	<div id="control" title="Control" class = "panel" >
+       <!--<input type = "button" onclick ="alert('test')" value="test" /> -->
+            <table style="width:auto; height: auto;" align = "center">
+               <tr>
+            <td align="center" valign="top" bgcolor="#0000FF" style="font-family: 'Courier New'; font-weight: bold; color: #FFFFFF">
+                <div id="DisplayText" align="left">
+                </div>
+           </td>
+           </tr>
+           <tr>
+               <td align="center">
+                   <table align="center">
+                       <tr>
+                           <td align="center">
+                              <button class= "toolButton" id="Button8" type="button" 
+                                   onclick = "refreshDisplay()">Refresh</button></td>
+                           <td align="center">
+                               &nbsp;</td>
+                           <td align="center">
+                               <button class= "toolButton" id="Button2" type="button"
+                                   onclick = "keyCommand('up')"><img src="icons/up-icon.png"/></button></td>
+                           <td align="center">
+                               &nbsp;</td>
+                       </tr>
+                       <tr>
+                           <td align="center">
+                               <button id="Button3" type="button"
+                                   class= "toolButton" onclick = "keyCommand('enter')">Enter</button></td>
+                           <td align="center">
+                               <button id="Button4" type="button" 
+                                   class= "toolButton" onclick = "keyCommand('left')"><img src="icons/left-icon.png"/></button></td>
+                           <td align="center">
+                               &nbsp;</td>
+
+                           <td align="center">
+                               <button id="Button5" type="button" 
+                                   class= "toolButton" onclick = "keyCommand('right')"><img src="icons/right-icon.png"/></button></td>
+                       </tr>
+                       <tr>
+                           <td align="center">
+                               <button id="Button6" type="button" value="Esc" 
+                                   class= "toolButton" onclick = "keyCommand('esc')">Esc</button></td>
+                           <td align="center">
+                               &nbsp;</td>
+                           <td align="center">
+                               <button id="Button7" type="button"
+                                   class= "toolButton" onclick = "keyCommand('down')"><img src="icons/down-icon.png"/></button></td>
+                           <td align="center">
+                               &nbsp;</td>
+                       </tr>
+                   </table>
+               </td>
+           </tr>
+       </table>
+       </div>
+       <a href="mobile.html">Back</a>
+	</body>
+</html>

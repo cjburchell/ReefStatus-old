@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="WindowBackground" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="ToolWindowBackground" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="DialogWindowBackground" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="AboutWindowBackground" Color="#FFCCCCCC"/>
+    <SolidColorBrush x:Key="WindowBorder" Color="#FF1A1A1A"/>
+    <SolidColorBrush x:Key="PaneWindowBackground" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="ToolbarBottomBorder" Color="#FF666666"/>
+    
+</ResourceDictionary>

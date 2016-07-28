@@ -1,0 +1,94 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Settings="clr-namespace:RedPoint.ReefStatus.Common.Settings;assembly=RedPoint.ReefStatus.Common"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    xmlns:Controls1="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit.Extended" mc:Ignorable="d"
+    x:Class="RedPoint.ReefStatus.Gui.Views.LoggingSettingsView"
+    x:Name="UserControl" d:DesignWidth="401.873" d:DesignHeight="307.49">
+
+
+    <UserControl.Resources>
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type System:Enum}" x:Key="dateRangeModeValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="Settings:DateRangeMode" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <CheckBox IsChecked="{Binding AllowMulitControllers}" Margin="5,5,5,0" Content="{DynamicResource strAllowMulitControllers}"/>
+            
+            <TextBlock Margin="5" Grid.Row="1" Grid.Column="0" Text="{DynamicResource strLogEvery}" VerticalAlignment="Center"/>
+            <Controls1:IntegerUpDown Minimum="1" Maximum="120" Value="{Binding LogInterval, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Margin="0,5,5,5"/>
+            <TextBlock Grid.Row="1" Grid.Column="2" Text="{DynamicResource strMinutes}" VerticalAlignment="Center" Margin="0,5,5,5"/>
+
+            <CheckBox IsChecked="{Binding LimitDatabase}" Margin="5,0,5,5" Grid.Row="2" Grid.Column="0" Content="{DynamicResource strLimitDataPoints}" VerticalAlignment="Center"/>
+            <Controls1:IntegerUpDown Margin="0,0,5,5" Minimum="1" Maximum="365" Value="{Binding LimitDatabaseDuration, Mode=TwoWay}" Grid.Row="2" Grid.Column="1" IsEnabled="{Binding LimitDatabase}"/>
+            <ComboBox ItemsSource="{Binding Source={StaticResource dateRangeModeValues}}" SelectedItem="{Binding LimitDatabaseMode}" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" MinWidth="100" Margin="0,0,5,5" IsEnabled="{Binding LimitDatabase}"/>
+        </Grid>
+        <GroupBox Grid.Row="2" Header="{DynamicResource strDatabase}" Grid.ColumnSpan="2" Margin="5,0,5,5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="{DynamicResource strConnection}" VerticalAlignment="Center" Margin="5"/>
+                <TextBox Grid.Column="1"  Grid.ColumnSpan="2" Margin="0,5,5,5" Text="{Binding DatabaseConnection}"/>
+
+                <CheckBox IsChecked="{Binding ArchiveDatabase}" Grid.Row="2" Grid.Column="0" Content="{DynamicResource strArchiveEvery}" VerticalAlignment="Center" Margin="5,0,5,5"/>
+                <Controls1:IntegerUpDown Minimum="1" Maximum="365" IsEnabled="{Binding ArchiveDatabase, Mode=TwoWay}" Value="{Binding ArchiveDatabaseDuration}" Grid.Row="2" Grid.Column="1" Margin="0,0,5,5"/>
+                <ComboBox HorizontalAlignment="Left" IsEnabled="{Binding ArchiveDatabase}" ItemsSource="{Binding Source={StaticResource dateRangeModeValues}}" SelectedItem="{Binding ArchiveDatabaseMode}" Grid.Row="2" Grid.Column="2" Margin="0,0,5,5" MinWidth="100"/>
+
+                <GroupBox Header="{DynamicResource strStatus}" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="3">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{DynamicResource strRecords}" VerticalAlignment="Center" Margin="5"/>
+                        <TextBlock Text="{Binding RecordCount}" Grid.Column="1" Margin="0,5,5,5"/>
+
+                        <TextBlock Text="{DynamicResource strSessionWrite}" Grid.Row="1" VerticalAlignment="Center" Margin="5,0,5,5"/>
+                        <TextBlock Text="{Binding RecordsWrite}" Grid.Row="1" Grid.Column="1" Margin="0,0,5,5"/>
+
+                        <TextBlock Text="{DynamicResource strSessionDelete}" Grid.Row="2" VerticalAlignment="Center" Margin="5,0,5,5"/>
+                        <TextBlock Text="{Binding RecordsDelete}" Grid.Row="2" Grid.Column="1" Margin="0,0,5,5"/>
+
+                        <Button Command="{Binding CleanUpCommand}" Content="{DynamicResource strCleanUp}" Grid.Row="3" HorizontalAlignment="Left" Style="{DynamicResource TextButtonStyle}" Margin="5,0,5,5"/>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

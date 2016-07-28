@@ -1,0 +1,68 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
+	<ResourceDictionary.MergedDictionaries>
+
+        <!--Colours-->
+        <ResourceDictionary Source="Colours/CommonColours.xaml"/>
+
+        <!--Fonts-->
+        <ResourceDictionary Source="Fonts/ButtonFont.xaml"/>
+
+        <!--Controls-->
+        <ResourceDictionary Source="Controls/ArrowStyle.xaml"/>
+        <ResourceDictionary Source="Controls/ThemeBorderStyle.xaml"/>
+        <ResourceDictionary Source="Controls/TextBoxStyle.xaml"/>
+        <ResourceDictionary Source="Controls/BasicButtonStyle.xaml"/>
+        <ResourceDictionary Source="Controls/BasicToggleButtonStyle.xaml"/>
+        <ResourceDictionary Source="Controls/TextButtonStyle.xaml"/>
+        <ResourceDictionary Source="Controls/CheckboxStyle.xaml"/>
+        <ResourceDictionary Source="Controls/GroupBoxStyle.xaml"/>
+        <ResourceDictionary Source="Controls/TabItemStyle.xaml"/>
+        <ResourceDictionary Source="Controls/LabelStyle.xaml"/>
+        <ResourceDictionary Source="Controls/DefaultWindowStyle.xaml"/>
+        <ResourceDictionary Source="Controls/MenuStyle.xaml"/>
+        <ResourceDictionary Source="Controls/ComboBoxStyle.xaml"/>
+
+        <ResourceDictionary Source="Controls/SliderStyle.xaml"/>
+        <ResourceDictionary Source="Controls/ListBoxStyle.xaml"/>
+        <ResourceDictionary Source="Controls/ScrollBarStyle.xaml"/>
+        <ResourceDictionary Source="Controls/ExpanderStyle.xaml"/>
+        <ResourceDictionary Source="Controls/TitlebarStyle.xaml"/>
+
+        <ResourceDictionary Source="Controls/ToolTipStyle.xaml"/>
+
+        <ResourceDictionary Source="Controls/RadioButtonStyle.xaml"/>
+        <ResourceDictionary Source="Controls/RoundDeleteButtonStyle.xaml"/>
+        <ResourceDictionary Source="Controls/SpinBoxStyle.xaml"/>
+        <ResourceDictionary Source="Controls/MessageBoxStyle.xaml"/>
+
+        <ResourceDictionary Source="Controls/DataGridStyle.xaml"/>
+
+
+        <ResourceDictionary Source="Controls/ButtonExpanderStyle.xaml"/>
+
+        <ResourceDictionary Source="Controls/FontChooserStyle.xaml"/>
+
+
+        <ResourceDictionary Source="Controls/BizzySpinnerStyle.xaml"/>
+
+        <ResourceDictionary Source="Controls/TreeViewStyle.xaml"/>
+
+        <ResourceDictionary Source="Controls/MenuButtonStyle.xaml"/>
+        <ResourceDictionary Source="Controls/FlatButtonStyle.xaml"/>
+        <ResourceDictionary Source="Controls/CalendarStyle.xaml"/>
+
+        <ResourceDictionary Source="Controls/ColorPicker.xaml"/>
+
+        <!--Images-->
+        <ResourceDictionary Source="Images/ControlImages.xaml"/>
+        <ResourceDictionary Source="Images/Images.xaml"/>
+
+        <!--Animations-->
+
+        <ResourceDictionary Source="Strings/Strings.en-US.xaml"/>
+
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

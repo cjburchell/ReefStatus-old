@@ -1,0 +1,37 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:Helpers="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls.Helpers" 
+    xmlns:Controls="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls">
+
+    <ControlTemplate x:Key="BasicButtonTemplate" TargetType="{x:Type ButtonBase}">
+        <Controls:ThemeBorder 
+                    Style="{DynamicResource ControlThemeBorderStyle}"
+                    CornerRadius="{TemplateBinding Helpers:ThemeHelper.CornerRadius}" 
+                    IsHighlighted="{TemplateBinding IsMouseOver}" 
+                    IsPressed="{TemplateBinding IsPressed}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+
+            <!-- Content Presenter is where the text content etc is placed by the control -->
+            <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+        </Controls:ThemeBorder>
+    </ControlTemplate>
+
+    <Style x:Key="BasicButton" TargetType="{x:Type Button}">
+        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeBaseForgroundLevel2}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource DefaultFontFamily}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Helpers:ThemeHelper.CornerRadius" Value="2"/>
+        <Setter Property="Template" Value="{DynamicResource BasicButtonTemplate}" />
+        <Setter Property="MinHeight" Value="{DynamicResource TouchScreenItemSize}"/>
+        <Setter Property="MinWidth" Value="{DynamicResource TouchScreenItemSize}"/>
+    </Style>
+
+    <Style BasedOn="{StaticResource BasicButton}" TargetType="{x:Type Button}"/>
+
+</ResourceDictionary>

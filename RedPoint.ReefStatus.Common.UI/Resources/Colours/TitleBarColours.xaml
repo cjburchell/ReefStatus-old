@@ -1,0 +1,55 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <LinearGradientBrush x:Key="TitleBarBackground" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFB3B3B3" Offset="0"/>
+        <GradientStop Color="#FF1A1A1A" Offset="0.5"/>
+        <GradientStop Color="#FF000000" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="TitleBarUnfocusedBackground" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFCCCCCC" Offset="0"/>
+        <GradientStop Color="#FF333333" Offset="1"/>
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="TitleBarButtonBorder" Color="#FF7B7B7B"/>
+    
+    <LinearGradientBrush x:Key="CloseHoverBackground" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFF7B19F" Offset="0"/>
+        <GradientStop Color="#FFF0484E" Offset="0.5"/>
+        <GradientStop Color="#FFBF2230" Offset="0.5"/>
+        <GradientStop Color="#FFF38188" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="CloseBackground" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFB6645A" Offset="0"/>
+        <GradientStop Color="#FFB33439" Offset="0.5"/>
+        <GradientStop Color="#FF901A1F" Offset="0.5"/>
+        <GradientStop Color="#FF9E4139" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="TitleBarButtonNormalBackground" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFB3B3B3" Offset="0"/>
+        <GradientStop Color="#FF1A1A1A" Offset="0.5"/>
+        <GradientStop Color="#FF000000" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="TitleBarButtonHoverBackground" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFCCCCCC" Offset="0"/>
+        <GradientStop Color="#FF333333" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="TitleBarButtonNormalInactiveBackground" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFCCCCCC" Offset="0"/>
+        <GradientStop Color="#FF333333" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <SolidColorBrush x:Key="TitleBarButtonHoverInactiveBackground" Color="#FFCCCCCC"/>
+    
+    <SolidColorBrush x:Key="TitleBarButtonDownBackground" Color="#FF1A1A1A"/>
+
+    <SolidColorBrush x:Key="TitleBarFontColor" Color="#FFFFFFFF"/>
+
+    <SolidColorBrush x:Key="TitleBarButtonForground" Color="#FFFFFFFF"/>
+    
+</ResourceDictionary>

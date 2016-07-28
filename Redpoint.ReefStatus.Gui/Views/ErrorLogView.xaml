@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="RedPoint.ReefStatus.Gui.Views.ErrorLogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DataGrid ItemsSource="{Binding ErrorLogContent}" IsReadOnly="True">
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="{DynamicResource strTimeHeader}" Binding="{Binding Time}" Width ="Auto" IsReadOnly="True"/>
+            <DataGridTextColumn Header="{DynamicResource strCodeHeader}" Binding ="{Binding Code}" Width ="Auto" IsReadOnly="True"/>
+            <DataGridTextColumn Header="{DynamicResource strMessageHeader}" Binding ="{Binding Message}" Width="Auto" IsReadOnly="True"/>
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>

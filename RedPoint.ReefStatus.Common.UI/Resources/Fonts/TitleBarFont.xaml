@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:System="clr-namespace:System;assembly=mscorlib">
+
+    <FontWeight x:Key="TitlebarFontWeight">Normal</FontWeight>
+    <System:Double x:Key="TitlebarFontSize">11</System:Double>
+    
+</ResourceDictionary>

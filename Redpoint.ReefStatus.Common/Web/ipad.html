@@ -1,0 +1,276 @@
+﻿<!DOCTYPE HTML>
+<html>
+	<head>
+      <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+
+      <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+      <link rel="apple-touch-startup-image" href="icons/ipadsplash1.png" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+
+      <link rel="icon" type="image/png" href="icons/starfish-icon.png"/>
+		<title>Reef Status</title>
+      <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+      <link rel="stylesheet" href="iui/iui.css" type="text/css" />
+      <link rel="stylesheet" title="Default" href="iui/t/default/default-theme.css"  type="text/css"/>
+      <link rel="stylesheet" href="iui/iui-panel-list.css" type="text/css" />
+      <script type="application/javascript">
+          function popover_toc() {
+              if (iui.hasClass(document.getElementById("iui-container"), 'hiding')) {
+                  iui.removeClass(document.getElementById("iui-container"), 'hiding')
+              } else {
+                  iui.addClass(document.getElementById("iui-container"), 'hiding')
+              }
+          }
+      </script>
+      <link rel="stylesheet" href="iui/iscroll/iui-iscroll.css" type="text/css" />
+
+        <script type="application/javascript" src="iui/iui.js"></script>
+        <script type="application/javascript" src="iui/iscroll/iscroll.js"></script>
+        <script type="application/javascript" src="iui/iscroll/iui-iscroll.js"></script>
+        <script type="application/javascript" src="xml.js"></script>
+        <script type="application/javascript" src="access.js"></script>
+        <script type="application/javascript" src="commands.js"></script>
+        <script type="application/javascript" src="iphone.js"></script>
+
+         <link rel="stylesheet" href="iphone.css" type="text/css" />
+
+        <script type="application/javascript">
+
+            iPad = true;
+
+            updateContentPane["info"] = updateInfo;
+            updateContentPane["probes"] = updateProbes;
+            updateContentPane["levelSensors"] = updateLevelSensors;
+            updateContentPane["digitalinputs"] = updateDigitalinputs;
+            updateContentPane["sport"] = updateSPorts;
+            updateContentPane["lport"] = updateLPorts;
+            updateContentPane["lights"] = updateLights;
+            updateContentPane["dosing"] = updateDosing;
+            updateContentPane["user"] = updateUserData;
+            updateContentPane["control"] = startRefreshText;
+            updateContentPane["reminders"] = updateReminders;
+
+         </script>
+
+         <script type="application/javascript">
+
+            function updateHomeMenu() {
+                var infoText = '<li><a href="#info" onclick = "updateInfo()"><img src="icons/info-icon.png" /> Information</a></li>';
+                var info = new ControlerInfo();
+
+                if (info.hasProbes) {
+                        infoText += '<li><a href="#probes" onclick = "stopRefresh()"><img src="icons/thermometer.png" /> Probes</a></li>';
+                    }
+                    if (info.hasLevelSensors) {
+                        infoText += '<li><a href="#levelSensors" onclick = "stopRefresh()"><img src="icons/WaterBottle.png" /> Level Sensors</a></li>';
+                    }
+                    if (info.hasDigitalInputs) {
+                        infoText += '<li><a href="#digitalinputs" onclick = "stopRefresh()"><img src="icons/green_button-32.png" /> Digtital Inputs</a></li>';
+                    }
+                    if (info.hasSPorts) {
+                        infoText += '<li><a href="#sport" onclick = "stopRefresh()"><img src="icons/powerplug.png" /> Sockets</a></li>';
+                    }
+                    if (info.hasLPorts) {
+                        infoText += '<li><a href="#lport" onclick = "stopRefresh()"><img src="icons/diagram-icon.png" /> 1-10V Ports</a></li>';
+                    }
+                    if (info.hasLights) {
+                        infoText += '<li><a href="#lights" onclick = "stopRefresh()"><img src="icons/light.png" /> Lights</a></li>';
+                    }
+                    if (info.hasDosingPumps) {
+                        infoText += '<li><a href="#dosing" onclick = "stopRefresh()"><img src="icons/science.png" /> Dosing</a></li>';
+                    }
+                    if (info.hasUserValues) {
+                        infoText += '<li><a href="#user" onclick = "stopRefresh()"><img src="icons/ph.png" /> Other</a></li>';
+                    }
+                    if (info.hasReminders) {
+                        infoText += '<li><a href="#reminders" onclick = "stopRefresh()"><img src="icons/bell.png" /> Reminders</a></li>';
+                    }
+                
+
+                infoText += '<li><a href="#control"><img src="icons/monitor-icon.png" /> Control</a></li>';
+                infoText += '<li><a href="#links">Links</a></li>';
+
+                document.getElementById('home').innerHTML = infoText;
+            }
+        </script>
+
+        <style type="text/css">
+            #iui-container > *:not(.toolbar) {
+                width: 320px;
+            }
+            
+            #iui-container > .toolbar {
+                width: 320px;
+            }
+            
+            #iui-container > .dialog {
+                width: 100%;
+            }
+        </style>
+	</head>
+	<body onload='updateHomeMenu()'>
+   <div id="iui-container">
+	    <div class="toolbar">
+        <h1 id="pageTitle"></h1>
+        <a id="backButton" class="button" href="#"></a>
+       </div>
+
+       <ul id="home" title="Reef Status" selected="true">
+       </ul>
+
+        <form id="unlock" class="dialog" method="post" action="none" onsubmit="unlock()">
+            <fieldset>
+                <h1>Password</h1>
+                <a class="button blueButton" type="submit" onclick="unlock()">OK</a>
+                <a class="button leftButton" type="cancel">Close</a>
+                <input id="Password" type="password" name="password"/>
+            </fieldset>
+        </form >
+
+        <form id="thunderDialog" class="dialog" method="post" action="none" onsubmit="thunderstorm()">
+            <fieldset>
+                <h1>Duration</h1>
+                <a class="button blueButton" type="submit" onclick="thunderstorm()" >OK</a>
+                <a class="button leftButton" type="cancel">Close</a>
+                <input id="thunderstormDuration" type="text" name="duration"/>
+            </fieldset>
+        </form >
+      
+      <ul id="more" title="More Information">
+      </ul>
+      
+      <div id="info" title="Information" class="panelcontent">
+      </div>
+
+       
+       <div id="probes" title="Probes" class="panelcontent">
+       </div>
+
+       <div id="reminders" title="Reminders" class="panelcontent">
+       </div>
+       
+       <div id="levelSensors" title="Level Sensors" class = "panelcontent" >
+       </div>
+
+       <div id="digitalinputs" title="Digital Inputs" class="panelcontent">
+       </div>
+       
+       <div id="sport" title="Sockets" class="panelcontent">
+       </div>
+       
+       <div id="lport" title="1-10V Ports" class = "panelcontent" >
+       </div>
+
+       <div id="lights" title="Lights" class = "panelcontent" >
+       </div>
+
+       <div id="dosing" title="Dosing" class = "panelcontent" >
+       </div>
+       
+       <div id="user" title="Other Parameters" class = "panelcontent" >
+       </div>
+       
+       <div id="graph" title="Graph" class="panelcontent">
+       </div>
+
+       <div id="graph_day" title="Graph" class="panelcontent">
+       </div>
+
+       <div id="graph_week" title="Graph" class="panelcontent">
+       </div>
+
+       <div id="graph_month" title="Graph" class="panelcontent">
+       </div>
+
+       <div id="graph_year" title="Graph" class="panelcontent">
+       </div>
+
+       <div id="data" title="Data" class="panelcontent">
+       </div>
+
+       <ul id="links" title="Links">
+        <li><a target='_self' href="reefstatus.html">Normal Interface</a></li> 
+        <li><a target='_self' href="iphone.html">iPhone Interface</a></li>
+        <li><a target='_self' href="mobile.html">Mobile Interface</a> </li>
+        <li><a target='_self' href="http://reefstatus.codeplex.com">Reef Status</a></li>
+        <li><a target='_self' href="http://www.aquariumcomputer.com/Forum/index.php">ProfiLux Support Forum</a></li>
+       </ul>
+
+       <div id="control" title="Control" class="panelcontent" >
+       <!--<input type = "button" onclick ="alert('test')" value="test" /> -->
+            <table style="width:auto; height: auto;" align = "center">
+               <tr>
+            <td align="left" valign ="top" bgcolor="#0000ff" style="font-family: 'Courier New'; font-weight: bold; color: #FFFFFF">
+                   <div id = "DisplayText">
+                   </div>
+           </td>
+           </tr>
+           <tr>
+               <td align="center">
+                   <table align="center">
+                       <tr>
+                           <td align="center">
+                              <button class= "whiteButton" id="Button8" type="button" value="Refresh" 
+                                   onclick = "refreshDisplay()">Refresh</button></td>
+                           <td align="center">
+                               &nbsp;</td>
+                           <td align="center">
+                               <button class= "whiteButton" id="Button2" type="button" value="Up" 
+                                   onclick = "keyCommand('up')"><img src="icons/up-icon.png"/></button></td>
+                           <td align="center">
+                               &nbsp;</td>
+                       </tr>
+                       <tr>
+                            <td align="center">
+                               <button id="Button3" type="button" value="Enter" 
+                                   class= "whiteButton" onclick = "keyCommand('enter')">Enter</button></td>
+                           <td align="center">
+                               <button id="Button4" type="button" value="Left" 
+                                   class= "whiteButton" onclick = "keyCommand('left')"><img src="icons/left-icon.png"/></button></td>
+                           <td align="center">
+                               &nbsp;</td>
+                           <td align="center">
+                               <button id="Button5" type="button" value="Right" 
+                                   class= "whiteButton" onclick = "keyCommand('right')"><img src="icons/right-icon.png"/></button></td>
+                       </tr>
+                       <tr>
+                       
+                           <td align="center">
+                               <button id="Button6" type="button" value="Esc" 
+                                   class= "whiteButton" onclick = "keyCommand('esc')">Esc</button></td>
+                           <td align="center">
+                               &nbsp;</td>
+                           <td align="center">
+                               <button id="Button7" type="button" value="Down" 
+                                   class= "whiteButton" onclick = "keyCommand('down')"><img src="icons/down-icon.png"/></button></td>
+                           <td align="center">
+                               &nbsp;</td>
+                       </tr>
+                   </table>
+               </td>
+           </tr>
+       </table>
+       </div>
+       </div>
+       <div id="iuipad-content-panel">
+        <div class="toolbar">
+            <h1 id="contentTitle"></h1>
+        </div>
+        <div class="wrapper">
+          <div class="scroller">
+            <div id="iuipad-content">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="iui-dialogArea">
+      </div>
+
+      <script type="text/javascript">
+          updateInfo();
+          updatePanelContent('info');
+      </script>
+	</body>
+</html>

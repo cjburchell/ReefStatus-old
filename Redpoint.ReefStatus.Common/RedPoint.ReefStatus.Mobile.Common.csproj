@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{549CFB59-991A-44E0-8C91-73D7B28801AA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RedPoint.ReefStatus.MobileBase</RootNamespace>
+    <AssemblyName>Redpoint.ReefStatus.MobileBase</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>PocketPC</PlatformFamilyName>
+    <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
+    <OSVersion>5.1</OSVersion>
+    <DeployDirSuffix>Redpoint.ReefStatus.MobileBase</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <NativePlatformName>Windows Mobile 5.0 Pocket PC SDK</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Communication\Connection.cs" />
+    <Compile Include="Communication\ConnectionException.cs" />
+    <Compile Include="Communication\IConnection.cs" />
+    <Compile Include="Communication\NetworkConnection.cs" />
+    <Compile Include="Communication\NetworkException.cs" />
+    <Compile Include="IUpdateProgress.cs" />
+    <Compile Include="Language.cs" />
+    <Compile Include="Logger.cs" />
+    <Compile Include="LogMessage.cs" />
+    <Compile Include="ProfiLux\BaseInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\BasicProtocol.cs" />
+    <Compile Include="ProfiLux\Controler.cs" />
+    <Compile Include="ProfiLux\DataPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\DeviceInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\DigitalInput.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\DosingPump.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\ErrorCodeException.cs" />
+    <Compile Include="ProfiLux\IBasicProtocol.cs" />
+    <Compile Include="ProfiLux\Info.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\IProfilux.cs" />
+    <Compile Include="ProfiLux\ItemDataRow.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\LevelSensor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\Light.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\LPort.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\ProbeSensor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\ProfiLux.cs" />
+    <Compile Include="ProfiLux\Profilux4Controler.cs" />
+    <Compile Include="ProfiLux\Profilux5Controler.cs" />
+    <Compile Include="ProfiLux\ProfiluxHttpProtocol.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\ProfiLuxProtocol.cs" />
+    <Compile Include="ProfiLux\Protocol.cs" />
+    <Compile Include="ProfiLux\ProtocolException.cs" />
+    <Compile Include="ProfiLux\Reminder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\SensorInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\SPort.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ProfiLux\Types.cs" />
+    <Compile Include="ProfiLux\UserInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfoMobile.cs" />
+    <Compile Include="ReefStatusException.cs" />
+    <Compile Include="Settings\ConnectionSettings.cs" />
+    <Compile Include="UI\IProgressCallback.cs" />
+    <Compile Include="UI\ViewModel\SafeObservableCollection.cs" />
+    <Compile Include="UI\ViewModel\ViewModelBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="key.snk" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Condition="'$(TargetFrameworkVersion)' == 'v3.5'" Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+</Project>

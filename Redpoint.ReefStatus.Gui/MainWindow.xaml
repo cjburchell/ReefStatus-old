@@ -1,0 +1,366 @@
+﻿<Controls:CustomWindow
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Views="clr-namespace:RedPoint.ReefStatus.Gui.Views"
+    xmlns:Controls="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls;assembly=RedPoint.ReefStatus.Common.UI"
+    x:Class="RedPoint.ReefStatus.Gui.MainWindow"
+    x:Name="mainWindow"
+    UseLayoutRounding="True"
+    Title="Reef Status"
+    Closing="WindowClosing" ShowInTaskbar="False"
+    Icon="/RedPoint.ReefStatus.Gui;component/Resources/starfish.ico"
+    Style="{StaticResource RibbonWindow}">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+
+        <DataTemplate x:Key="ControllerTabView">
+            <Views:StatusView />
+        </DataTemplate>
+
+        <DataTemplate x:Key="ControllerTabHeaderView">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Height="20" Width="20" Margin="0,0,2,0" Source="{DynamicResource imgFish}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="{Binding Name}" TextWrapping="Wrap" HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+                <Button Foreground="{DynamicResource ThemeBaseForgroundLevel2}" Margin="2,0,0,0" Grid.Column="2"
+                        Style="{DynamicResource FlatButtonStyle}" Height="20" Width="20"
+                        Command="{Binding DataContext.DeleteControllerCommand, ElementName=mainWindow}"
+                        CommandParameter="{Binding}">
+                    <Viewbox>
+                        <TextBlock FontWeight="Bold" Text="X" />
+                    </Viewbox>
+                </Button>
+            </Grid>
+        </DataTemplate>
+
+    </Window.Resources>
+
+    <Controls:CustomWindow.TitleContent>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Source="/RedPoint.ReefStatus.Gui;component/Resources/starfish.ico" Margin="5" />
+
+            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" Grid.Column="1">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Text" Value="{DynamicResource strReefStatus}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=IsInAlarm}" Value="True">
+                                <Setter Property="Text" Value="{DynamicResource strAlarmReefStatus}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Menu
+                    Name="mnuLayout"
+                    Grid.Column="1"
+                    Style="{DynamicResource MenuButtonStyle}"
+                    Margin="0,0,5,0">
+                    <MenuItem
+                        Style="{DynamicResource MenuButtonItemStyle}"
+                        Header="{DynamicResource strFile}"
+                        Padding="0"
+                        Margin="0"
+                        MaxHeight="30">
+
+                        <MenuItem Header="{DynamicResource strImportData}">
+                            <MenuItem.Icon>
+                                <Image Height="24" Width="24" Source="{DynamicResource imgImport}" />
+                            </MenuItem.Icon>
+                            <MenuItem Header="{StaticResource strImportFromFile}"
+                                      Command="{Binding ImportFromFileCommand}"
+                                      CommandParameter="{Binding SelectedItem, ElementName=tabControl}" />
+                            <MenuItem Header="{StaticResource strImportFromProfilux}"
+                                      Command="{Binding ImportFromProfiluxCommand}"
+                                      CommandParameter="{Binding SelectedItem, ElementName=tabControl}" />
+                        </MenuItem>
+                        <MenuItem Header="{StaticResource strExportData}" Command="{Binding ExportDataMenuItemCommand}"
+                                  CommandParameter="{Binding SelectedItem, ElementName=tabControl}">
+                            <MenuItem.Icon>
+                                <Image Height="24" Width="24" Source="{DynamicResource imgExport}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator />
+                        <MenuItem Header="{StaticResource strAbout}" Click="AboutClick">
+                            <MenuItem.Icon>
+                                <Image Height="24" Width="24" Source="{DynamicResource imgAbout}" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </MenuItem>
+                </Menu>
+
+                <Button Command="{Binding RefreshCommand}" Style="{DynamicResource FlatButtonStyle}" Margin="0,0,3,0"
+                        ToolTip="{DynamicResource strRefresh}" Height="24" Width="24">
+                    <Image Height="16" Width="16" Source="{DynamicResource imgRefresh_White}"
+                           HorizontalAlignment="Center" />
+                </Button>
+
+                <Button Command="{Binding ShowProfiluxControlCommand}" Style="{DynamicResource FlatButtonStyle}"
+                        Margin="0,0,3,0" ToolTip="{StaticResource strProfiluxControl}" Height="24" Width="24">
+                    <Image Height="16" Width="16" Source="/RedPoint.ReefStatus.Gui;component/Resources/p6.ico"
+                           HorizontalAlignment="Center" />
+                </Button>
+
+                <ToggleButton x:Name="logButton" Style="{DynamicResource FlatToggleButtonStyle}" Margin="0,0,3,0"
+                              ToolTip="{StaticResource strLog}" Height="24" Width="24">
+                    <Image Height="16" Width="16" Source="{DynamicResource imgBlog_White}" HorizontalAlignment="Center" />
+                </ToggleButton>
+
+                <ToggleButton x:Name="optionsButton" Style="{DynamicResource FlatToggleButtonStyle}" Margin="0,0,3,0"
+                              ToolTip="{StaticResource strOptions}" Height="24" Width="24">
+                    <Image Height="16" Width="16" Source="{DynamicResource imgOptions_White}"
+                           HorizontalAlignment="Center" />
+                </ToggleButton>
+            </StackPanel>
+        </Grid>
+    </Controls:CustomWindow.TitleContent>
+
+    <Grid>
+        <Grid>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="35" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TabControl
+                Visibility="{Binding Settings.Logging.AllowMulitControllers, Converter={StaticResource booleanToVisibilityConverter}}"
+                SelectedIndex="0" x:Name="tabControl" ItemsSource="{Binding Settings.Controllers}"
+                SelectedItem="{Binding SelectedController}"
+                Grid.Row="1"
+                ItemTemplate="{StaticResource ControllerTabHeaderView}"
+                ContentTemplate="{StaticResource ControllerTabView}">
+                <TabControl.Template>
+                    <ControlTemplate TargetType="{x:Type TabControl}">
+                        <Grid ClipToBounds="true" SnapsToDevicePixels="true" KeyboardNavigation.TabNavigation="Local">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition x:Name="ColumnDefinition0" />
+                                <ColumnDefinition x:Name="ColumnDefinition1" Width="0" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition x:Name="RowDefinition0" Height="Auto" />
+                                <RowDefinition x:Name="RowDefinition1" Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <ScrollViewer Template="{DynamicResource ScrollViewerTabScrollTemplate}" Margin="0,0,0,-1"
+                                          Panel.ZIndex="1" x:Name="HeaderPanel" Grid.Column="0" Grid.Row="0"
+                                          HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                                <StackPanel Orientation="Horizontal">
+                                    <TabPanel x:Name="TabPannel" IsItemsHost="true" Margin="2,2,2,0"
+                                              KeyboardNavigation.TabIndex="1" />
+                                    <Button Width="20" VerticalAlignment="Center" Height="20" Margin="0,2,2,2"
+                                            Command="{Binding DataContext.AddControllerCommand, ElementName=mainWindow}">
+                                        <Viewbox>
+                                            <Image Margin="5" Height="30" Width="30"
+                                                   Source="{DynamicResource imgCross}" />
+                                        </Viewbox>
+                                    </Button>
+                                </StackPanel>
+                            </ScrollViewer>
+
+                            <Controls:ThemeBorder x:Name="ContentPanel"
+                                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                                  Style="{DynamicResource NoHoverThemeLevelStyle}"
+                                                  CornerRadius="0"
+                                                  Grid.Column="0"
+                                                  Grid.Row="1"
+                                                  KeyboardNavigation.DirectionalNavigation="Contained"
+                                                  KeyboardNavigation.TabIndex="2"
+                                                  KeyboardNavigation.TabNavigation="Local">
+                                <ContentPresenter x:Name="PART_SelectedContentHost" Margin="{TemplateBinding Padding}"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                  ContentSource="SelectedContent" />
+                            </Controls:ThemeBorder>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="TabStripPlacement" Value="Bottom">
+                                <Setter Property="Grid.Row" TargetName="HeaderPanel" Value="1" />
+                                <Setter Property="Grid.Row" TargetName="ContentPanel" Value="0" />
+                                <Setter Property="Height" TargetName="RowDefinition0" Value="*" />
+                                <Setter Property="Height" TargetName="RowDefinition1" Value="Auto" />
+                                <Setter Property="Margin" TargetName="TabPannel" Value="2,0,2,2" />
+                            </Trigger>
+                            <Trigger Property="TabStripPlacement" Value="Left">
+                                <Setter Property="Grid.Row" TargetName="HeaderPanel" Value="0" />
+                                <Setter Property="Grid.Row" TargetName="ContentPanel" Value="0" />
+                                <Setter Property="Grid.Column" TargetName="HeaderPanel" Value="0" />
+                                <Setter Property="Grid.Column" TargetName="ContentPanel" Value="1" />
+                                <Setter Property="Width" TargetName="ColumnDefinition0" Value="Auto" />
+                                <Setter Property="Width" TargetName="ColumnDefinition1" Value="*" />
+                                <Setter Property="Height" TargetName="RowDefinition0" Value="*" />
+                                <Setter Property="Height" TargetName="RowDefinition1" Value="0" />
+                                <Setter Property="Margin" TargetName="TabPannel" Value="2,2,-1,2" />
+                                <Setter Property="Margin" TargetName="HeaderPanel" Value="-2, 0, -2, 0" />
+
+                                <Setter Property="HorizontalScrollBarVisibility" TargetName="HeaderPanel"
+                                        Value="Disabled" />
+                                <Setter Property="VerticalScrollBarVisibility" TargetName="HeaderPanel" Value="Auto" />
+                            </Trigger>
+                            <Trigger Property="TabStripPlacement" Value="Right">
+                                <Setter Property="Grid.Row" TargetName="HeaderPanel" Value="0" />
+                                <Setter Property="Grid.Row" TargetName="ContentPanel" Value="0" />
+                                <Setter Property="Grid.Column" TargetName="HeaderPanel" Value="1" />
+                                <Setter Property="Grid.Column" TargetName="ContentPanel" Value="0" />
+                                <Setter Property="Width" TargetName="ColumnDefinition0" Value="*" />
+                                <Setter Property="Width" TargetName="ColumnDefinition1" Value="Auto" />
+                                <Setter Property="Height" TargetName="RowDefinition0" Value="*" />
+                                <Setter Property="Height" TargetName="RowDefinition1" Value="0" />
+                                <Setter Property="Margin" TargetName="TabPannel" Value="-1,2,2,2" />
+                                <Setter Property="HorizontalScrollBarVisibility" TargetName="HeaderPanel"
+                                        Value="Disabled" />
+                                <Setter Property="VerticalScrollBarVisibility" TargetName="HeaderPanel" Value="Auto" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </TabControl.Template>
+            </TabControl>
+
+            <Controls:ThemeBorder Grid.Row="1"
+                                  Foreground="{DynamicResource ThemeBaseForgroundLevel2}"
+                                  CornerRadius="0"
+                                  BorderThickness="0" BackgroundThemeLevel="{DynamicResource ThemeColor11}">
+                <ContentControl x:Name="contentControl" ContentTemplate="{StaticResource ControllerTabView}"
+                                Content="{Binding SelectedItem}" />
+                <Controls:ThemeBorder.Style>
+                    <Style TargetType="Controls:ThemeBorder" BasedOn="{StaticResource BorderThemeLevelStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Settings.Logging.AllowMulitControllers}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Controls:ThemeBorder.Style>
+            </Controls:ThemeBorder>
+
+            <Border Grid.Row="1" x:Name="settingsBorder" Background="#60000000">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsChecked, ElementName=optionsButton}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                <Controls:ThemeBorder Margin="5,5,5,5"
+                                  VerticalAlignment="Center" HorizontalAlignment="Center"
+                                      Style="{DynamicResource NoHoverThemeLevelStyle}"
+                                      BackgroundThemeLevel="{DynamicResource ThemeColor10}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Margin="5,5,5,0" Text="{DynamicResource strSettings}" FontWeight="Bold"
+                                   FontSize="{DynamicResource TitlebarFontSize}" Foreground="{DynamicResource ThemeBaseForgroundLevel2}"/>
+                        <Views:OptionsView DataContext="{Binding Settings}" Grid.Row="1"/>
+                        <Button Margin="5" Grid.Row="2" Style="{DynamicResource TextButton}"
+                                HorizontalAlignment="Right" Content="{DynamicResource strClose}" Click="Button_Click"
+                                Command="{Binding UpdateSettingsCommand}" />
+                    </Grid>
+                    </Controls:ThemeBorder>
+            </Border>
+
+            <Border Grid.Row="2" x:Name="logBorder">
+                <Border.LayoutTransform>
+                    <ScaleTransform ScaleX="1" ScaleY="0" />
+                </Border.LayoutTransform>
+
+                <Views:ErrorLogView Margin="0,5,0,0" Height="200" />
+
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsChecked, ElementName=logButton}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation From="0" To="1" Duration="0:0:0.25"
+                                                             Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(ScaleTransform.ScaleY)" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation From="1" To="0" Duration="0:0:0.25"
+                                                             Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(ScaleTransform.ScaleY)" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+
+            <Border Grid.Row="3" CornerRadius="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock FontWeight="Bold" Text="{Binding LastLogMessage}" HorizontalAlignment="Right"
+                               Margin="5,2">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Foreground" Value="Red" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding LastLogCode}" Value="0">
+                                        <Setter Property="Foreground" Value="White" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding LastLogCode}" Value="1">
+                                        <Setter Property="Foreground" Value="White" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding LastLogCode}" Value="2">
+                                        <Setter Property="Foreground" Value="Yellow" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <ProgressBar
+                        Value="{Binding UpdateProgress}"
+                        Grid.Column="1"
+                        Width="100"
+                        Visibility="{Binding DisplayProgress, Converter={StaticResource booleanToVisibilityConverter}}"
+                        ToolTip="{Binding ProgressText}">
+                        <ProgressBar.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="{DynamicResource strStop}" Command="{Binding StopCommand}" />
+                            </ContextMenu>
+                        </ProgressBar.ContextMenu>
+                    </ProgressBar>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Views:ProgressView Height="141"
+                            Margin="3"
+                            Width="296"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            DataContext="{Binding Progress}"
+                            Visibility="{Binding Display, Converter={StaticResource booleanToVisibilityConverter}}" />
+    </Grid>
+</Controls:CustomWindow>

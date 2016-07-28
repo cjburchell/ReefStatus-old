@@ -1,0 +1,32 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:Views="clr-namespace:RedPoint.ReefStatus.Gui.Views" x:Class="RedPoint.ReefStatus.Gui.Views.OptionsView"
+    mc:Ignorable="d"
+    x:Name="OptionsWindow">
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TabControl Grid.ColumnSpan="3" x:Name="tabControl1" Margin="5,5,5,0">
+            <TabItem Header="{DynamicResource strLoggingTab}">
+                <Views:LoggingSettingsView DataContext="{Binding Logging}"/>
+            </TabItem>
+            <TabItem Header="{DynamicResource strEMailTab}">
+                <Views:EmailSettingsView DataContext="{Binding Mail}"/>
+            </TabItem>
+            <TabItem Header="{DynamicResource strWebInterfaceTab}">
+                <Views:WebInterfaceSettingsView DataContext="{Binding Web}"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

@@ -1,0 +1,17 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <SolidColorBrush x:Key="GridViewColumnHeaderBackground" Color="#FF4E4E4E"/>
+    <SolidColorBrush x:Key="GridViewColumnHeaderGripperBackground" Color="#FF4E4E4E"/>
+    
+    <SolidColorBrush x:Key="GridViewColumnHeaderSelectedColor" Color="#FF1A1A1A"/>
+    
+    <SolidColorBrush x:Key="GridViewColumnHeaderGripperColor" Color="#FF666666"/>
+    
+    <Color x:Key="GridViewHeaderSelectedFontColor">#FFFFFFFF</Color>
+    <Color x:Key="GridViewHeaderFontColor">#FFFFFFFF</Color>
+
+    <SolidColorBrush x:Key="GridViewHeaderSelectedFontBrush" Color="{DynamicResource GridViewHeaderSelectedFontColor}"/>
+    <SolidColorBrush x:Key="GridViewHeaderFontBrush" Color="{DynamicResource GridViewHeaderFontColor}"/>
+
+</ResourceDictionary>

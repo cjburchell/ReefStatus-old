@@ -1,0 +1,545 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:Controls="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls" 
+    mc:Ignorable="d">
+
+    <Style x:Key="DefaultTabControl" TargetType="{x:Type TabControl}">
+        <Setter Property="Foreground" Value="{DynamicResource ThemeBaseForgroundLevel2}"/>
+        <Setter Property="Padding" Value="0,0,0,0"/>
+        <Setter Property="BorderThickness" Value="1,1,1,1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <Grid ClipToBounds="true" SnapsToDevicePixels="true" KeyboardNavigation.TabNavigation="Local" d:DesignWidth="149.375" d:DesignHeight="236.5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="ColumnDefinition0"/>
+                            <ColumnDefinition x:Name="ColumnDefinition1" Width="0"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition x:Name="RowDefinition0" Height="Auto"/>
+                            <RowDefinition x:Name="RowDefinition1" Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <ScrollViewer Template="{DynamicResource ScrollViewerTabScrollTemplate}" Margin="0,0,0,-1" Panel.ZIndex="1" x:Name="HeaderPanel" Grid.Column="0" Grid.Row="0"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                            <TabPanel x:Name="TabPannel" IsItemsHost="true" Margin="2,2,2,0" KeyboardNavigation.TabIndex="1"/>
+                        </ScrollViewer>
+
+                        <Controls:ThemeBorder x:Name="ContentPanel" 
+                                             BorderThickness="{TemplateBinding BorderThickness}" 
+                                             Style="{DynamicResource NoHoverThemeLevelStyle}" 
+                                             CornerRadius="0"
+                                             Grid.Column="0" 
+                                             Grid.Row="1" 
+                                             KeyboardNavigation.DirectionalNavigation="Contained" 
+                                                KeyboardNavigation.TabIndex="2" 
+                                                KeyboardNavigation.TabNavigation="Local">
+                            <ContentPresenter x:Name="PART_SelectedContentHost" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ContentSource="SelectedContent"/>
+                        </Controls:ThemeBorder>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="TabStripPlacement" Value="Bottom">
+                            <Setter Property="Grid.Row" TargetName="HeaderPanel" Value="1"/>
+                            <Setter Property="Grid.Row" TargetName="ContentPanel" Value="0"/>
+                            <Setter Property="Height" TargetName="RowDefinition0" Value="*"/>
+                            <Setter Property="Height" TargetName="RowDefinition1" Value="Auto"/>
+                            <Setter Property="Margin" TargetName="TabPannel" Value="2,0,2,2"/>
+                        </Trigger>
+                        <Trigger Property="TabStripPlacement" Value="Left">
+                            <Setter Property="Grid.Row" TargetName="HeaderPanel" Value="0"/>
+                            <Setter Property="Grid.Row" TargetName="ContentPanel" Value="0"/>
+                            <Setter Property="Grid.Column" TargetName="HeaderPanel" Value="0"/>
+                            <Setter Property="Grid.Column" TargetName="ContentPanel" Value="1"/>
+                            <Setter Property="Width" TargetName="ColumnDefinition0" Value="Auto"/>
+                            <Setter Property="Width" TargetName="ColumnDefinition1" Value="*"/>
+                            <Setter Property="Height" TargetName="RowDefinition0" Value="*"/>
+                            <Setter Property="Height" TargetName="RowDefinition1" Value="0"/>
+                            <Setter Property="Margin" TargetName="TabPannel" Value="2,2,-1,2"/>
+                            <Setter Property="Margin" TargetName="HeaderPanel" Value="-2, 0, -2, 0"/>
+
+                            <Setter Property="HorizontalScrollBarVisibility" TargetName="HeaderPanel" Value="Disabled"/>
+                            <Setter Property="VerticalScrollBarVisibility" TargetName="HeaderPanel" Value="Auto"/>
+                        </Trigger>
+                        <Trigger Property="TabStripPlacement" Value="Right">
+                            <Setter Property="Grid.Row" TargetName="HeaderPanel" Value="0"/>
+                            <Setter Property="Grid.Row" TargetName="ContentPanel" Value="0"/>
+                            <Setter Property="Grid.Column" TargetName="HeaderPanel" Value="1"/>
+                            <Setter Property="Grid.Column" TargetName="ContentPanel" Value="0"/>
+                            <Setter Property="Width" TargetName="ColumnDefinition0" Value="*"/>
+                            <Setter Property="Width" TargetName="ColumnDefinition1" Value="Auto"/>
+                            <Setter Property="Height" TargetName="RowDefinition0" Value="*"/>
+                            <Setter Property="Height" TargetName="RowDefinition1" Value="0"/>
+                            <Setter Property="Margin" TargetName="TabPannel" Value="-1,2,2,2"/>
+                            <Setter Property="HorizontalScrollBarVisibility" TargetName="HeaderPanel" Value="Disabled"/>
+                            <Setter Property="VerticalScrollBarVisibility" TargetName="HeaderPanel" Value="Auto"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultTabControl}" TargetType="{x:Type TabControl}"/>
+
+    <Style x:Key="NoScrollTabControl" BasedOn="{StaticResource DefaultTabControl}" TargetType="{x:Type TabControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabControl}">
+                    <Grid ClipToBounds="true" SnapsToDevicePixels="true" KeyboardNavigation.TabNavigation="Local">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="ColumnDefinition0"/>
+                            <ColumnDefinition x:Name="ColumnDefinition1" Width="0"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition x:Name="RowDefinition0" Height="Auto"/>
+                            <RowDefinition x:Name="RowDefinition1" Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TabPanel x:Name="HeaderPanel" Margin="2,2,2,0" IsItemsHost="true" Panel.ZIndex="1" Grid.Column="0" Grid.Row="0" KeyboardNavigation.TabIndex="1"/>
+                        <Controls:ThemeBorder x:Name="ContentPanel" 
+                                             BorderThickness="{TemplateBinding BorderThickness}" 
+                                             Style="{DynamicResource NoHoverThemeLevelStyle}" 
+                                             CornerRadius="0"
+                                             Grid.Column="0" 
+                                             Grid.Row="1" 
+                                             KeyboardNavigation.DirectionalNavigation="Contained" 
+                                                KeyboardNavigation.TabIndex="2" 
+                                                KeyboardNavigation.TabNavigation="Local">
+                            <ContentPresenter x:Name="PART_SelectedContentHost" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" ContentSource="SelectedContent"/>
+                        </Controls:ThemeBorder>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="TabStripPlacement" Value="Bottom">
+                            <Setter Property="Grid.Row" TargetName="HeaderPanel" Value="1"/>
+                            <Setter Property="Grid.Row" TargetName="ContentPanel" Value="0"/>
+                            <Setter Property="Height" TargetName="RowDefinition0" Value="*"/>
+                            <Setter Property="Height" TargetName="RowDefinition1" Value="Auto"/>
+                            <Setter Property="Margin" TargetName="HeaderPanel" Value="2,0,2,2"/>
+                        </Trigger>
+                        <Trigger Property="TabStripPlacement" Value="Left">
+                            <Setter Property="Grid.Row" TargetName="HeaderPanel" Value="0"/>
+                            <Setter Property="Grid.Row" TargetName="ContentPanel" Value="0"/>
+                            <Setter Property="Grid.Column" TargetName="HeaderPanel" Value="0"/>
+                            <Setter Property="Grid.Column" TargetName="ContentPanel" Value="1"/>
+                            <Setter Property="Width" TargetName="ColumnDefinition0" Value="Auto"/>
+                            <Setter Property="Width" TargetName="ColumnDefinition1" Value="*"/>
+                            <Setter Property="Height" TargetName="RowDefinition0" Value="*"/>
+                            <Setter Property="Height" TargetName="RowDefinition1" Value="0"/>
+                            <Setter Property="Margin" TargetName="HeaderPanel" Value="2,2,-1,2"/>
+                        </Trigger>
+                        <Trigger Property="TabStripPlacement" Value="Right">
+                            <Setter Property="Grid.Row" TargetName="HeaderPanel" Value="0"/>
+                            <Setter Property="Grid.Row" TargetName="ContentPanel" Value="0"/>
+                            <Setter Property="Grid.Column" TargetName="HeaderPanel" Value="1"/>
+                            <Setter Property="Grid.Column" TargetName="ContentPanel" Value="0"/>
+                            <Setter Property="Width" TargetName="ColumnDefinition0" Value="*"/>
+                            <Setter Property="Width" TargetName="ColumnDefinition1" Value="Auto"/>
+                            <Setter Property="Height" TargetName="RowDefinition0" Value="*"/>
+                            <Setter Property="Height" TargetName="RowDefinition1" Value="0"/>
+                            <Setter Property="Margin" TargetName="HeaderPanel" Value="-1,2,2,2"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="TabShape1" TargetType="{x:Type Controls:TabShape}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Column="1" Grid.RowSpan="2" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="0,3,0,0" BorderThickness="0,1,1,0"/>
+
+            <Border Grid.Column="1" Grid.RowSpan="2" Background="{TemplateBinding BackgroundThemeLevel}" BorderBrush="{TemplateBinding BorderThemeLevel}" CornerRadius="0,3,0,0" BorderThickness="0,1,1,0"/>
+
+            <Border Grid.Row="1" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1,0,0,0" CornerRadius="0"/>
+
+            <Border Grid.Row="1" Background="{TemplateBinding BottomThemeLevel}" BorderBrush="{TemplateBinding BorderThemeLevel}" BorderThickness="1,0,0,0" CornerRadius="0"/>
+
+            <Path Stretch="Fill"
+                        Data="F1 M 0.5,288.5C 0.5,267.167 0.500004,245.833 11.1667,224.5C 21.8333,203.167 43.1667,181.833 64.5,160.5L 160.5,64.5C 181.833,43.1666 203.167,21.8333 224.5,11.1666C 245.833,0.5 267.167,0.5 288.5,0.5L 288.5,288.5L 0.500004,288.5" 
+                        HorizontalAlignment="Stretch" 
+                        Grid.Column="0" VerticalAlignment="Stretch" 
+                        Fill="{TemplateBinding BorderBrush}" RenderTransformOrigin="0.5 0.5" Margin="0" >
+            </Path>
+
+            <Path Stretch="Fill"
+                        Data="F1 M 0.5,288.5C 0.5,267.167 0.500004,245.833 11.1667,224.5C 21.8333,203.167 43.1667,181.833 64.5,160.5L 160.5,64.5C 181.833,43.1666 203.167,21.8333 224.5,11.1666C 245.833,0.5 267.167,0.5 288.5,0.5L 288.5,288.5L 0.500004,288.5" 
+                        HorizontalAlignment="Stretch" 
+                        Grid.Column="0" VerticalAlignment="Stretch" 
+                        Fill="{TemplateBinding BorderThemeLevel}" RenderTransformOrigin="0.5 0.5" Margin="0" >
+            </Path>
+
+            <Path Stretch="Fill"
+                        Data="F1 M 0.5,288.5C 0.5,267.167 0.500004,245.833 11.1667,224.5C 21.8333,203.167 43.1667,181.833 64.5,160.5L 160.5,64.5C 181.833,43.1666 203.167,21.8333 224.5,11.1666C 245.833,0.5 267.167,0.5 288.5,0.5L 288.5,288.5L 0.500004,288.5" 
+                        HorizontalAlignment="Stretch" 
+                        Grid.Column="0" VerticalAlignment="Stretch" 
+                        Fill="{TemplateBinding Background}" RenderTransformOrigin="0.5 0.5" Margin="1,1,0,0" >
+            </Path>
+
+            <Path Stretch="Fill" 
+                        Data="F1 M 0.5,288.5C 0.5,267.167 0.500004,245.833 11.1667,224.5C 21.8333,203.167 43.1667,181.833 64.5,160.5L 160.5,64.5C 181.833,43.1666 203.167,21.8333 224.5,11.1666C 245.833,0.5 267.167,0.5 288.5,0.5L 288.5,288.5L 0.500004,288.5" 
+                        HorizontalAlignment="Stretch" 
+                        Grid.Column="0" VerticalAlignment="Stretch" 
+                        Fill="{TemplateBinding TopThemeLevel}" RenderTransformOrigin="0.5 0.5" Margin="1,1,0,0">
+            </Path>
+
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="TabThemeBorderTemplate"  TargetType="{x:Type Controls:ThemeBorder}">
+        <Grid >
+
+            <Controls:TabShape Template="{DynamicResource TabShape1}" 
+                               Background="{TemplateBinding Background}" 
+                               BorderBrush="{TemplateBinding BorderBrush}"
+                               BackgroundThemeLevel="{TemplateBinding BackgroundThemeLevel}"
+                               BorderThemeLevel="{TemplateBinding BorderThemeLevel}"
+                               BottomThemeLevel="{TemplateBinding BackgroundThemeLevel}"
+                               TopThemeLevel="{TemplateBinding BackgroundThemeLevel}"/>
+
+            <Controls:TabShape x:Name="Hover"
+                               Style="{DynamicResource HoverControl}"
+                               Template="{DynamicResource TabShape1}" 
+                               Background="{TemplateBinding HoverBackground}" 
+                               BorderBrush="{TemplateBinding HoverBorder}"
+                               BackgroundThemeLevel="{TemplateBinding HoverThemeLevel}"
+                               BorderThemeLevel="{TemplateBinding HoverBorderThemeLevel}"
+                               BottomThemeLevel="{DynamicResource HoverFillBottomHalf}"
+                               TopThemeLevel="{DynamicResource HoverFillTopHalf}"/>
+
+            <!-- Content Presenter is where the text content etc is placed by the control -->
+            <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+            <ContentPresenter x:Name="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+        </Grid>
+        <ControlTemplate.Triggers>
+
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Hover"/>
+            </Trigger>
+
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="TabShape2" TargetType="{x:Type Controls:TabShape}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="15"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Column="1" Grid.RowSpan="2" Background="{TemplateBinding Background}" CornerRadius="0" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0,1,0,0"/>
+
+            <Border Grid.Column="1" Grid.RowSpan="2" Background="{TemplateBinding BackgroundThemeLevel}"  CornerRadius="0" BorderThickness="0,1,0,0"/>
+
+            <Border Grid.Column="0" Grid.Row="1" Background="{TemplateBinding Background}" CornerRadius="0" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1,0,0,0" />
+
+            <Border Grid.Column="0" Grid.Row="1" Background="{TemplateBinding BottomThemeLevel}" CornerRadius="0" BorderBrush="{TemplateBinding BorderThemeLevel}" BorderThickness="1,0,0,0"/>
+
+            <Border Grid.Column="2" Grid.Row="1" Background="{TemplateBinding Background}" CornerRadius="0" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0,0,1,0"/>
+
+            <Border Grid.Column="2" Grid.Row="1" Background="{TemplateBinding BottomThemeLevel}" CornerRadius="0" BorderBrush="{TemplateBinding BorderThemeLevel}" BorderThickness="0,0,1,0"/>
+
+
+            <Path Stretch="Fill" 
+                        Data="F1 M 0.5,288.5C 0.5,267.167 0.500004,245.833 11.1667,224.5C 21.8333,203.167 43.1667,181.833 64.5,160.5L 160.5,64.5C 181.833,43.1666 203.167,21.8333 224.5,11.1666C 245.833,0.5 267.167,0.5 288.5,0.5L 288.5,288.5L 0.500004,288.5" 
+                        HorizontalAlignment="Stretch" 
+                        Grid.Column="0" VerticalAlignment="Stretch" 
+                        
+                        Fill="{TemplateBinding BorderBrush}" RenderTransformOrigin="0.5 0.5" Margin="0">
+
+            </Path>
+
+            <Path Stretch="Fill" 
+                        Data="F1 M 0.5,288.5C 0.5,267.167 0.500004,245.833 11.1667,224.5C 21.8333,203.167 43.1667,181.833 64.5,160.5L 160.5,64.5C 181.833,43.1666 203.167,21.8333 224.5,11.1666C 245.833,0.5 267.167,0.5 288.5,0.5L 288.5,288.5L 0.500004,288.5" 
+                        HorizontalAlignment="Stretch" 
+                        Grid.Column="0" VerticalAlignment="Stretch" 
+                        Fill="{TemplateBinding BorderThemeLevel}" RenderTransformOrigin="0.5 0.5" Margin="0">
+            </Path>
+
+
+            <Path Stretch="Fill" 
+                        Data="F1 M 0.5,288.5C 0.5,267.167 0.500004,245.833 11.1667,224.5C 21.8333,203.167 43.1667,181.833 64.5,160.5L 160.5,64.5C 181.833,43.1666 203.167,21.8333 224.5,11.1666C 245.833,0.5 267.167,0.5 288.5,0.5L 288.5,288.5L 0.500004,288.5" 
+                        HorizontalAlignment="Stretch" 
+                        Grid.Column="0" VerticalAlignment="Stretch" 
+                        Fill="{TemplateBinding Background}" RenderTransformOrigin="0.5 0.5" Margin="1,1,0,0">
+            </Path>
+
+            <Path Stretch="Fill" 
+                        Data="F1 M 0.5,288.5C 0.5,267.167 0.500004,245.833 11.1667,224.5C 21.8333,203.167 43.1667,181.833 64.5,160.5L 160.5,64.5C 181.833,43.1666 203.167,21.8333 224.5,11.1666C 245.833,0.5 267.167,0.5 288.5,0.5L 288.5,288.5L 0.500004,288.5" 
+                        HorizontalAlignment="Stretch" 
+                        Grid.Column="0" VerticalAlignment="Stretch" 
+                        Fill="{TemplateBinding TopThemeLevel}" RenderTransformOrigin="0.5 0.5" Margin="1,1,0,0">
+            </Path>
+
+
+            <Path Stretch="Fill" 
+                        Data="F1 M 0.5,288.5C 0.5,267.167 0.500004,245.833 11.1667,224.5C 21.8333,203.167 43.1667,181.833 64.5,160.5L 160.5,64.5C 181.833,43.1666 203.167,21.8333 224.5,11.1666C 245.833,0.5 267.167,0.5 288.5,0.5L 288.5,288.5L 0.500004,288.5" 
+                        HorizontalAlignment="Stretch" 
+                        Grid.Column="2" VerticalAlignment="Stretch" 
+                        Fill="{TemplateBinding BorderBrush}" RenderTransformOrigin="0.5 0.5" Margin="0">
+                <Path.RenderTransform>
+                    <ScaleTransform ScaleX="-1" />
+                </Path.RenderTransform>
+            </Path>
+
+            <Path Stretch="Fill" 
+                        Data="F1 M 0.5,288.5C 0.5,267.167 0.500004,245.833 11.1667,224.5C 21.8333,203.167 43.1667,181.833 64.5,160.5L 160.5,64.5C 181.833,43.1666 203.167,21.8333 224.5,11.1666C 245.833,0.5 267.167,0.5 288.5,0.5L 288.5,288.5L 0.500004,288.5" 
+                        HorizontalAlignment="Stretch" 
+                        Grid.Column="2" VerticalAlignment="Stretch" 
+                        Fill="{TemplateBinding BorderThemeLevel}" RenderTransformOrigin="0.5 0.5" Margin="0">
+                <Path.RenderTransform>
+                    <ScaleTransform ScaleX="-1" />
+                </Path.RenderTransform>
+            </Path>
+
+            <Path Stretch="Fill" 
+                        Data="F1 M 0.5,288.5C 0.5,267.167 0.500004,245.833 11.1667,224.5C 21.8333,203.167 43.1667,181.833 64.5,160.5L 160.5,64.5C 181.833,43.1666 203.167,21.8333 224.5,11.1666C 245.833,0.5 267.167,0.5 288.5,0.5L 288.5,288.5L 0.500004,288.5" 
+                        HorizontalAlignment="Stretch" 
+                        Grid.Column="2" VerticalAlignment="Stretch" 
+                        Fill="{TemplateBinding Background}" RenderTransformOrigin="0.5 0.5" Margin="0,1,1,0">
+                <Path.RenderTransform>
+                    <ScaleTransform ScaleX="-1" />
+                </Path.RenderTransform>
+            </Path>
+
+            <Path Stretch="Fill" 
+                        Data="F1 M 0.5,288.5C 0.5,267.167 0.500004,245.833 11.1667,224.5C 21.8333,203.167 43.1667,181.833 64.5,160.5L 160.5,64.5C 181.833,43.1666 203.167,21.8333 224.5,11.1666C 245.833,0.5 267.167,0.5 288.5,0.5L 288.5,288.5L 0.500004,288.5" 
+                        HorizontalAlignment="Stretch" 
+                        Grid.Column="2" VerticalAlignment="Stretch" 
+                        Fill="{TemplateBinding TopThemeLevel}" RenderTransformOrigin="0.5 0.5" Margin="0,1,1,0">
+                <Path.RenderTransform>
+                    <ScaleTransform ScaleX="-1" />
+                </Path.RenderTransform>
+            </Path>
+
+
+        </Grid>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="TabThemeBorderTemplate2"  TargetType="{x:Type Controls:ThemeBorder}">
+        <Grid >
+
+            <Controls:TabShape Template="{DynamicResource TabShape2}" 
+                               Background="{TemplateBinding Background}" 
+                               BorderBrush="{TemplateBinding BorderBrush}"
+                               BackgroundThemeLevel="{TemplateBinding BackgroundThemeLevel}"
+                               BorderThemeLevel="{TemplateBinding BorderThemeLevel}"
+                               BottomThemeLevel="{TemplateBinding BackgroundThemeLevel}"
+                               TopThemeLevel="{TemplateBinding BackgroundThemeLevel}"/>
+
+            <Controls:TabShape x:Name="Hover"
+                               Style="{DynamicResource HoverControl}"
+                               Template="{DynamicResource TabShape2}" 
+                               Background="{TemplateBinding HoverBackground}" 
+                               BorderBrush="{TemplateBinding HoverBorder}"
+                               BackgroundThemeLevel="{TemplateBinding HoverThemeLevel}"
+                               BorderThemeLevel="{TemplateBinding HoverBorderThemeLevel}"
+                               BottomThemeLevel="{DynamicResource HoverFillBottomHalf}"
+                               TopThemeLevel="{DynamicResource HoverFillTopHalf}"/>
+
+            <!-- Content Presenter is where the text content etc is placed by the control -->
+            <!-- The bindings are useful so that the control can be parameterized without editing the template -->
+            <ContentPresenter x:Name="Content" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+        </Grid>
+        <ControlTemplate.Triggers>
+
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter Property="Tag" Value="Show" TargetName="Hover"/>
+            </Trigger>
+
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="TabItemTemplateLevel2" TargetType="{x:Type TabItem}">
+        <Grid Margin="0,0,1,1" SnapsToDevicePixels="True" Width="20">
+            <Grid x:Name="Transform" RenderTransformOrigin="0.5,0.5">
+                <Controls:ThemeBorder x:Name="crome" 
+                                Style="{DynamicResource ControlThemeBorderStyle}"
+                                BackgroundThemeLevel="{DynamicResource ThemeColor9}"  
+                        		Template="{DynamicResource TabThemeBorderTemplate2}">
+                    <ContentPresenter Margin="{TemplateBinding Padding}" 
+                                      SnapsToDevicePixels="True" ContentSource="Header" RecognizesAccessKey="True"/>
+                </Controls:ThemeBorder>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected" Value="False"/>
+                    <Condition Property="IsMouseOver" Value="True"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="IsHighlighted" Value="True" TargetName="crome"/>
+            </MultiTrigger>
+
+            <Trigger Property="IsSelected" Value="true">
+                <Setter Property="Panel.ZIndex" Value="1"/>
+                <Setter Property="BackgroundThemeLevel" Value="{DynamicResource ThemeColor11}" TargetName="crome"/>
+            </Trigger>
+            <Trigger Property="TabStripPlacement" Value="Bottom">
+                <Setter Property="LayoutTransform" TargetName="Transform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="1" ScaleY="-1"/>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="TabStripPlacement" Value="Left">
+                <Setter Property="LayoutTransform" TargetName="Transform">
+                    <Setter.Value>
+                        <RotateTransform Angle="-90"/>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="TabStripPlacement" Value="Right">
+                <Setter Property="LayoutTransform" TargetName="Transform">
+                    <Setter.Value>
+                        <RotateTransform Angle="90"/>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected" Value="true"/>
+                    <Condition Property="TabStripPlacement" Value="Top"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Margin" Value="-2,-2,-2,-1"/>
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected" Value="true"/>
+                    <Condition Property="TabStripPlacement" Value="Bottom"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Margin" Value="-2"/>
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected" Value="true"/>
+                    <Condition Property="TabStripPlacement" Value="Left"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Margin" Value="-2,-2,-4,-2"/>
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected" Value="true"/>
+                    <Condition Property="TabStripPlacement" Value="Right"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Margin" Value="-1,-2,-2,-2"/>
+            </MultiTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="DefaultTabItemTemplate" TargetType="{x:Type TabItem}">
+        <Grid Margin="0,0,1,1" SnapsToDevicePixels="True">
+            <Grid x:Name="Transform">
+                <Controls:ThemeBorder x:Name="crome"
+                                         Style="{DynamicResource ControlThemeBorderStyle}"
+                                         BackgroundThemeLevel="{DynamicResource ThemeColor9}"  
+                                         Template="{DynamicResource TabThemeBorderTemplate}"
+                                         >
+                    <ContentPresenter Margin="{TemplateBinding Padding}" 
+                                      SnapsToDevicePixels="True" ContentSource="Header" RecognizesAccessKey="True"/>
+                </Controls:ThemeBorder>
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected" Value="False"/>
+                    <Condition Property="IsMouseOver" Value="True"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="IsHighlighted" Value="True" TargetName="crome"/>
+            </MultiTrigger>
+
+            <Trigger Property="IsSelected" Value="true">
+                <Setter Property="Panel.ZIndex" Value="1"/>
+                <Setter Property="BackgroundThemeLevel" Value="{DynamicResource ThemeColor11}" TargetName="crome"/>
+            </Trigger>
+            <Trigger Property="TabStripPlacement" Value="Bottom">
+                <Setter Property="LayoutTransform" TargetName="Transform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="1" ScaleY="-1"/>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="TabStripPlacement" Value="Left">
+                <Setter Property="LayoutTransform" TargetName="Transform">
+                    <Setter.Value>
+                        <RotateTransform Angle="-90"/>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <Trigger Property="TabStripPlacement" Value="Right">
+                <Setter Property="LayoutTransform" TargetName="Transform">
+                    <Setter.Value>
+                        <RotateTransform Angle="90"/>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected" Value="true"/>
+                    <Condition Property="TabStripPlacement" Value="Top"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Margin" Value="-2,-2,-2,-1"/>
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected" Value="true"/>
+                    <Condition Property="TabStripPlacement" Value="Bottom"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Margin" Value="-2"/>
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected" Value="true"/>
+                    <Condition Property="TabStripPlacement" Value="Left"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Margin" Value="-2,-2,-1,-2"/>
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsSelected" Value="true"/>
+                    <Condition Property="TabStripPlacement" Value="Right"/>
+                </MultiTrigger.Conditions>
+                <Setter Property="Margin" Value="-1,-2,-2,-2"/>
+            </MultiTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="DefaultTabItemStyle" TargetType="{x:Type TabItem}">
+        <Setter Property="Padding" Value="12,2,12,2"/>
+        <Setter Property="Foreground" Value="{DynamicResource ThemeBaseForgroundLevel2}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="FontFamily" Value="{DynamicResource DefaultFontFamily}"/>
+        <Setter Property="FontSize" Value="{DynamicResource DefaultFontSize}"/>
+        <Setter Property="FontWeight" Value="Normal"/>
+        <Setter Property="Template" Value="{DynamicResource DefaultTabItemTemplate}"/>
+        <Setter Property="MinHeight" Value="{DynamicResource TouchScreenItemSize}"/>
+        <Setter Property="MinWidth" Value="{DynamicResource TouchScreenItemSize}"/>
+    </Style>
+
+    <Style x:Key="TabItemStyleLevel2" TargetType="{x:Type TabItem}" BasedOn="{StaticResource DefaultTabItemStyle}">
+        <Setter Property="Template" Value="{DynamicResource TabItemTemplateLevel2}"/>
+    </Style>
+
+    <Style BasedOn="{StaticResource DefaultTabItemStyle}" TargetType="{x:Type TabItem}"/>
+
+</ResourceDictionary>

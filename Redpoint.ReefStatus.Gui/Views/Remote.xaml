@@ -1,0 +1,84 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Converters="clr-namespace:RedPoint.ReefStatus.Gui.Converters" x:Class="RedPoint.ReefStatus.Gui.Views.Remote"
+    mc:Ignorable="d">
+    
+    <UserControl.Resources>
+        <Converters:BitmapToBitmapSource x:Key="BitmapToBitmapSource"/>
+        <Converters:NullToVisibility x:Key="NullToVisibility"/>
+    </UserControl.Resources>
+    
+    <!--<TabControl Margin="5">
+        <TabItem Header="{DynamicResource strDisplay}">-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Border Background="Blue"  Width="389" Height="101" Margin="5">
+                <Grid>
+                    <Viewbox HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                        <TextBlock FontFamily="Courier New" FontSize="16" Foreground="White" Text="{Binding DisplayText}"/>
+                    </Viewbox>
+                    
+                    <Image Margin="5" SnapsToDevicePixels="True" Visibility="{Binding DisplayImage, Converter={StaticResource NullToVisibility}}" Width="384" Height="96" Source="{Binding DisplayImage, Converter={StaticResource BitmapToBitmapSource}}"/>
+                </Grid>
+            </Border>
+           
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height ="Auto"/>
+                        <RowDefinition Height ="Auto"/>
+                        <RowDefinition Height ="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width ="Auto"/>
+                        <ColumnDefinition Width ="Auto"/>
+                        <ColumnDefinition Width ="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Margin="0,5,5,5" Height="48" Width="48"  Grid.Row ="0" Grid.Column ="1" Command ="{Binding UpCommand}" >
+                        <Viewbox>
+                            <Image Height="32" Width="32" Margin="3" Source="{DynamicResource imgArrowUp}"/>
+                        </Viewbox>
+                    </Button>
+                    <Button Margin="5,0,5,5" Height="48" Width="48" Grid.Row ="1" Grid.Column ="0" Command ="{Binding LeftCommand}" >
+                        <Viewbox>
+                            <Image Height="32" Width="32" Margin="3" Source="{DynamicResource imgArrowLeft}"/>
+                        </Viewbox>
+                    </Button>
+                    <Button Margin="0,0,5,5" Height="48" Width="48" Grid.Row ="1" Grid.Column ="1" Command ="{Binding EnterCommand}" >
+                        <Viewbox>
+                            <TextBlock Margin="3" Text="{DynamicResource strEnter}"/>
+                        </Viewbox>
+                    </Button>
+                    <Button Margin="0,0,5,5" Height="48" Width="48" Grid.Row ="1" Grid.Column ="2" Command ="{Binding RightCommand}" >
+                        <Viewbox>
+                            <Image Height="32" Width="32" Margin="3" Source="{DynamicResource imgArrowRight}"/>
+                        </Viewbox>
+                    </Button>
+                    <Button Margin="5,0,5,5" Height="48" Width="48" Grid.Row ="2" Grid.Column ="0" Command ="{Binding EscCommand}" >
+                        <Viewbox>
+                            <TextBlock Margin="3" Text="{DynamicResource strEsc}"/>
+                        </Viewbox>
+                    </Button>
+                    <Button Margin="0,0,5,5" Height="48" Width="48" Grid.Row ="2" Grid.Column ="1" Command ="{Binding DownCommand}" >
+                        <Viewbox>
+                            <Image Height="32" Width="32" Margin="3" Source="{DynamicResource imgArrowDown}"/>
+                        </Viewbox>
+                    </Button>
+                </Grid>
+            </Grid>
+        <!--</TabItem>
+
+        <TabItem Header="{DynamicResource strView}">
+            <Border Background="Blue" Width="389" Height="101" Margin="5,31,5,32" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Viewbox>
+                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" Background="Blue" FontFamily="Courier New" FontSize="16" Foreground="White" Text="{Binding ViewText}"/>
+                </Viewbox>
+            </Border>
+        </TabItem>
+    </TabControl>-->
+
+    
+</UserControl>

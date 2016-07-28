@@ -1,0 +1,51 @@
+﻿.itable					{ border: 1px solid gray;
+       					   -webkit-border-top-right-radius: 10px;
+                        -webkit-border-top-left-radius: 10px;
+       				      -moz-border-radius-topright: 10px;
+                        -moz-border-radius-topleft: 10px;
+       					}
+       					
+.itable tr.header { -webkit-border-top-right-radius: 10px;
+                    -webkit-border-top-left-radius: 10px;
+       				  -moz-border-radius-topright: 10px;
+                    -moz-border-radius-topleft: 10px; }
+       					
+.itable tr.header th	{ text-align: left;}
+                    	  
+.itable tr.header th.first	{
+                    	  -webkit-border-top-left-radius: 10px;
+                    	  -moz-border-radius-topleft: 10px;}
+.itable tr.header th.last	{ 
+                         	  -webkit-border-top-right-radius: 10px; 
+                         	  -moz-border-radius-topright: 10px;}
+.itable tr.alarm	    { background-color: #CF202C; }
+.itable tr.alt			{ background-color: #eff7ff; }
+.itable tr.reg			{ background-color: #fff; }
+.itable tr.warn      { background-color: #CF202C; }
+.itable th				{ background: url(iui/t/default/listGroup.png) top left repeat-x; border-right: 1px solid grey; }
+.itable th:last-child	{ border-right: none; }
+.itable td				{ border-right: 1px solid gray; }
+.itable tr:first-child	{ white-space: nowrap; }
+.itable tr:last-child	{ border-right: none; }
+
+.iphonefieldset {
+    position: relative;
+    margin: 10px 0 10px 0;
+    padding: 0;
+    background: #FFFFFF;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border: 1px solid #999999;
+    text-align: right;
+    font-size: 16px;
+}
+
+.alarmItem 
+{
+    background: #FF0000;
+}
+
+.warnItem 
+{
+    background: #FFFF00;
+}

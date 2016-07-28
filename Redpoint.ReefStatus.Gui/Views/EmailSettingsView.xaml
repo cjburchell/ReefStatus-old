@@ -1,0 +1,101 @@
+﻿<UserControl x:Class="RedPoint.ReefStatus.Gui.Views.EmailSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Settings="clr-namespace:RedPoint.ReefStatus.Common.Settings;assembly=RedPoint.ReefStatus.Common"
+    xmlns:System="clr-namespace:System;assembly=mscorlib" 
+             xmlns:Controls="clr-namespace:RedPoint.ReefStatus.Common.UI.Controls;assembly=RedPoint.ReefStatus.Common.UI" 
+             xmlns:Controls1="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit.Extended">
+
+    <UserControl.Resources>
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type System:Enum}" x:Key="dateRangeModeValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="Settings:DateRangeMode" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <CheckBox Margin="5" Content="{DynamicResource strEMailonAlarm}" IsChecked="{Binding SendOnAlarm}"/>
+        <CheckBox Margin="5,0,5,5"  Grid.Row="1" Content="{DynamicResource strEMailonReminder}" IsChecked="{Binding SendOnReminder}"/>
+        <CheckBox Margin="5,0,5,5"  Grid.Row="2" Content="{DynamicResource strEMailonConnection}" IsChecked="{Binding SendOnConnectionLost}"/>
+        
+        <CheckBox VerticalAlignment="Center" Margin="5,0,5,5" Content="{DynamicResource strEMailStatusEvery}" Grid.Row="3" IsChecked="{Binding SendStatus}"/>
+        <Controls1:IntegerUpDown Minimum="1" Maximum="365" Value="{Binding SendStatusDuration, Mode=TwoWay}" Margin="0,0,5,5" Grid.Column="1" Grid.Row="3" IsEnabled="{Binding SendStatus}"/>
+        <ComboBox HorizontalAlignment="Left" ItemsSource="{Binding Source={StaticResource dateRangeModeValues}}" SelectedItem="{Binding SendStatusMode}" Margin="0,0,5,5" Grid.Row="3" Grid.Column="2" MinWidth="100" IsEnabled="{Binding SendStatus}"/>
+        
+        <CheckBox Margin="5,0,5,5" Content="{DynamicResource strSendShortMessage}" Grid.Row="4" IsChecked="{Binding SendShortMessage}"/>
+
+        <GroupBox Margin="5,0,5,5" Grid.Row="5" Grid.ColumnSpan="3" Header="{DynamicResource strEMailSettings}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Margin="5" Text="{DynamicResource strMailServer}" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding Server}" MinWidth="200" Margin="0,5,5,5" Grid.Column="1" VerticalAlignment="Center"/>
+                <TextBlock Margin="0,5,5,5" Grid.Column="2" Text ="{DynamicResource strPort}" VerticalAlignment="Center"/>
+                <Controls1:IntegerUpDown Minimum="1" Maximum="65535" Value="{Binding Port, Mode=TwoWay}" Margin="0,5,5,5" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                <TextBlock Margin="5,0,5,5" Grid.Row="1" Text ="{DynamicResource strTo}" VerticalAlignment="Center"/>
+                <TextBox VerticalAlignment="Center" Margin="0,0,5,5" Text="{Binding To}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"/>
+
+                <TextBlock VerticalAlignment="Center" Margin="5,0,5,5" Grid.Row="2" Text ="{DynamicResource strFrom}"/>
+                <TextBox VerticalAlignment="Center" Margin="0,0,5,5" Text="{Binding From}" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"/>
+                <CheckBox Margin="5,0,5,5" IsChecked="{Binding UsePassword}"  Grid.Row="3" Grid.ColumnSpan="4" Content="{DynamicResource strMailServerRequiresAuthentication}"/>
+                <GroupBox IsEnabled="{Binding UsePassword}" Margin="5,0,5,5" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Header="{DynamicResource strMailServerAuthentication}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock VerticalAlignment="Center" Margin="5" Text="{DynamicResource strUserName}" />
+                        <TextBox Text="{Binding UserName}" Margin="0,5,5,5" Grid.Column="1"/>
+                        <TextBlock VerticalAlignment="Center" Margin="5,0,5,5" Grid.Row="1" Grid.Column="0" Text="{DynamicResource strPassword}" />
+                        <PasswordBox Margin="0,0,5,5"
+                     PasswordChar="*"
+                     Controls:PasswordBoxAssistant.BindPassword="true"
+                     Controls:PasswordBoxAssistant.BoundPassword="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Grid.Row="1" Grid.Column="1" VerticalAlignment="Center"  />
+
+                    </Grid>
+                </GroupBox>
+                <CheckBox Margin="5,0,5,5" Grid.Row="5" Grid.ColumnSpan="4" IsChecked="{Binding EnableSsl}" Content="{DynamicResource strEnableSsl}" />
+                <Button Command="{Binding TestEmailCommand}" Margin="5,0,5,5" Grid.Row="6" VerticalAlignment="Center" HorizontalAlignment="Left" Style="{StaticResource TextButton}" Content="{DynamicResource strTest}"/>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

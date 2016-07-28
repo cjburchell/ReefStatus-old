@@ -1,0 +1,34 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush  x:Key="ScrollBarBorder" Color="#FF666666"/>
+
+    <LinearGradientBrush x:Key="HorizontalScrollBarBackground" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFCCCCCC" Offset="0"/>
+        <GradientStop Color="#FFF2F2F2" Offset="0.5"/>
+        <GradientStop Color="#FFCCCCCC" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="VerticalScrollBarBackground" EndPoint="1,0.5" StartPoint="0,0.5">
+        <GradientStop Color="#FFCCCCCC" Offset="0"/>
+        <GradientStop Color="#FFF2F2F2" Offset="0.5"/>
+        <GradientStop Color="#FFCCCCCC" Offset="1"/>
+    </LinearGradientBrush>
+
+    <SolidColorBrush  x:Key="ScrollBarThumbBorder" Color="#FF999999"/>
+    
+    <LinearGradientBrush x:Key="HorizontalScrollBarThumbBackground" EndPoint="0.5,0" StartPoint="0.5,1">
+        <GradientStop Color="#FFC0C0C7" Offset="0.35"/>
+        <GradientStop Color="#FF8C8E9C" Offset="0.5"/>
+        <GradientStop Color="#FFAAB2CF" Offset="0.56"/>
+        <GradientStop Color="#FFE3EBF5" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="VerticalScrollBarThumbBackground" EndPoint="0,0.5" StartPoint="1,0.5">
+        <GradientStop Color="#FFC0C0C7" Offset="0.35"/>
+        <GradientStop Color="#FF8C8E9C" Offset="0.5"/>
+        <GradientStop Color="#FFAAB2CF" Offset="0.56"/>
+        <GradientStop Color="#FFE3EBF5" Offset="1"/>
+    </LinearGradientBrush>
+    
+</ResourceDictionary>
