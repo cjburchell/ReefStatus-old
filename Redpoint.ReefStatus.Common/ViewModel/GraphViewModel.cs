@@ -24,6 +24,8 @@ namespace RedPoint.ReefStatus.Common.ViewModel
     /// </summary>
     public class GraphViewModel : BindableBase
     {
+        private readonly IReefStatusSettings reefStatusSettings;
+
         #region Constants and Fields
 
         /// <summary>
@@ -41,8 +43,9 @@ namespace RedPoint.ReefStatus.Common.ViewModel
         /// <param name="settings">
         /// The settings.
         /// </param>
-        public GraphViewModel(BaseInfo settings)
+        public GraphViewModel(BaseInfo settings, IReefStatusSettings reefStatusSettings)
         {
+            this.reefStatusSettings = reefStatusSettings;
             this.Dispatcher = Dispatcher.CurrentDispatcher;
             this.Settings = settings;
         }
@@ -177,7 +180,7 @@ namespace RedPoint.ReefStatus.Common.ViewModel
             var points = new Collection<DataPoint>();
             try
             {
-                using (IDataAccess data = ReefStatusSettings.Instance.Logging.Connection.Create())
+                using (IDataAccess data = this.reefStatusSettings.Logging.Connection.Create())
                 {
                     switch (this.Item.Range)
                     {

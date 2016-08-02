@@ -14,6 +14,8 @@ namespace RedPoint.ReefStatus.Common.WebServer
     using HttpServer.Rules;
     using HttpServer.Sessions;
 
+    using RedPoint.ReefStatus.Common.Commands;
+    using RedPoint.ReefStatus.Common.ProfiLux.Data;
     using RedPoint.ReefStatus.Common.Settings;
 
     /// <summary>
@@ -29,7 +31,7 @@ namespace RedPoint.ReefStatus.Common.WebServer
         /// <summary>
         /// Initializes a new instance of the <see cref="WebInterface"/> class.
         /// </summary>
-        public WebInterface()
+        public WebInterface(IReefStatusSettings settings, Controller controller, CommandThread commandThread)
         {
             this.server = new HttpServer();
 
@@ -39,8 +41,7 @@ namespace RedPoint.ReefStatus.Common.WebServer
 
             this.server.Add(this);
 
-            // browsing to http://localhost:8081/user/edit will invoke the method "public string Edit()" in  UserController.
-            mod.Add(new CommandController());
+            mod.Add(new CommandController(settings, controller, commandThread));
             this.server.Add(mod);
 
             var fileModule = new FileModule("/", Environment.CurrentDirectory + "\\web\\");
@@ -51,13 +52,12 @@ namespace RedPoint.ReefStatus.Common.WebServer
 
             try
             {
-                this.server.Start(System.Net.IPAddress.Any, ReefStatusSettings.Instance.Web.Port);
+                this.server.Start(System.Net.IPAddress.Any, settings.Web.Port);
             }
             catch (SocketException ex)
             {
                 throw new ReefStatusException(40001, "Unable to start web server", ex);
             }
-            
         }
 
         /// <summary>

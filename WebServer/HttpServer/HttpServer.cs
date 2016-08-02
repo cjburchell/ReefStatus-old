@@ -367,7 +367,7 @@ namespace HttpServer
 			response.ContentType = "text/plain";
 			StreamWriter writer = new StreamWriter(response.Body);
 #if DEBUG
-            writer.WriteLine(err);
+            writer.WriteLine(err.Message);
 #else
 			writer.WriteLine(err.Message);
 #endif

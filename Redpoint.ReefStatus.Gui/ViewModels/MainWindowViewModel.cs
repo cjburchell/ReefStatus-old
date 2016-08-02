@@ -28,7 +28,6 @@ namespace RedPoint.ReefStatus.Gui.ViewModels
     using RedPoint.ReefStatus.Common.ProfiLux;
     using RedPoint.ReefStatus.Common.Settings;
     using RedPoint.ReefStatus.Common.UI;
-    using RedPoint.ReefStatus.Common.UI.ViewModel;
 
     using MessageBox = RedPoint.ReefStatus.Common.UI.Controls.MessageBox;
     using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
@@ -108,17 +107,11 @@ namespace RedPoint.ReefStatus.Gui.ViewModels
 
         private Controller selectedController;
 
+        private DataService dataService;
+
         #endregion
 
         #region Constructors and Destructors
-
-        /// <summary>
-        /// Initializes static members of the <see cref="MainWindowViewModel"/> class. 
-        /// </summary>
-        static MainWindowViewModel()
-        {
-            Instance = new MainWindowViewModel();
-        }
 
         /// <summary>
         /// Prevents a default instance of the <see cref="MainWindowViewModel"/> class from being created. 
@@ -131,7 +124,9 @@ namespace RedPoint.ReefStatus.Gui.ViewModels
             this.dispatcher = Dispatcher.CurrentDispatcher;
 
             Logger.Instance.OnError += this.LoggerOnError;
-            DataService.Instance.Start();
+            this.Settings = ReefStatusSettings.LoadSettings();
+            this.dataService = new DataService(this.Settings);
+            this.dataService.Start();
 
             this.WindowClosingCommand = new DelegateCommand(this.WindowClosing);
 
@@ -145,7 +140,7 @@ namespace RedPoint.ReefStatus.Gui.ViewModels
             this.RefreshCommand = new DelegateCommand(this.UpdateAll, () => this.HasController);
             this.ShowProfiluxControlCommand = new DelegateCommand(this.ShowProfiluxControl, () => this.HasProfilux);
 
-            DataService.Instance.OnLogItem += this.AddToGraphDisplay;
+            this.dataService.OnLogItem += this.AddToGraphDisplay;
 
             this.UpdateAll();
 
@@ -165,12 +160,6 @@ namespace RedPoint.ReefStatus.Gui.ViewModels
         #endregion
 
         #region Public Properties
-
-        /// <summary>
-        /// Gets the instance.
-        /// </summary>
-        /// <value>The instance.</value>
-        public static MainWindowViewModel Instance { get; private set; }
 
         /// <summary>
         /// Gets AddControllerCommand.
@@ -492,13 +481,7 @@ namespace RedPoint.ReefStatus.Gui.ViewModels
         /// Gets the settings.
         /// </summary>
         /// <value>The settings.</value>
-        public ReefStatusSettings Settings
-        {
-            get
-            {
-                return ReefStatusSettings.Instance;
-            }
-        }
+        public IReefStatusSettings Settings { get; }
 
         /// <summary>
         /// Gets the show profilux control command.
@@ -652,7 +635,7 @@ namespace RedPoint.ReefStatus.Gui.ViewModels
             }
             else
             {
-                this.IsInAlarm = ReefStatusSettings.Instance.Controllers.Any(item => item.Info.Alarm == CurrentState.On);
+                this.IsInAlarm = this.Settings.Controllers.Any(item => item.Info.Alarm == CurrentState.On);
 
                 foreach (var sensor in Controller.Items)
                 {
@@ -820,7 +803,7 @@ namespace RedPoint.ReefStatus.Gui.ViewModels
         /// </summary>
         private void UpdateAll()
         {
-            foreach (var Controller in ReefStatusSettings.Instance.Controllers)
+            foreach (var Controller in this.Settings.Controllers)
             {
                 Controller.Commands.Progress = this;
                 Controller.Commands.UpdateAll();
@@ -852,7 +835,7 @@ namespace RedPoint.ReefStatus.Gui.ViewModels
         /// </summary>
         private void UpdateSettings()
         {
-            DataService.Instance.UpdateSettings();
+            this.dataService.UpdateSettings();
         }
 
         /// <summary>
@@ -862,11 +845,11 @@ namespace RedPoint.ReefStatus.Gui.ViewModels
         {
             // shut down the data service and save its state
             this.StopRefresh();
-            ReefStatusSettings.Instance.Save();
+            this.Settings.Save();
 
             this.SelectedController = null;
 
-            DataService.Instance.Stop();
+            this.dataService.Stop();
         }
 
         #endregion

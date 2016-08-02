@@ -5,7 +5,6 @@
 namespace RedPoint.ReefStatus.Common.ProfiLux
 {
     using System;
-    using System.Runtime.Serialization;
 
     /// <summary>
     /// Protocol Exception

@@ -10,53 +10,23 @@
 namespace RedPoint.ReefStatus.Common.Settings
 {
     using System.Collections.ObjectModel;
-
-    using Microsoft.Practices.Prism.Mvvm;
-
     using RedPoint.ReefStatus.Common.ProfiLux;
-    using RedPoint.ReefStatus.Common.UI.ViewModel;
 
     /// <summary>
     /// Custom Graph Settings
     /// </summary>
-    public class CustomGraphSettings : BindableBase
+    public class CustomGraphSettings
     {
-        /// <summary>
-        /// Graph range
-        /// </summary>
-        private GraphRange customGraphRange;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CustomGraphSettings"/> class.
-        /// </summary>
-        public CustomGraphSettings()
-        {
-            this.ShowCurves = new SafeObservableCollection<string>();
-            this.Range = GraphRange.Week;
-        }
-
         /// <summary>
         /// Gets or sets the range.
         /// </summary>
         /// <value>The range.</value>
-        public GraphRange Range
-        {
-            get
-            {
-                return this.customGraphRange;
-            }
-
-            set
-            {
-                this.customGraphRange = value;
-                this.OnPropertyChanged(() => this.Range);
-            }
-        }
+        public GraphRange Range { get; set; } = GraphRange.Week;
 
         /// <summary>
         /// Gets or sets the show curves.
         /// </summary>
         /// <value>The show curves.</value>
-        public SafeObservableCollection<string> ShowCurves { get; set; }
+        public Collection<string> ShowCurves { get; set; } = new Collection<string>();
     }
 }

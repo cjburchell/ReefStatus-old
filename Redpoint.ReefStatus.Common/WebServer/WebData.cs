@@ -6,6 +6,8 @@ namespace RedPoint.ReefStatus.Common.WebServer
 {
     using ProfiLux;
 
+    using RedPoint.ReefStatus.Common.ProfiLux.Data;
+
     /// <summary>
     /// Web interface data
     /// </summary>
@@ -30,14 +32,8 @@ namespace RedPoint.ReefStatus.Common.WebServer
             this.ValueString = item.ValueWithUnits;
             this.Value = item.ConvertedValue != null ? item.ConvertedValue.ToString() : string.Empty;
             this.Mode = item.Mode;
-            if (item is SensorInfo)
-            {
-                this.IsAlarmOn = ((SensorInfo)item).IsAlarmOn;
-            }
-            else
-            {
-                this.IsAlarmOn = CurrentState.Off;
-            }
+            var info = item as SensorInfo;
+            this.IsAlarmOn = info?.IsAlarmOn ?? CurrentState.Off;
 
             if (item is DosingPump)
             {

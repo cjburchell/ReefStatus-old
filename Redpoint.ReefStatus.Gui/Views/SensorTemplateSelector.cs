@@ -9,6 +9,7 @@ namespace RedPoint.ReefStatus.Gui.Views
     using System.Windows.Controls;
 
     using RedPoint.ReefStatus.Common.ProfiLux;
+    using RedPoint.ReefStatus.Common.ProfiLux.Data;
 
     public class SensorTemplateSelector : DataTemplateSelector
     {

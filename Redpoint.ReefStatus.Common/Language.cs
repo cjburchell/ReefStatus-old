@@ -23,7 +23,7 @@ namespace RedPoint.ReefStatus.Common
         {
             if (Application.Current == null)
             {
-                return "NOT_TRANSLATED";
+                return key;
             }
 
             try
@@ -32,7 +32,7 @@ namespace RedPoint.ReefStatus.Common
             }
             catch (XamlParseException)
             {
-                return "NOT_TRANSLATED";
+                return key;
             }
             
         }

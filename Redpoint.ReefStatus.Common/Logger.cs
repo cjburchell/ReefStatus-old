@@ -4,9 +4,9 @@
 
 namespace RedPoint.ReefStatus.Common
 {
-    using System.Diagnostics;
-    using System.IO;
-    using RedPoint.ReefStatus.Common.Settings;
+    using System;
+
+    using log4net;
 
     /// <summary>
     /// The logger.
@@ -14,19 +14,11 @@ namespace RedPoint.ReefStatus.Common
     public class Logger
     {
         /// <summary>
-        /// The name of the error log file
-        /// </summary>
-        private const string LogFileName = "log.txt";
-
-        /// <summary>
         /// the instance of the logger
         /// </summary>
         private static Logger instance;
 
-        /// <summary>
-        /// The error log location.
-        /// </summary>
-        private static string errorLogLocation;
+        private readonly ILog log = LogManager.GetLogger("ReefStatus");
 
         /// <summary>
         /// Prevents a default instance of the <see cref="Logger"/> class from being created.
@@ -36,47 +28,10 @@ namespace RedPoint.ReefStatus.Common
         }
 
         /// <summary>
-        /// The on error delagate.
-        /// </summary>
-        /// <param name="message">
-        /// The message.
-        /// </param>
-        public delegate void OnErrorDelagate(LogMessage message);
-
-        /// <summary>
         /// Gets the instance.
         /// </summary>
         /// <value>The instance.</value>
-        public static Logger Instance
-        {
-            get
-            {
-                return instance ?? (instance = new Logger());
-            }
-        }
-
-        /// <summary>
-        /// Gets the error log location.
-        /// </summary>
-        /// <value>The error log location.</value>
-        public static string ErrorLogLocation
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(errorLogLocation))
-                {
-                    errorLogLocation = ReefStatusSettings.AppDataDir + "\\ReefStatus\\" + LogFileName;
-                }
-
-                return errorLogLocation;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the on error.
-        /// </summary>
-        /// <value>The on error.</value>
-        public OnErrorDelagate OnError { get; set; }
+        public static Logger Instance => instance ?? (instance = new Logger());
 
         /// <summary>
         /// Logs the error.
@@ -88,28 +43,19 @@ namespace RedPoint.ReefStatus.Common
         {
             if (message.Code != 1)
             {
-                try
+                if (message.Exception != null)
                 {
-                    using (var logFile = File.AppendText(ErrorLogLocation))
-                    {
-                        logFile.WriteLine(message.ToString());
-                        if (message.Exception != null)
-                        {
-                            logFile.WriteLine(message.Exception);
-                        }
-                    }
+                    this.log.Error(message, message.Exception);
                 }
-                catch (IOException)
+                else
                 {
+                    this.log.Error(message);
                 }
             }
-
-            if (this.OnError != null)
+            else
             {
-                this.OnError(message);
+                this.log.Debug(message);
             }
-
-            Trace.WriteLine(message);
         }
 
         /// <summary>
@@ -122,6 +68,14 @@ namespace RedPoint.ReefStatus.Common
                          {
                              Exception = ex
                          });
+        }
+
+        public void LogError(Exception ex)
+        {
+            this.Log(new LogMessage(404, ex.Message)
+            {
+                Exception = ex
+            });
         }
     }
 }

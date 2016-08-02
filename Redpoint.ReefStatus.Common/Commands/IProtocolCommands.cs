@@ -63,5 +63,7 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </summary>
         /// <param name="facePlateKey">The face plate key.</param>
         void KeyCommand(FaceplateKey facePlateKey);
+
+        void LogParameters();
     }
 }

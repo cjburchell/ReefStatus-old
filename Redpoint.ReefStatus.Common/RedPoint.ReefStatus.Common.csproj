@@ -12,7 +12,7 @@
     <AssemblyName>RedPoint.ReefStatus.Common</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -100,16 +100,16 @@
     <Reference Include="DynamicDataDisplay">
       <HintPath>..\libs\DynamicDataDisplay.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Prism.Mvvm, Version=1.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Prism.Mvvm.1.1.1\lib\net45\Microsoft.Practices.Prism.Mvvm.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Practices.Prism.Mvvm.Desktop, Version=1.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Prism.Mvvm.1.1.1\lib\net45\Microsoft.Practices.Prism.Mvvm.Desktop.dll</HintPath>
+    <Reference Include="LoveSeat, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LoveSeat.1.0.1\lib\net40\LoveSeat.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Practices.Prism.SharedInterfaces, Version=1.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Prism.Mvvm.1.1.1\lib\net45\Microsoft.Practices.Prism.SharedInterfaces.dll</HintPath>
+    <Reference Include="LoveSeat.Interfaces, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LoveSeat.1.0.1\lib\net40\LoveSeat.Interfaces.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -137,51 +137,44 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\AdoDataAccess.cs" />
+    <Compile Include="Database\CouchDataAccess.cs" />
     <Compile Include="Database\DataLog.cs" />
     <Compile Include="Database\DataType.cs" />
-    <Compile Include="Database\MemoryDataAccess.cs" />
+    <Compile Include="Database\StatsUtils.cs" />
     <Compile Include="IUpdateProgress.cs" />
-    <Compile Include="Language.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Localization\ResourceLoader.cs" />
     <Compile Include="LogMessage.cs" />
-    <Compile Include="ProfiLux\LogicFunction.cs" />
-    <Compile Include="ProfiLux\Controler.cs" />
-    <Compile Include="ProfiLux\CurrentPump.cs" />
-    <Compile Include="ProfiLux\DigitalInput.cs" />
-    <Compile Include="ProfiLux\DosingPump.cs" />
-    <Compile Include="ProfiLux\IProfilux.cs" />
-    <Compile Include="ProfiLux\IRangeInfo.cs" />
-    <Compile Include="ProfiLux\Light.cs" />
-    <Compile Include="ProfiLux\Profilux5Controler.cs" />
-    <Compile Include="ProfiLux\ProgramableLogic.cs" />
-    <Compile Include="ProfiLux\TimerHistoryInstance.cs" />
-    <Compile Include="ProfiLux\Types.cs" />
-    <Compile Include="ProfiLux\ValueHistoryInstance.cs" />
-    <Compile Include="UI\ErrorWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\ErrorWindow.Designer.cs">
-      <DependentUpon>ErrorWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\ViewModel\RegistrationViewModel.cs" />
-    <Compile Include="UI\ViewModel\SafeObservableCollection.cs" />
-    <Compile Include="ViewModel\DataPointsViewModel.cs" />
-    <Compile Include="ViewModel\GraphViewModel.cs" />
-    <Compile Include="ViewModel\ProbeGraphViewModel.cs" />
-    <Compile Include="ViewModel\RemoteViewModel.cs" />
-    <Compile Include="ViewModel\ReportViewModel.cs" />
-    <Compile Include="ViewModel\SPortGraphViewModel.cs" />
+    <Compile Include="ProfiLux\Data\DeviceMode.cs" />
+    <Compile Include="ProfiLux\Data\DigitalInputFunction.cs" />
+    <Compile Include="ProfiLux\Data\LevelSensorOpertationMode.cs" />
+    <Compile Include="ProfiLux\Data\LogicFunction.cs" />
+    <Compile Include="ProfiLux\Data\Controller.cs" />
+    <Compile Include="ProfiLux\Data\CurrentPump.cs" />
+    <Compile Include="ProfiLux\Data\DigitalInput.cs" />
+    <Compile Include="ProfiLux\Data\DosingPump.cs" />
+    <Compile Include="ProfiLux\Data\Maintenance.cs" />
+    <Compile Include="ProfiLux\Data\OperationMode.cs" />
+    <Compile Include="ProfiLux\Data\ProductId.cs" />
+    <Compile Include="ProfiLux\Protocol\DayMode.cs" />
+    <Compile Include="ProfiLux\Protocol\IProfilux.cs" />
+    <Compile Include="ProfiLux\Data\Light.cs" />
+    <Compile Include="ProfiLux\Protocol\LevelState.cs" />
+    <Compile Include="ProfiLux\Protocol\PortMode.cs" />
+    <Compile Include="ProfiLux\Protocol\Profilux5Controler.cs" />
+    <Compile Include="ProfiLux\Data\ProgramableLogic.cs" />
+    <Compile Include="ProfiLux\Data\SensorMode.cs" />
+    <Compile Include="ProfiLux\Data\SensorType.cs" />
+    <Compile Include="ProfiLux\Data\LogicMode.cs" />
+    <Compile Include="ProfiLux\Protocol\TimerMode.cs" />
+    <Compile Include="ProfiLux\Protocol\TimerSettings.cs" />
+    <Compile Include="ProfiLux\Protocol\WaterMode.cs" />
+    <Compile Include="Service\AlertService.cs" />
+    <Compile Include="Settings\ConnectionType.cs" />
+    <Compile Include="Settings\DateRangeMode.cs" />
+    <Compile Include="Settings\IReefStatusSettings.cs" />
+    <Compile Include="Settings\ReportLayout.cs" />
+    <Compile Include="Settings\ScreenSaverMode.cs" />
     <Compile Include="WebServer\CommandController.cs" />
     <Compile Include="Commands\CommandThread.cs" />
-    <Compile Include="CommonInstaller.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="CommonInstaller.Designer.cs">
-      <DependentUpon>CommonInstaller.cs</DependentUpon>
-    </Compile>
     <Compile Include="Communication\Connection.cs" />
     <Compile Include="Communication\ConnectionException.cs" />
     <Compile Include="Communication\IConnection.cs" />
@@ -191,40 +184,33 @@
     <Compile Include="Communication\PortException.cs" />
     <Compile Include="Database\DataAccess.cs" />
     <Compile Include="Database\DataAccessException.cs" />
-    <Compile Include="Database\DatabaseConnection.cs" />
+    <Compile Include="Database\DatabaseConnectionFactory.cs" />
     <Compile Include="Database\IDataAccess.cs" />
-    <Compile Include="Commands\ICommandReply.cs" />
     <Compile Include="Commands\IProtocolCommands.cs" />
-    <Compile Include="Core\DataService.cs" />
-    <Compile Include="UI\ExportToFile.cs" />
-    <Compile Include="UI\ImportFromFile.cs" />
-    <Compile Include="UI\ImportFromProfilux.cs" />
+    <Compile Include="Service\DataService.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="Dump.cs" />
-    <Compile Include="ProfiLux\BasicProtocol.cs" />
+    <Compile Include="ProfiLux\Protocol\BasicProtocol.cs" />
     <Compile Include="ProfiLux\ErrorCodeException.cs" />
-    <Compile Include="ProfiLux\IBasicProtocol.cs" />
-    <Compile Include="ProfiLux\ProfiLux.cs" />
+    <Compile Include="ProfiLux\Protocol\IBasicProtocol.cs" />
+    <Compile Include="ProfiLux\Protocol\ProfiLux.cs" />
     <Compile Include="Settings\ConnectionSettings.cs" />
-    <Compile Include="Settings\CustomGraphSettings.cs" />
-    <Compile Include="UI\IProgressCallback.cs" />
+    <Compile Include="IProgressCallback.cs" />
     <Compile Include="Settings\LoggingSettings.cs" />
     <Compile Include="Settings\MailSettings.cs" />
-    <Compile Include="ProfiLux\BaseInfo.cs" />
-    <Compile Include="ProfiLux\ProfiLuxProtocol.cs" />
-    <Compile Include="ProfiLux\DataPoint.cs" />
-    <Compile Include="ProfiLux\DeviceInfo.cs" />
-    <Compile Include="ProfiLux\Info.cs" />
+    <Compile Include="ProfiLux\Data\BaseInfo.cs" />
+    <Compile Include="ProfiLux\Protocol\ProfiluxProtocol.cs" />
+    <Compile Include="ProfiLux\Data\DeviceInfo.cs" />
+    <Compile Include="ProfiLux\Data\Info.cs" />
     <Compile Include="ProfiLux\ItemDataRow.cs" />
-    <Compile Include="ProfiLux\LevelSensor.cs" />
-    <Compile Include="ProfiLux\LPort.cs" />
-    <Compile Include="ProfiLux\ProbeSensor.cs" />
-    <Compile Include="ProfiLux\ProfiluxControler.cs" />
+    <Compile Include="ProfiLux\Data\LevelSensor.cs" />
+    <Compile Include="ProfiLux\Data\LPort.cs" />
+    <Compile Include="ProfiLux\Data\Probe.cs" />
+    <Compile Include="ProfiLux\Protocol\ProfiluxControler.cs" />
     <Compile Include="ProfiLux\ProtocolException.cs" />
-    <Compile Include="ProfiLux\Reminder.cs" />
-    <Compile Include="ProfiLux\SensorInfo.cs" />
-    <Compile Include="ProfiLux\SPort.cs" />
-    <Compile Include="ProfiLux\UserInfo.cs" />
+    <Compile Include="ProfiLux\Data\Reminder.cs" />
+    <Compile Include="ProfiLux\Data\SensorInfo.cs" />
+    <Compile Include="ProfiLux\Data\SPort.cs" />
+    <Compile Include="ProfiLux\Data\UserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -236,17 +222,11 @@
     <Compile Include="Database\Stats.cs" />
     <Compile Include="Settings\WebInterfaceSettings.cs" />
     <Compile Include="Settings\WindowSettings.cs" />
-    <Compile Include="WebServer\ControlerInfo.cs" />
-    <Compile Include="WebServer\SessionBase.cs" />
-    <Compile Include="WebServer\SessionProvider.cs" />
-    <Compile Include="WebServer\WebClient.cs" />
-    <Compile Include="WebServer\WebData.cs" />
-    <Compile Include="WebServer\WebGraphData.cs" />
+    <Compile Include="WebServer\DousingValue.cs" />
     <Compile Include="WebServer\WebInterface.cs" />
-    <Compile Include="WebServer\Reminder.cs" />
-    <Compile Include="WebServer\WebSession.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="key.snk" />
     <None Include="packages.config" />
     <None Include="Web\yui\assets\skins\sam\sprite.psd">
@@ -263,11 +243,10 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UI\ErrorWindow.resx">
-      <DependentUpon>ErrorWindow.cs</DependentUpon>
-    </EmbeddedResource>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
@@ -1620,6 +1599,7 @@
       <Name>HttpServer</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

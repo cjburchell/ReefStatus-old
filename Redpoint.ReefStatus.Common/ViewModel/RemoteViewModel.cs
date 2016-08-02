@@ -20,7 +20,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoteViewModel"/> class.
         /// </summary>
-        public RemoteViewModel(CommandThread commands, Controller controller)
+        public RemoteViewModel(CommandThread commands, Controller controller, DataService dataService)
         {
             this.Commands = commands;
             this.Controller = controller;
@@ -30,8 +30,9 @@
             this.RightCommand = new DelegateCommand(this.Right);
             this.EnterCommand = new DelegateCommand(this.Enter);
             this.EscCommand = new DelegateCommand(this.Esc);
+            this.dataService = dataService;
 
-            DataService.Instance.OnUpdateDisplayText += this.UpdateDisplayText;
+            dataService.OnUpdateDisplayText += this.UpdateDisplayText;
             this.timerDisplayText.Interval = 1000;
             this.timerDisplayText.Tick += this.TimeDrisplayText_Tick;
         }
@@ -215,6 +216,8 @@
         private Image displayImage;
 
         private bool isActive;
+
+        private DataService dataService;
 
         /// <summary>
         /// Gets or sets the display image.

@@ -1,8 +1,9 @@
 ﻿namespace RedPoint.ReefStatus.Common.WebServer
 {
-    using System.Collections.ObjectModel;
+    using System.Collections.Generic;
     using System.Drawing;
 
+    using RedPoint.ReefStatus.Common.Database;
     using RedPoint.ReefStatus.Common.ProfiLux;
 
     /// <summary>
@@ -18,6 +19,6 @@
 
         public string Id { get; set; }
 
-        public Collection<DataPoint> Data { get; set; }
+        public List<DataLog> Data { get; set; }
     }
 }

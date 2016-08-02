@@ -12,7 +12,6 @@ namespace Redpoint.ReefStatus.Server
         {
             var server = new Server();
 
-
             server.Initialize();
 
             Console.ReadLine();

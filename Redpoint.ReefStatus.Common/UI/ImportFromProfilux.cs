@@ -19,7 +19,7 @@
         /// <param name="controller">The controller.</param>
         /// <param name="dispatcher">The dispatcher.</param>
         /// <param name="commands">The commands.</param>
-        public static void Start(IProgressCallback callback, Controller controller, Dispatcher dispatcher, CommandThread commands)
+        public static void Start(IProgressCallback callback, Controller controller, Dispatcher dispatcher, CommandThread commands, IReefStatusSettings settings)
         {
             new Thread(() =>
                     {
@@ -36,7 +36,7 @@
                                     return;
                                 }
 
-                                using (var access = ReefStatusSettings.Instance.Logging.Connection.Create())
+                                using (var access = settings.Logging.Connection.Create())
                                 {
                                     access.AddLog(data, callback, controller.Id);
                                 }

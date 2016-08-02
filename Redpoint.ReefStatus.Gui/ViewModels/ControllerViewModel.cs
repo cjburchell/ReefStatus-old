@@ -17,6 +17,7 @@ namespace RedPoint.ReefStatus.Gui.ViewModels
     using RedPoint.ReefStatus.Common.Communication;
     using RedPoint.ReefStatus.Common.Core;
     using RedPoint.ReefStatus.Common.ProfiLux;
+    using RedPoint.ReefStatus.Common.ProfiLux.Data;
     using RedPoint.ReefStatus.Common.Settings;
     using RedPoint.ReefStatus.Common.UI.ViewModel;
     using RedPoint.ReefStatus.Common.ViewModel;

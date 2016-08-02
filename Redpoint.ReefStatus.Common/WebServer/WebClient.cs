@@ -78,55 +78,6 @@
         }
 
         /// <summary>
-        /// Gets the item data.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="Controller">The Controller.</param>
-        /// <returns>A list of data items</returns>
-        public Collection<WebData> GetItemData(string type, int Controller)
-        {
-            string rawData = this.GetRawXmlData(type, "Controller=" + Controller);
-            if (string.IsNullOrEmpty(rawData))
-            {
-                throw new ReefStatusException(6104, "Unable to Item Data");
-            }
-
-            Collection<WebData> data;
-            using (TextReader reader = new StringReader(rawData))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(Collection<WebData>), new[] { typeof(WebData) });
-                data = (Collection<WebData>)serializer.Deserialize(reader);
-                reader.Close();
-            }
-
-            return data;
-        }
-
-        /// <summary>
-        /// Gets the Controller info.
-        /// </summary>
-        /// <param name="Controller">The Controller.</param>
-        /// <returns>The Controller Info</returns>
-        public ControllerInfo GetControllerInfo(int Controller)
-        {
-            string rawData = this.GetRawXmlData("info", "Controller=" + Controller);
-            if (string.IsNullOrEmpty(rawData))
-            {
-                throw new ReefStatusException(6104, "Unable to get Info");
-            }
-
-            ControllerInfo data;
-            using (TextReader reader = new StringReader(rawData))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(ControllerInfo));
-                data = (ControllerInfo)serializer.Deserialize(reader);
-                reader.Close();
-            }
-
-            return data;
-        }
-
-        /// <summary>
         /// Graphes the specified Controller.
         /// </summary>
         /// <param name="Controller">The Controller.</param>

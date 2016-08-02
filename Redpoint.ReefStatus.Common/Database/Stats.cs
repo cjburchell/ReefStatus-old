@@ -7,6 +7,7 @@ namespace RedPoint.ReefStatus.Common.Database
     using System;
 
     using RedPoint.ReefStatus.Common.ProfiLux;
+    using RedPoint.ReefStatus.Common.ProfiLux.Data;
 
     /// <summary>
     /// Data Stats

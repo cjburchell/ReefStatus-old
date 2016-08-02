@@ -18,16 +18,9 @@ namespace RedPoint.ReefStatus.Common
         /// <param name="message">The message.</param>
         public LogMessage(int code, string message)
         {
-            this.Time = DateTime.Now;
             this.Code = code;
             this.Message = message;
         }
-
-        /// <summary>
-        /// Gets the time.
-        /// </summary>
-        /// <value>The time.</value>
-        public DateTime Time { get; private set; }
 
         /// <summary>
         /// Gets or sets the excption.
@@ -39,13 +32,13 @@ namespace RedPoint.ReefStatus.Common
         /// Gets the code.
         /// </summary>
         /// <value>The code.</value>
-        public int Code { get; private set; }
+        public int Code { get; }
 
         /// <summary>
         /// Gets the message.
         /// </summary>
         /// <value>The message.</value>
-        public string Message { get; private set; }
+        public string Message { get; }
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.
@@ -55,7 +48,7 @@ namespace RedPoint.ReefStatus.Common
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{0} {1} {2}", this.Time, this.Code, this.Message);
+            return $"{this.Code} {this.Message}";
         }
     }
 }

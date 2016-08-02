@@ -7,8 +7,6 @@ namespace RedPoint.ReefStatus.Common.WebServer
 {
     public class ControllerInfo
     {
-        public string Name { get; set; }
-
         public string Alarm { get; set; }
 
         public string LastUpdateString { get; set; }

@@ -11,6 +11,7 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:viewModels="clr-namespace:RedPoint.ReefStatus.Gui.ViewModels"
     xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+    xmlns:data="clr-namespace:RedPoint.ReefStatus.Common.ProfiLux.Data;assembly=RedPoint.ReefStatus.Common"
     mc:Ignorable="d"
     x:Class="RedPoint.ReefStatus.Gui.Views.StatusView"
     x:Name="statusView" d:DesignWidth="800" d:DesignHeight="568"
@@ -724,7 +725,7 @@
                                         <Image Style="{DynamicResource LightItemImage}" />
                                     </DataTemplate>
 
-                                    <DataTemplate DataType="{x:Type profiLux:DosingPump}">
+                                    <DataTemplate DataType="{x:Type data:DosingPump}">
                                         <Image Source="{DynamicResource imgDose}" />
                                     </DataTemplate>
 
@@ -732,7 +733,7 @@
                                         <Image Style="{DynamicResource LevelItemImage}" />
                                     </DataTemplate>
 
-                                    <DataTemplate DataType="{x:Type profiLux:CurrentPump}">
+                                    <DataTemplate DataType="{x:Type data:CurrentPump}">
                                         <Image Source="{DynamicResource imgWave}" />
                                     </DataTemplate>
 
@@ -775,7 +776,7 @@
                                         <Image Style="{DynamicResource LightItemImage}" />
                                     </DataTemplate>
 
-                                    <DataTemplate DataType="{x:Type profiLux:DosingPump}">
+                                    <DataTemplate DataType="{x:Type data:DosingPump}">
                                         <Image Source="{DynamicResource imgDose}" />
                                     </DataTemplate>
 
@@ -783,7 +784,7 @@
                                         <Image Style="{DynamicResource LevelItemImage}" />
                                     </DataTemplate>
 
-                                    <DataTemplate DataType="{x:Type profiLux:CurrentPump}">
+                                    <DataTemplate DataType="{x:Type data:CurrentPump}">
                                         <Image Source="{DynamicResource imgWave}" />
                                     </DataTemplate>
                                 </ContentControl.Resources>
@@ -816,7 +817,7 @@
                     </Button>
                 </DataTemplate>
 
-                <DataTemplate DataType="{x:Type profiLux:DigitalInput}">
+                <DataTemplate DataType="{x:Type data:DigitalInput}">
                     <Button Style="{StaticResource ButtonItemType}">
                         <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
                             <Grid.ColumnDefinitions>
@@ -857,7 +858,7 @@
                     </Button>
                 </DataTemplate>
 
-                <DataTemplate DataType="{x:Type profiLux:DosingPump}">
+                <DataTemplate DataType="{x:Type data:DosingPump}">
                     <Button Style="{StaticResource ButtonItemType}">
                         <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
                             <Grid.ColumnDefinitions>
@@ -878,7 +879,7 @@
                 </DataTemplate>
 
 
-                <DataTemplate DataType="{x:Type profiLux:CurrentPump}">
+                <DataTemplate DataType="{x:Type data:CurrentPump}">
                     <Button Style="{StaticResource ButtonItemType}">
                         <Grid TextBlock.FontSize="{DynamicResource DefaultFontSize2}">
                             <Grid.ColumnDefinitions>

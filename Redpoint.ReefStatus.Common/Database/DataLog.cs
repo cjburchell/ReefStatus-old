@@ -1,34 +1,16 @@
 using System;
-using Microsoft.Practices.Prism.Mvvm;
 
 namespace RedPoint.ReefStatus.Common.Database
 {
-    public class DataLog : BindableBase
-	{
-        /// <summary>
-        /// The type
-        /// </summary>
-        private int type;
+    using Newtonsoft.Json;
 
-        /// <summary>
-        /// The time
-        /// </summary>
-        private DateTime time;
+    public class DataLog
+    {
+        [JsonProperty("_id")]
+        public string Id { get; set; }
 
-        /// <summary>
-        /// The value
-        /// </summary>
-        private double value;
-
-        /// <summary>
-        /// The index
-        /// </summary>
-        private int index;
-
-        /// <summary>
-        /// The controller
-        /// </summary>
-        private int controller;
+        [JsonProperty("_rev")]
+        public string Rev { get; set; }
 
         /// <summary>
         /// Gets or sets the type.
@@ -36,24 +18,7 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <value>
         /// The type.
         /// </value>
-        public int Type
-        {
-            get
-            {
-                return this.type;
-            }
-
-            set
-            {
-                if (value == this.type)
-                {
-                    return;
-                }
-
-                this.type = value;
-                this.OnPropertyChanged(() => this.Type);
-            }
-        }
+        public string Type { get; set; }
 
         /// <summary>
         /// Gets or sets the time.
@@ -61,24 +26,7 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <value>
         /// The time.
         /// </value>
-        public DateTime Time
-        {
-            get
-            {
-                return this.time;
-            }
-
-            set
-            {
-                if (value.Equals(this.time))
-                {
-                    return;
-                }
-
-                this.time = value;
-                this.OnPropertyChanged(() => this.Time);
-            }
-        }
+        public DateTime Time { get; set; }
 
         /// <summary>
         /// Gets or sets the value.
@@ -86,68 +34,6 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <value>
         /// The value.
         /// </value>
-        public double Value
-        {
-            get
-            {
-                return this.value;
-            }
-            set
-            {
-                if (value.Equals(this.value))
-                {
-                    return;
-                }
-                this.value = value;
-                this.OnPropertyChanged(() => this.Value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the index.
-        /// </summary>
-        /// <value>
-        /// The index.
-        /// </value>
-        public int Index
-        {
-            get
-            {
-                return this.index;
-            }
-            set
-            {
-                if (value == this.index)
-                {
-                    return;
-                }
-                this.index = value;
-                this.OnPropertyChanged(() => this.Index);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the controller.
-        /// </summary>
-        /// <value>
-        /// The controller.
-        /// </value>
-        public int Controller
-        {
-            get
-            {
-                return this.controller;
-            }
-            set
-            {
-                if (value == this.controller)
-                {
-                    return;
-                }
-                this.controller = value;
-                this.OnPropertyChanged(() => this.Controller);
-            }
-        }
-	}
+        public double Value { get; set; }
+    }
 }
-

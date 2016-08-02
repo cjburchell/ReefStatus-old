@@ -14,7 +14,6 @@ namespace RedPoint.ReefStatus.Common.Database
     using System.Data.Common;
 
     using RedPoint.ReefStatus.Common.ProfiLux;
-    using RedPoint.ReefStatus.Common.UI;
 
     /// <summary>
     /// The ado data access.

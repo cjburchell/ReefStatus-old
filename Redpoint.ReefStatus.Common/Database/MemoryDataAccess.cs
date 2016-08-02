@@ -13,7 +13,6 @@ namespace RedPoint.ReefStatus.Common.Database
     using System.Linq;
 
     using RedPoint.ReefStatus.Common.ProfiLux;
-    using RedPoint.ReefStatus.Common.UI;
 
     /// <summary>
     /// The memory data access.
@@ -48,18 +47,6 @@ namespace RedPoint.ReefStatus.Common.Database
             }
         }
 
-        /// <summary>
-        /// Gets the data types.
-        /// </summary>
-        /// <value>The data types.</value>
-        private Collection<DataType> DataTypes
-        {
-            get
-            {
-                return this.dataTypes;
-            }
-        }
-
         #endregion
 
         #region Public Methods
@@ -76,13 +63,13 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="descending">
         /// if set to <c>true</c> [descending].
         /// </param>
-        /// <param name="Controller">
+        /// <param name="controller">
         /// The Controller.
         /// </param>
         /// <returns>
         /// A list of data points
         /// </returns>
-        public IEnumerable<DataLog> GetDataPoints(int type, int count, bool descending, int Controller)
+        public IEnumerable<DataLog> GetDataPoints(string type, int count, bool descending, int controller)
         {
             try
             {
@@ -90,14 +77,14 @@ namespace RedPoint.ReefStatus.Common.Database
                 if (descending)
                 {
                     logs = (from item in this.DataLogs
-                            where item.Type == type && item.Controller == Controller
+                            where item.Type == type && item.Controller == controller
                             orderby item.Time descending
                             select item).Take(count);
                 }
                 else
                 {
                     logs = (from item in this.DataLogs
-                            where item.Type == type && item.Controller == Controller
+                            where item.Type == type && item.Controller == controller
                             orderby item.Time ascending
                             select item).Take(count);
                 }
@@ -120,7 +107,6 @@ namespace RedPoint.ReefStatus.Common.Database
         {
             try
             {
-                this.WriteCount++;
                 this.Insert(log);
             }
             catch (Exception ex)
@@ -139,7 +125,6 @@ namespace RedPoint.ReefStatus.Common.Database
         {
             try
             {
-                this.WriteCount += log.Count;
                 this.InserAll(log);
             }
             catch (Exception ex)
@@ -155,34 +140,21 @@ namespace RedPoint.ReefStatus.Common.Database
         #region IDataAccess
 
         /// <summary>
-        /// Backups the specified connection string.
-        /// </summary>
-        /// <param name="connectionString">
-        /// The connection string.
-        /// </param>
-        /// <param name="archiveLocation">
-        /// The archive location.
-        /// </param>
-        public void Backup(string connectionString, string archiveLocation)
-        {
-        }
-
-        /// <summary>
         /// Cleanups the data set.
         /// </summary>
         /// <param name="type">
         /// The type.
         /// </param>
-        /// <param name="Controller">
+        /// <param name="controller">
         /// the Controller
         /// </param>
-        public void CleanupDataSet(string type, int Controller)
+        public void CleanupDataSet(string type, int controller)
         {
             try
             {
                 int typeIndex = this.GetTypeIndex(type);
                 List<DataLog> items = (from item in this.DataLogs
-                                       where item.Type == typeIndex && item.Controller == Controller
+                                       where item.Type == typeIndex && item.Controller == controller
                                        orderby item.Time ascending
                                        select item).ToList();
 
@@ -190,9 +162,9 @@ namespace RedPoint.ReefStatus.Common.Database
 
                 for (int i = 2; i < items.Count; i++)
                 {
-                    DataLog log0 = items[i - 2];
-                    DataLog log1 = items[i - 1];
-                    DataLog log2 = items[i];
+                    var log0 = items[i - 2];
+                    var log1 = items[i - 1];
+                    var log2 = items[i];
 
                     if (log1.Value == log2.Value && log0.Value == log2.Value)
                     {
@@ -200,7 +172,6 @@ namespace RedPoint.ReefStatus.Common.Database
                     }
                 }
 
-                this.DeleteCount += toDelete.Count;
                 this.DeleteAll(toDelete);
             }
             catch (Exception ex)
@@ -214,17 +185,16 @@ namespace RedPoint.ReefStatus.Common.Database
         /// </summary>
         /// <param name="graph">The graph.</param>
         /// <param name="descending">The descending.</param>
-        /// <param name="Controller">The Controller.</param>
+        /// <param name="controller">The Controller.</param>
         /// <returns> a list of data points</returns>
         /// <exception cref="DataAccessException">
         /// </exception>
-        public Collection<DataPoint> GetDataPoints(string graph, bool descending, int Controller)
+        public IEnumerable<Common.ProfiLux.DataLog> GetDataPoints(string graph, bool descending, int controller)
         {
             try
             {
-                var data = new Collection<DataPoint>();
                 IEnumerable<DataLog> logs;
-                int type = this.GetTypeIndex(graph);
+                var type = this.GetTypeIndex(graph);
                 if (descending)
                 {
                     logs = from item in this.DataLogs where item.Type == type orderby item.Time descending select item;
@@ -232,17 +202,12 @@ namespace RedPoint.ReefStatus.Common.Database
                 else
                 {
                     logs = from item in this.DataLogs
-                           where item.Type == type && item.Controller == Controller
+                           where item.Type == type && item.Controller == controller
                            orderby item.Time ascending
                            select item;
                 }
 
-                foreach (DataLog log in logs)
-                {
-                    data.Add(new DataPoint(graph, log.Time, log.Value, log.Index));
-                }
-
-                return data;
+                return logs.Select(log => new Common.ProfiLux.DataLog(graph, log.Time, log.Value));
             }
             catch (Exception ex)
             {
@@ -262,25 +227,18 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="descending">
         /// if set to <c>true</c> [descending].
         /// </param>
-        /// <param name="Controller">
+        /// <param name="controller">
         /// The Controller.
         /// </param>
         /// <returns>
         /// list of data points
         /// </returns>
-        public Collection<DataPoint> GetDataPoints(string graph, int count, bool descending, int Controller)
+        public IEnumerable<Common.ProfiLux.DataLog> GetDataPoints(string graph, int count, bool descending, int controller)
         {
             try
             {
-                var data = new Collection<DataPoint>();
-                IEnumerable<DataLog> logs = this.GetDataPoints(this.GetTypeIndex(graph), count, descending, Controller);
-
-                foreach (DataLog log in logs)
-                {
-                    data.Add(new DataPoint(graph, log.Time, log.Value, log.Index));
-                }
-
-                return data;
+                var logs = this.GetDataPoints(this.GetTypeIndex(graph), count, descending, controller);
+                return logs.Select(log => new Common.ProfiLux.DataLog(graph, log.Time, log.Value));
             }
             catch (Exception ex)
             {
@@ -306,34 +264,16 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <returns>
         /// List of data points
         /// </returns>
-        public Collection<DataPoint> GetDataPoints(string graph, DateTime startTime, bool descending, int contorler)
+        public IEnumerable<Common.ProfiLux.DataLog> GetDataPoints(string graph, DateTime startTime, bool descending, int contorler)
         {
             try
             {
-                var data = new Collection<DataPoint>();
-                IEnumerable<DataLog> logs;
-                int type = this.GetTypeIndex(graph);
-                if (descending)
-                {
-                    logs = from item in this.DataLogs
-                           where item.Type == type && item.Time > startTime && item.Controller == contorler
-                           orderby item.Time descending
-                           select item;
-                }
-                else
-                {
-                    logs = from item in this.DataLogs
-                           where item.Type == type && item.Time > startTime && item.Controller == contorler
-                           orderby item.Time ascending
-                           select item;
-                }
+                var type = this.GetTypeIndex(graph);
+                var logs = @descending
+                                       ? (from item in this.DataLogs where item.Type == type && item.Time > startTime && item.Controller == contorler orderby item.Time descending select item)
+                                       : (from item in this.DataLogs where item.Type == type && item.Time > startTime && item.Controller == contorler orderby item.Time ascending select item);
 
-                foreach (DataLog log in logs)
-                {
-                    data.Add(new DataPoint(graph, log.Time, log.Value, log.Index));
-                }
-
-                return data;
+                return logs.Select(log => new Common.ProfiLux.DataLog(graph, log.Time, log.Value));
             }
             catch (Exception ex)
             {
@@ -353,32 +293,25 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="graph">
         /// The graph.
         /// </param>
-        /// <param name="Controller">
+        /// <param name="controller">
         /// The Controller.
         /// </param>
         /// <returns>
         /// a list of data points for the range
         /// </returns>
-        public Collection<DataPoint> GetDataPoints(DateTime startTime, DateTime endTime, string graph, int Controller)
+        public IEnumerable<Common.ProfiLux.DataLog> GetDataPoints(DateTime startTime, DateTime endTime, string graph, int controller)
         {
             try
             {
-                var data = new Collection<DataPoint>();
-                int type = this.GetTypeIndex(graph);
-
-                IEnumerable<DataLog> logs = from item in this.DataLogs
+                var type = this.GetTypeIndex(graph);
+                var logs = from item in this.DataLogs
                                             where
                                                 item.Type == type && item.Time > startTime && item.Time <= endTime &&
-                                                item.Controller == Controller
+                                                item.Controller == controller
                                             orderby item.Time descending
                                             select item;
 
-                foreach (DataLog log in logs)
-                {
-                    data.Add(new DataPoint(graph, log.Time, log.Value, log.Index));
-                }
-
-                return data;
+                return logs.Select(log => new Common.ProfiLux.DataLog(graph, log.Time, log.Value));
             }
             catch (Exception ex)
             {
@@ -391,35 +324,23 @@ namespace RedPoint.ReefStatus.Common.Database
         /// </summary>
         /// <param name="typeIndex">Index of the type.</param>
         /// <param name="newTypeIndex">New index of the type.</param>
-        /// <param name="callback">The callback.</param>
-        /// <param name="Controller">contorler index</param>
+        /// <param name="controller">contorler index</param>
         /// <returns>The Data points</returns>
-        public Collection<DataLog> GetDataPoints(
-            int typeIndex, int newTypeIndex, IProgressCallback callback, int Controller)
+        public IEnumerable<DataLog> GetDataPoints(
+            string typeIndex, string newTypeIndex, int controller)
         {
             try
             {
-                var data = new Collection<DataLog>();
-
-                IEnumerable<DataLog> logs = from item in this.DataLogs
-                                            where item.Type == typeIndex && item.Controller == Controller
+                var logs = from item in this.DataLogs
+                                            where item.Type == typeIndex && item.Controller == controller
                                             select item;
-
-                foreach (DataLog log in logs)
+                return logs.Select(log => new DataLog
                 {
-                    if (callback.IsAborting)
-                    {
-                        return data;
-                    }
-
-                    var dataLog = new DataLog
-                        {
-                           Time = log.Time, Value = log.Value, Type = newTypeIndex, Controller = (short)Controller 
-                        };
-                    data.Add(dataLog);
-                }
-
-                return data;
+                    Time = log.Time,
+                    Value = log.Value,
+                    Type = newTypeIndex,
+                    Controller = (short)controller
+                });
             }
             catch (Exception ex)
             {
@@ -431,15 +352,15 @@ namespace RedPoint.ReefStatus.Common.Database
         /// Gets the data points.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <param name="Controller">Controller Index</param>
+        /// <param name="controller">Controller Index</param>
         /// <returns>The Data points</returns>
-        public IEnumerable GetDataPoints(string type, int Controller)
+        public IEnumerable GetDataPoints(string type, int controller)
         {
             try
             {
-                int typeIndex = this.GetTypeIndex(type);
+                var typeIndex = this.GetTypeIndex(type);
                 return from item in this.DataLogs
-                       where item.Type == typeIndex && item.Controller == Controller
+                       where item.Type == typeIndex && item.Controller == controller
                        select new { item.Time, item.Value };
             }
             catch (Exception ex)
@@ -456,22 +377,23 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="points">The points.</param>
         /// <param name="getStdDev">if set to <c>true</c> [get STD dev].</param>
         /// <returns>The status</returns>
-        public static Stats GetStats(DateTime endTime, DateTime startTime, Collection<DataPoint> points, bool getStdDev = false)
+        public static Stats GetStats(DateTime endTime, DateTime startTime, IEnumerable<Common.ProfiLux.DataLog> points, bool getStdDev = false)
         {
+            var dataPoints = points as IList<Common.ProfiLux.DataLog> ?? points.ToList();
             return getStdDev
                        ? new Stats
                            {
-                               Max = MaxDataPoint(endTime, startTime, points),
-                               Min = MinDataPoint(endTime, startTime, points),
-                               Average = AverageDataPoint(endTime, startTime, points),
-                               StdDeviation = StdDevDataPoint(endTime, startTime, points)
+                               Max = MaxDataPoint(endTime, startTime, dataPoints),
+                               Min = MinDataPoint(endTime, startTime, dataPoints),
+                               Average = AverageDataPoint(endTime, startTime, dataPoints),
+                               StdDeviation = StdDevDataPoint(endTime, startTime, dataPoints)
                            }
 
                        : new Stats
                            {
-                               Max = MaxDataPoint(endTime, startTime, points),
-                               Min = MinDataPoint(endTime, startTime, points),
-                               Average = AverageDataPoint(endTime, startTime, points)
+                               Max = MaxDataPoint(endTime, startTime, dataPoints),
+                               Min = MinDataPoint(endTime, startTime, dataPoints),
+                               Average = AverageDataPoint(endTime, startTime, dataPoints)
                            };
         }
 
@@ -484,19 +406,19 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <returns>
         /// the index of the type
         /// </returns>
-        public int GetTypeIndex(string type)
+        public string GetTypeIndex(string type)
         {
             try
             {
-                IEnumerable<int> typeList = from types in this.DataTypes where types.Type == type select types.Index;
-
-                if (typeList.Count() == 0)
+                var typeList = from types in this.DataTypes where types.Type == type select types.Index;
+                var enumerable = typeList as IList<string> ?? typeList.ToList();
+                if (enumerable.Count == 0)
                 {
                     this.InsertType(type);
                     return (from types in this.DataTypes where types.Type == type select types.Index).Single();
                 }
 
-                return typeList.First();
+                return enumerable.First();
             }
             catch (Exception ex)
             {
@@ -537,16 +459,17 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="optimize">
         /// if set to <c>true</c> [optimize].
         /// </param>
-        /// <param name="Controller">
+        /// <param name="controller">
         /// The Controller.
         /// </param>
-        public override void InsertItem(double value, DateTime time, string type, bool optimize, int Controller, double? oldValue)
+        /// <param name="oldValue">old value</param>
+        public override void InsertItem(double value, DateTime time, string type, bool optimize, int controller, double? oldValue)
         {
             try
             {
-                int typeIndex = this.GetTypeIndex(type);
+                var typeIndex = this.GetTypeIndex(type);
 
-                var log = new DataLog { Time = time, Type = typeIndex, Value = value, Controller = (short)Controller };
+                var log = new DataLog { Time = time, Type = typeIndex, Value = value, Controller = controller };
 
                 if (optimize)
                 {
@@ -564,7 +487,7 @@ namespace RedPoint.ReefStatus.Common.Database
                         }
                         else
                         {
-                            List<DataLog> datapoints = this.GetDataPoints(typeIndex, 1, true, Controller).ToList();
+                            List<DataLog> datapoints = this.GetDataPoints(typeIndex, 1, true, controller).ToList();
                             if (datapoints.Count == 1)
                             {
                                 datapoints.First().Time = log.Time;
@@ -611,19 +534,18 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="type">
         /// The type.
         /// </param>
-        /// <param name="Controller">
+        /// <param name="controller">
         /// The Controller.
         /// </param>
-        public void RemoveDataSet(string type, int Controller)
+        public void RemoveDataSet(string type, int controller)
         {
             try
             {
-                int typeIndex = this.GetTypeIndex(type);
-                IEnumerable<DataLog> logs = from item in this.DataLogs
-                                            where item.Type == typeIndex && item.Controller == Controller
+                var typeIndex = this.GetTypeIndex(type);
+                var logs = from item in this.DataLogs
+                                            where item.Type == typeIndex && item.Controller == controller
                                             select item;
 
-                this.DeleteCount += logs.Count();
                 this.DeleteAll(logs);
             }
             catch (Exception ex)
@@ -642,10 +564,8 @@ namespace RedPoint.ReefStatus.Common.Database
         {
             try
             {
-                IEnumerable<DataLog> logs = from item in this.DataLogs where item.Time < timefrom select item;
-
+                var logs = from item in this.DataLogs where item.Time < timefrom select item;
                 this.DeleteAll(logs);
-                this.DeleteCount++;
             }
             catch (Exception ex)
             {
@@ -677,22 +597,22 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="time">
         /// The time.
         /// </param>
-        /// <param name="Controller">
+        /// <param name="controller">
         /// The Controller.
         /// </param>
         /// <returns>
         /// A list of points
         /// </returns>
-        protected override Dictionary<int, double> GetDataPoints(DateTime time, int Controller)
+        protected override Dictionary<string, double> GetDataPoints(DateTime time, int controller)
         {
             try
             {
                 IEnumerable<DataLog> logs = from item in this.DataLogs
-                                            where item.Time == time && item.Controller == Controller
+                                            where item.Time == time && item.Controller == controller
                                             select item;
 
-                var data = new Dictionary<int, double>();
-                foreach (DataLog item in logs)
+                var data = new Dictionary<string, double>();
+                foreach (var item in logs)
                 {
                     if (!data.ContainsKey(item.Type))
                     {
@@ -733,7 +653,7 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="startTime">The start time.</param>
         /// <param name="points">The points.</param>
         /// <returns>the average of a data point</returns>
-        private static double AverageDataPoint(DateTime endTime, DateTime startTime, Collection<DataPoint> points)
+        private static double AverageDataPoint(DateTime endTime, DateTime startTime, IEnumerable<Common.ProfiLux.DataLog> points)
         {
             try
             {
@@ -741,7 +661,7 @@ namespace RedPoint.ReefStatus.Common.Database
                         where item.Time <= endTime && item.Time > startTime
                         select (double?)item.Value).Average();
 
-                return average.HasValue ? average.Value : 0;
+                return average ?? 0;
             }
             catch (Exception ex)
             {
@@ -790,8 +710,6 @@ namespace RedPoint.ReefStatus.Common.Database
         /// </param>
         private void Insert(DataLog log)
         {
-            log.Index = this.lastIndex;
-            this.lastIndex++;
             this.DataLogs.Add(log);
         }
 
@@ -832,7 +750,7 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="startTime">The start time.</param>
         /// <param name="points">The points.</param>
         /// <returns></returns>
-        private static double MaxDataPoint(DateTime endTime, DateTime startTime, Collection<DataPoint> points)
+        private static double MaxDataPoint(DateTime endTime, DateTime startTime, IEnumerable<Common.ProfiLux.DataLog> points)
         {
             try
             {
@@ -840,7 +758,7 @@ namespace RedPoint.ReefStatus.Common.Database
                                             where
                                                 item.Time <= endTime && item.Time > startTime
                            select (double?)item.Value).Max();
-                return max.HasValue ? max.Value : 0;
+                return max ?? 0;
             }
             catch (Exception ex)
             {
@@ -855,7 +773,7 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="startTime">The start time.</param>
         /// <param name="points">The points.</param>
         /// <returns></returns>
-        private static double MinDataPoint(DateTime endTime, DateTime startTime, Collection<DataPoint> points)
+        private static double MinDataPoint(DateTime endTime, DateTime startTime, IEnumerable<Common.ProfiLux.DataLog> points)
         {
             try
             {
@@ -876,7 +794,7 @@ namespace RedPoint.ReefStatus.Common.Database
         /// </summary>
         /// <param name="points">The points.</param>
         /// <returns></returns>
-        public static DateTime GetMinDate(Collection<DataPoint> points)
+        public static DateTime GetMinDate(IEnumerable<Common.ProfiLux.DataLog> points)
         {
             try
             {
@@ -895,7 +813,7 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="items">
         /// The items.
         /// </param>
-        private void RemoveAll(Collection<DataLog> items)
+        private void RemoveAll(IList<DataLog> items)
         {
             if (items.Count != 0)
             {
@@ -912,7 +830,7 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="startTime">The start time.</param>
         /// <param name="points">The points.</param>
         /// <returns></returns>
-        private static double StdDevDataPoint(DateTime endTime, DateTime startTime, Collection<DataPoint> points)
+        private static double StdDevDataPoint(DateTime endTime, DateTime startTime, IEnumerable<Common.ProfiLux.DataLog> points)
         {
             try
             {
@@ -935,9 +853,9 @@ namespace RedPoint.ReefStatus.Common.Database
         /// Removes the data point.
         /// </summary>
         /// <param name="index">The index.</param>
-        public void RemoveDataPoint(int index)
+        public void RemoveDataPoint(string id)
         {
-            var data = this.DataLogs.FirstOrDefault(item => item.Index == index);
+            var data = this.DataLogs.FirstOrDefault(item => item.Id == id);
             this.DataLogs.Remove(data);
         }
 
