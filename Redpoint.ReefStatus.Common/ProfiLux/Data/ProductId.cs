@@ -1,4 +1,4 @@
-﻿namespace RedPoint.ReefStatus.Common.ProfiLux
+﻿namespace RedPoint.ReefStatus.Common.ProfiLux.Data
 {
     /// <summary>
     /// The Id's of all the Profilux products
@@ -53,9 +53,6 @@
         /// <summary>
         /// ProfiLux III Ex
         /// </summary>
-        ProfiLuxIIIEx = 12,
-
-
-        Neptune = 100,
+        ProfiLuxIIIEx = 12
     }
 }

@@ -14,6 +14,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
     using System.Linq;
 
     using RedPoint.ReefStatus.Common.ProfiLux.Data;
+    using RedPoint.ReefStatus.Common.ProfiLux.Protocol;
 
     /// <summary>
     /// Profilux Version 5 Controller FW

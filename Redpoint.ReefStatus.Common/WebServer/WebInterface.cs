@@ -5,7 +5,6 @@
 namespace RedPoint.ReefStatus.Common.WebServer
 {
     using System;
-    using System.Diagnostics;
     using System.Net.Sockets;
 
     using HttpServer;
@@ -14,8 +13,12 @@ namespace RedPoint.ReefStatus.Common.WebServer
     using HttpServer.Rules;
     using HttpServer.Sessions;
 
+    using log4net;
+
     using RedPoint.ReefStatus.Common.Commands;
-    using RedPoint.ReefStatus.Common.ProfiLux.Data;
+    using RedPoint.ReefStatus.Common.Database;
+    using RedPoint.ReefStatus.Common.ProfiLux;
+    using RedPoint.ReefStatus.Common.Service;
     using RedPoint.ReefStatus.Common.Settings;
 
     /// <summary>
@@ -23,6 +26,8 @@ namespace RedPoint.ReefStatus.Common.WebServer
     /// </summary>
     public class WebInterface : HttpModule
     {
+        private readonly ILog log = LogManager.GetLogger("ReefStatus");
+
         /// <summary>
         /// Http Server
         /// </summary>
@@ -31,7 +36,7 @@ namespace RedPoint.ReefStatus.Common.WebServer
         /// <summary>
         /// Initializes a new instance of the <see cref="WebInterface"/> class.
         /// </summary>
-        public WebInterface(IReefStatusSettings settings, Controller controller, CommandThread commandThread)
+        public WebInterface(IReefStatusSettings settings, IController controller, CommandThread commandThread, IDataAccess dataAccess, IAlertService alertService)
         {
             this.server = new HttpServer();
 
@@ -41,18 +46,22 @@ namespace RedPoint.ReefStatus.Common.WebServer
 
             this.server.Add(this);
 
-            mod.Add(new CommandController(settings, controller, commandThread));
+            mod.Add(new CommandController(controller, commandThread, alertService));
+            mod.Add(new ControllerController(controller));
+            mod.Add(new DataController(dataAccess));
+            mod.Add(new SettingsController(settings, dataAccess));
             this.server.Add(mod);
 
             var fileModule = new FileModule("/", Environment.CurrentDirectory + "\\web\\");
             fileModule.AddDefaultMimeTypes();
             fileModule.MimeTypes.Add("xml", "xml");
+            fileModule.MimeTypes.Add("svg", "image/svg+xml");
             fileModule.MimeTypes.Add("xsl", "xsl");
             this.server.Add(fileModule);
 
             try
             {
-                this.server.Start(System.Net.IPAddress.Any, settings.Web.Port);
+                this.server.Start(System.Net.IPAddress.Any, 8081);
             }
             catch (SocketException ex)
             {
@@ -78,7 +87,7 @@ namespace RedPoint.ReefStatus.Common.WebServer
         /// <returns>true if this module handled the request.</returns>
         public override bool Process(IHttpRequest request, IHttpResponse response, IHttpSession session)
         {
-            Trace.WriteLine(request.Uri.ToString());
+            log.DebugFormat("{0} {1}", request.Method, request.Uri);
             return false;
         }
     }

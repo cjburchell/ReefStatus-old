@@ -61,14 +61,6 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether [save to database].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [save to database]; otherwise, <c>false</c>.
-        /// </value>
-        public bool SaveToLog { get; set; } = true;
-
-        /// <summary>
         /// Gets or sets the units.
         /// </summary>
         /// <value>The units.</value>

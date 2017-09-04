@@ -4,19 +4,11 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
 {
     using System.Collections.Generic;
 
-    using Newtonsoft.Json;
-
     /// <summary>
     /// Controller Class
     /// </summary>
-    public class Controller
+    public class Controller : IController
     {
-        [JsonProperty("_id")]
-        public string Id { get; set; } = "controller";
-
-        [JsonProperty("_rev")]
-        public string Rev { get; set; }
-
         /// <summary>
         /// Gets or sets the Controller info.
         /// </summary>
@@ -46,7 +38,5 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
         public List<Light> Lights { get; set; } = new List<Light>();
 
         public List<Probe> Probes { get; set; } = new List<Probe>();
-
-        public List<UserInfo> UserInfo { get; set; } = new List<UserInfo>();
     }
 }

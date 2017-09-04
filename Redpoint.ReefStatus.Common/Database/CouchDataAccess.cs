@@ -7,47 +7,34 @@ namespace RedPoint.ReefStatus.Common.Database
 
     using LoveSeat;
 
-    using RedPoint.ReefStatus.Common.ProfiLux;
+    using Newtonsoft.Json;
+
+    using RedPoint.ReefStatus.Common.Settings;
 
     public class CouchDataAccess : DataAccess, IDataAccess
     {
-        private static CouchDatabase GetLoggingDatabase()
-        {
-            var client = new CouchClient("localhost", 5984, "admin", "admin", false, AuthenticationType.Basic);
-            if (!client.HasDatabase("reefstatus_log"))
-            {
-                client.CreateDatabase("reefstatus_log");
-            }
-
-            return client.GetDatabase("reefstatus_log");
-        }
-
         /// <summary>
         /// Inserts the item.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="time">The time.</param>
-        /// <param name="name">The name.</param>
-        /// <param name="optimize">if set to <c>true</c> [optimize].</param>
-        /// <param name="Controller">The Controller.</param>
-        public override void InsertItem(double value, DateTime time, string type, bool optimize, double? oldValue)
+        /// <param name="type">the type of the value</param>
+        /// <param name="oldValue">the old value</param>
+        public override void InsertItem(double value, DateTime time, string type, double? oldValue = null)
         {
             try
             {
                 var log = new DataLog { Time = time, Type = type, Value = value };
 
-                var db = GetLoggingDatabase();
+                var db = GetDatabase();
 
-                if (optimize)
+                if (oldValue.HasValue && Math.Abs(oldValue.Value - log.Value) < double.Epsilon)
                 {
-                    if (oldValue.HasValue && oldValue.Value == log.Value)
+                    var oldPoint = this.GetDataPoints(type, 1, true).FirstOrDefault();
+                    if (oldPoint != null)
                     {
-                        var oldPoint = this.GetDataPoints(type, 1, true).FirstOrDefault();
-                        if (oldPoint != null)
-                        {
-                            oldPoint.Time = log.Time;
-                            log = oldPoint;
-                        }
+                        oldPoint.Time = log.Time;
+                        log = oldPoint;
                     }
                 }
 
@@ -65,62 +52,116 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="type">The type.</param>
         /// <param name="count">The count.</param>
         /// <param name="descending">if set to <c>true</c> [descending].</param>
-        /// <param name="controller">The controller.</param>
         /// <returns>
         /// A list of datapoints
         /// </returns>
-        public IEnumerable<DataLog> GetDataPoints(string type, int count, bool @descending)
+        public IEnumerable<DataLog> GetDataPoints(string type, int? count = null, bool? descending = null)
         {
-            return new List<DataLog>();
+            var result = GetRawDataPoints(type, count, descending);
+            return result.Select(JsonConvert.DeserializeObject<DataLog>);
+        }
+
+        public IEnumerable<string> GetRawDataPoints(string type, int? count = null, bool? descending = null)
+        {
+            var db = GetDatabase();
+            var options = new ViewOptions();
+
+            options.Key.Add(type);
+            options.Limit = count;
+            options.Descending = descending;
+            options.IncludeDocs = true;
+            var result = db.View<DataLog>("by_type", options, "log");
+            return result.RawDocs;
+        }
+
+        private static CouchDatabase GetDatabase()
+        {
+            var client = new CouchClient("localhost", 5984, "admin", "admin", false, AuthenticationType.Basic);
+            if (!client.HasDatabase("reefstatus"))
+            {
+                client.CreateDatabase("reefstatus");
+            }
+
+            return client.GetDatabase("reefstatus");
         }
 
         /// <summary>
-        /// Gets the data points.
+        /// Saves the settings to the specified file.
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="descending">if set to <c>true</c> [descending].</param>
-        /// <param name="controller">The controller.</param>
-        /// <returns>
-        /// A list of datapoints
-        /// </returns>
-        public IEnumerable<DataLog> GetDataPoints(string type, bool @descending)
+        public void SaveSettings(LoggingSettings settings)
         {
-            return new List<DataLog>();
+            this.SaveSettings<LoggingSettings>(settings);
+        }
+
+        public void SaveSettings(MailSettings settings)
+        {
+            this.SaveSettings<MailSettings>(settings);
+        }
+
+        public void SaveSettings(ConnectionSettings settings)
+        {
+            this.SaveSettings<ConnectionSettings>(settings);
+        }
+
+        private void SaveSettings<T>(T settings) where T : CouchDocument
+        {
+            try
+            {
+                var db = GetDatabase();
+                var result = db.SaveDocument(new Document<T>(settings));
+                var isOk = result["ok"].ToObject<bool>();
+                if (isOk)
+                {
+                    settings.Rev = result["rev"].ToObject<string>();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogError(ex);
+            }
         }
 
         /// <summary>
-        /// Gets the data points.
+        /// Loads the settings.
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="dateTime">The date time.</param>
-        /// <param name="descending">if set to <c>true</c> [descending].</param>
-        /// <param name="controller">The controller.</param>
         /// <returns>
-        /// A list of datapoints
+        /// The settings object that was created from the file
         /// </returns>
-        public IEnumerable<DataLog> GetDataPoints(string type, DateTime dateTime, bool @descending)
+        public MailSettings LoadMailSettings()
         {
-            return new List<DataLog>();
+            return this.LoadSettings<MailSettings>("settings_mail");
         }
 
-        /// <summary>
-        /// Gets the data points.
-        /// </summary>
-        /// <param name="startTime">The start time.</param>
-        /// <param name="endTime">The end time.</param>
-        /// <param name="type">The type.</param>
-        /// <param name="controller">The controller.</param>
-        /// <returns>
-        /// a list of data points for the range
-        /// </returns>
-        public IEnumerable<DataLog> GetDataPoints(DateTime startTime, DateTime endTime, string type)
+        private T LoadSettings<T>(string id) where T : CouchDocument, new()
         {
-            return new List<DataLog>();
+            T settings = null;
+            try
+            {
+                var db = GetDatabase();
+                settings = db.GetDocument<T>(id);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.Log(new LogMessage(3003, "Unable to load settings file using default settings") { Exception = ex });
+            }
+
+            if (settings == null)
+            {
+                settings = new T { Id = id };
+                SaveSettings(settings);
+            }
+
+            return settings;
         }
 
-        /// <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
-        public void Dispose()
+        public LoggingSettings LoadLoggingSettings()
         {
+            return this.LoadSettings<LoggingSettings>("settings_logging");
+        }
+
+        public ConnectionSettings LoadConnectionSettings()
+        {
+            return this.LoadSettings<ConnectionSettings>("settings_connection");
         }
     }
 }

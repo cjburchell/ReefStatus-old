@@ -5,11 +5,13 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace RedPoint.ReefStatus.Common.Settings
-{ 
+{
+    using RedPoint.ReefStatus.Common.Database;
+
     /// <summary>
     /// The logging settings.
     /// </summary>
-    public class LoggingSettings
+    public class LoggingSettings : CouchDocument
     {
         /// <summary>
         /// Gets or sets the log interval.

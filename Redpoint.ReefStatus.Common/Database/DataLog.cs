@@ -2,16 +2,8 @@ using System;
 
 namespace RedPoint.ReefStatus.Common.Database
 {
-    using Newtonsoft.Json;
-
-    public class DataLog
+    public class DataLog : CouchDocument
     {
-        [JsonProperty("_id")]
-        public string Id { get; set; }
-
-        [JsonProperty("_rev")]
-        public string Rev { get; set; }
-
         /// <summary>
         /// Gets or sets the type.
         /// </summary>

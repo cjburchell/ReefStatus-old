@@ -9,9 +9,9 @@ namespace RedPoint.ReefStatus.Common.Commands
     using System.Linq;
     using System.Threading;
 
-    using RedPoint.ReefStatus.Common.Communication;
     using RedPoint.ReefStatus.Common.ProfiLux;
     using RedPoint.ReefStatus.Common.ProfiLux.Data;
+    using RedPoint.ReefStatus.Common.ProfiLux.Protocol;
     using RedPoint.ReefStatus.Common.Settings;
 
     /// <summary>
@@ -30,7 +30,7 @@ namespace RedPoint.ReefStatus.Common.Commands
         ///     Gets or sets the Controller.
         /// </summary>
         /// <value>The Controller.</value>
-        private readonly Controller controller;
+        private readonly IController controller;
 
         /// <summary>
         ///     The protocol lock
@@ -79,7 +79,7 @@ namespace RedPoint.ReefStatus.Common.Commands
         ///     The Controller.
         /// </param>
         /// <param name="connectionSettings">connection settings</param>
-        public CommandThread(Controller controller, ConnectionSettings connectionSettings)
+        public CommandThread(IController controller, ConnectionSettings connectionSettings)
         {
             this.controller = controller;
             this.connectionSettings = connectionSettings;
@@ -137,21 +137,6 @@ namespace RedPoint.ReefStatus.Common.Commands
             {
                 this.Connect();
                 return this.protocol.ViewText;
-            }
-        }
-
-        /// <summary>
-        ///     Keys the command.
-        /// </summary>
-        /// <param name="facePlateKey">
-        ///     The face plate key.
-        /// </param>
-        public void KeyCommand(FaceplateKey facePlateKey)
-        {
-            lock (this.protocolLock)
-            {
-                this.Connect();
-                this.protocol.KeyCommand(facePlateKey);
             }
         }
 
@@ -239,35 +224,31 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </summary>
         public void UpdateAll()
         {
-            new Thread(
-                () =>
-                    {
-                        if (this.InUpdateAll)
-                        {
-                            return;
-                        }
+            if (this.InUpdateAll)
+            {
+                return;
+            }
 
-                        this.InUpdateAll = true;
-                        try
-                        {
-                            lock (this.protocolLock)
-                            {
-                                try
-                                {
-                                    this.Connect();
-                                    this.UpdateAll(this.Progress, false);
-                                }
-                                catch (ReefStatusException ex)
-                                {
-                                    this.HandelException(ex);
-                                }
-                            }
-                        }
-                        finally
-                        {
-                            this.InUpdateAll = false;
-                        }
-                    }).Start();
+            this.InUpdateAll = true;
+            try
+            {
+                lock (this.protocolLock)
+                {
+                    try
+                    {
+                        this.Connect();
+                        this.UpdateAll(this.Progress, false);
+                    }
+                    catch (ReefStatusException ex)
+                    {
+                        this.HandelException(ex);
+                    }
+                }
+            }
+            finally
+            {
+                this.InUpdateAll = false;
+            }
         }
 
         /// <summary>
@@ -600,6 +581,8 @@ namespace RedPoint.ReefStatus.Common.Commands
                 {
                     return false;
                 }
+
+                this.UpdateAssoications();
 
                 this.controller.Info.LastUpdate = DateTime.Now;
             }
@@ -1103,12 +1086,6 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// <param name="progress">
         ///     The progress.
         /// </param>
-        /// <exception cref="ProtocolException">
-        ///     If there is a failure in the protocol
-        /// </exception>
-        /// <exception cref="ConnectionException">
-        ///     There is a failure in the communication
-        /// </exception>
         public void UpdateLPorts(IProfilux basicProtocol, IUpdateProgress progress)
         {
             for (var i = 0; i < basicProtocol.LPortCount; i++)
@@ -1133,13 +1110,11 @@ namespace RedPoint.ReefStatus.Common.Commands
                         if (port == null)
                         {
                             port = new LPort { Id = basicProtocol.GetLPortId(i), PortNumber = i };
-                            port.UpdateMode(mode, this.controller);
                             this.controller.LPorts.Add(port);
                         }
-                        else
-                        {
-                            port.UpdateMode(mode, this.controller);
-                        }
+
+                        port.Mode = mode;
+                        PortMode.UpdateAssociatedModeItem(port.Mode, controller);
 
                         port.SetValue(basicProtocol.GetLPortValue(i));
                     }
@@ -1167,12 +1142,6 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// <param name="progress">
         ///     The progress.
         /// </param>
-        /// <exception cref="ProtocolException">
-        ///     If there is a failure in the protocol
-        /// </exception>
-        /// <exception cref="ConnectionException">
-        ///     There is a failure in the communication
-        /// </exception>
         public void UpdateLevelSensors(IProfilux basicProtocol, IUpdateProgress progress)
         {
             for (var i = 0; i < basicProtocol.LevelSenosrCount; i++)
@@ -1212,9 +1181,9 @@ namespace RedPoint.ReefStatus.Common.Commands
 
                         sensor.OpertationMode = mode;
                         var state = basicProtocol.GetLevelSensorState(i);
-                        if (state.Alarm != sensor.IsAlarmOn)
+                        if (state.Alarm != sensor.AlarmState)
                         {
-                            sensor.IsAlarmOn = state.Alarm;
+                            sensor.AlarmState = state.Alarm;
                             Logger.Instance.Log(new LogMessage(state.Alarm == CurrentState.On ? 1 : 0, "Level Sensor " + sensor.DisplayName + " Alarm is now " + state.Alarm));
                         }
 
@@ -1250,9 +1219,9 @@ namespace RedPoint.ReefStatus.Common.Commands
         public void UpdateLevelSensorsValue(IProfilux basicProtocol, LevelSensor sensor)
         {
             var state = basicProtocol.GetLevelSensorState(sensor.Index);
-            if (state.Alarm != sensor.IsAlarmOn)
+            if (state.Alarm != sensor.AlarmState)
             {
-                sensor.IsAlarmOn = state.Alarm;
+                sensor.AlarmState = state.Alarm;
                 Logger.Instance.Log(new LogMessage(state.Alarm == CurrentState.On ? 1 : 0, "Level Sensor " + sensor.DisplayName + " Alarm is now " + state.Alarm));
             }
 
@@ -1437,9 +1406,16 @@ namespace RedPoint.ReefStatus.Common.Commands
                 progress.ProgressText = "Update Maintiance Mode " + index;
             }
 
-            this.controller.Info.Maintenance[index].IsActive = basicProtocol.GetMaintenanceIsActive(index);
-            this.controller.Info.Maintenance[index].Duration = basicProtocol.GetMaintenanceDuration(index) * 60;
-            this.controller.Info.Maintenance[index].TimeLeft = basicProtocol.GetMaintenanceTimeLeft(index) * 60;
+            var maintenance = this.controller.Info.Maintenance.FirstOrDefault(item => item.Index == index);
+            if (maintenance == null)
+            {
+                maintenance = new Maintenance(index);
+                this.controller.Info.Maintenance.Add(maintenance);
+            }
+
+            maintenance.IsActive = basicProtocol.GetMaintenanceIsActive(index);
+            maintenance.Duration = basicProtocol.GetMaintenanceDuration(index) * 60;
+            maintenance.TimeLeft = basicProtocol.GetMaintenanceTimeLeft(index) * 60;
         }
 
         /// <summary>
@@ -1492,9 +1468,9 @@ namespace RedPoint.ReefStatus.Common.Commands
 
                     probe.SetValue(basicProtocol.GetSensorValue(probe.Index));
                     var alarm = basicProtocol.GetSensorAlarm(probe.Index);
-                    if (alarm != probe.IsAlarmOn)
+                    if (alarm != probe.AlarmState)
                     {
-                        probe.IsAlarmOn = alarm;
+                        probe.AlarmState = alarm;
                         Logger.Instance.Log(new LogMessage(alarm == CurrentState.On ? 1 : 0, "Sensor " + probe.DisplayName + " Alarm is now " + alarm));
                     }
 
@@ -1590,9 +1566,9 @@ namespace RedPoint.ReefStatus.Common.Commands
 
                     probe.SetValue(basicProtocol.GetSensorValue(i));
                     var alarm = basicProtocol.GetSensorAlarm(i);
-                    if (alarm != probe.IsAlarmOn)
+                    if (alarm != probe.AlarmState)
                     {
-                        probe.IsAlarmOn = alarm;
+                        probe.AlarmState = alarm;
                         Logger.Instance.Log(new LogMessage(alarm == CurrentState.On ? 1 : 0, "Sensor " + probe.DisplayName + " Alarm is now " + alarm));
                     }
                 }
@@ -1677,7 +1653,7 @@ namespace RedPoint.ReefStatus.Common.Commands
                 {
                     if (logic == null)
                     {
-                        logic = new ProgramableLogic { Index = i };
+                        logic = new ProgramableLogic(i);
                         this.controller.ProgrammableLogic.Add(logic);
                     }
 
@@ -1696,7 +1672,8 @@ namespace RedPoint.ReefStatus.Common.Commands
 
             foreach (var logic in this.controller.ProgrammableLogic)
             {
-                logic.Update(this.controller);
+                PortMode.UpdateAssociatedModeItem(logic.Input1, controller);
+                PortMode.UpdateAssociatedModeItem(logic.Input2, controller);
             }
         }
 
@@ -1723,12 +1700,6 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// <param name="progress">
         ///     The progress.
         /// </param>
-        /// <exception cref="ProtocolException">
-        ///     If there is a failure in the protocol
-        /// </exception>
-        /// <exception cref="ConnectionException">
-        ///     There is a failure in the commuincation
-        /// </exception>
         public void UpdateSPorts(IProfilux basicProtocol, IUpdateProgress progress)
         {
             for (var i = 0; i < basicProtocol.SPortCount; i++)
@@ -1754,13 +1725,11 @@ namespace RedPoint.ReefStatus.Common.Commands
                         if (port == null)
                         {
                             port = new SPort { Id = basicProtocol.GetSPortId(portNumber), PortNumber = portNumber };
-                            port.UpdateMode(mode, this.controller);
                             this.controller.SPorts.Add(port);
                         }
-                        else
-                        {
-                            port.UpdateMode(mode, this.controller);
-                        }
+
+                        port.Mode = mode;
+                        PortMode.UpdateAssociatedModeItem(port.Mode, controller);
 
                         port.SetValue(basicProtocol.GetSPortValue(i));
                         port.OldCurrentValue = port.Current;
@@ -1914,6 +1883,8 @@ namespace RedPoint.ReefStatus.Common.Commands
                     return false;
                 }
 
+                this.UpdateAssoications();
+
                 this.controller.Info.LastUpdate = DateTime.Now;
             }
             finally
@@ -2039,23 +2010,19 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </param>
         public void SendClearLevelAlarm(LevelSensor levelSensor)
         {
-            new Thread(
-                () =>
-                    {
-                        lock (this.protocolLock)
-                        {
-                            try
-                            {
-                                this.Connect();
-                                this.ClearLevelAlarm(this.protocol, levelSensor);
-                                Logger.Instance.Log(new LogMessage(0, "Level Sensor Alarm " + levelSensor.DisplayName + " Cleared"));
-                            }
-                            catch (ReefStatusException ex)
-                            {
-                                this.HandelException(ex);
-                            }
-                        }
-                    }).Start();
+            lock (this.protocolLock)
+            {
+                try
+                {
+                    this.Connect();
+                    this.ClearLevelAlarm(this.protocol, levelSensor);
+                    Logger.Instance.Log(new LogMessage(0, "Level Sensor Alarm " + levelSensor.DisplayName + " Cleared"));
+                }
+                catch (ReefStatusException ex)
+                {
+                    this.HandelException(ex);
+                }
+            }
         }
 
         /// <summary>
@@ -2066,23 +2033,19 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </param>
         public void SendFeed(bool enable)
         {
-            new Thread(
-                () =>
-                    {
-                        lock (this.protocolLock)
-                        {
-                            try
-                            {
-                                this.Connect();
-                                this.protocol.FeedPause(enable);
-                                Logger.Instance.Log(new LogMessage(0, "Feed Pause Set"));
-                            }
-                            catch (ReefStatusException ex)
-                            {
-                                this.HandelException(ex);
-                            }
-                        }
-                    }).Start();
+            lock (this.protocolLock)
+            {
+                try
+                {
+                    this.Connect();
+                    this.protocol.FeedPause(enable);
+                    Logger.Instance.Log(new LogMessage(0, "Feed Pause Set"));
+                }
+                catch (ReefStatusException ex)
+                {
+                    this.HandelException(ex);
+                }
+            }
         }
 
         /// <summary>
@@ -2091,24 +2054,20 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// <param name="key">
         ///     The key.
         /// </param>
-        public void SendKeyCommand(FaceplateKey key)
+        public void KeyCommand(FaceplateKey key)
         {
-            new Thread(
-                () =>
-                    {
-                        lock (this.protocolLock)
-                        {
-                            try
-                            {
-                                this.Connect();
-                                this.KeyCommand(key);
-                            }
-                            catch (ReefStatusException ex)
-                            {
-                                this.HandelException(ex);
-                            }
-                        }
-                    }).Start();
+            lock (this.protocolLock)
+            {
+                try
+                {
+                    this.Connect();
+                    this.protocol.KeyCommand(key);
+                }
+                catch (ReefStatusException ex)
+                {
+                    this.HandelException(ex);
+                }
+            }
         }
 
         /// <summary>
@@ -2125,36 +2084,32 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </param>
         public void SendLightState(Light light, double value, bool force = false)
         {
-            new Thread(
-                () =>
-                    {
-                        if (this.isSendingLightCommand && !force)
-                        {
-                            return;
-                        }
+            if (this.isSendingLightCommand && !force)
+            {
+                return;
+            }
 
-                        this.isSendingLightCommand = true;
-                        try
-                        {
-                            lock (this.protocolLock)
-                            {
-                                try
-                                {
-                                    this.Connect();
-                                    this.SetLightState(this.protocol, light, value);
-                                    this.UpdateLightValue(this.protocol, light);
-                                }
-                                catch (ReefStatusException ex)
-                                {
-                                    this.HandelException(ex);
-                                }
-                            }
-                        }
-                        finally
-                        {
-                            this.isSendingLightCommand = false;
-                        }
-                    }).Start();
+            this.isSendingLightCommand = true;
+            try
+            {
+                lock (this.protocolLock)
+                {
+                    try
+                    {
+                        this.Connect();
+                        this.SetLightState(this.protocol, light, value);
+                        this.UpdateLightValue(this.protocol, light);
+                    }
+                    catch (ReefStatusException ex)
+                    {
+                        this.HandelException(ex);
+                    }
+                }
+            }
+            finally
+            {
+                this.isSendingLightCommand = false;
+            }
         }
 
         /// <summary>
@@ -2166,35 +2121,31 @@ namespace RedPoint.ReefStatus.Common.Commands
         public void SendLightTestTime(int value)
         {
             this.newLightTestTimeValue = value;
-            new Thread(
-                () =>
-                    {
-                        if (this.isSendingLightTimeCommand)
-                        {
-                            return;
-                        }
+            if (this.isSendingLightTimeCommand)
+            {
+                return;
+            }
 
-                        this.isSendingLightTimeCommand = true;
-                        try
-                        {
-                            lock (this.protocolLock)
-                            {
-                                try
-                                {
-                                    this.Connect();
-                                    this.SetLightTestTime(this.protocol, this.newLightTestTimeValue);
-                                }
-                                catch (ReefStatusException ex)
-                                {
-                                    this.HandelException(ex);
-                                }
-                            }
-                        }
-                        finally
-                        {
-                            this.isSendingLightTimeCommand = false;
-                        }
-                    }).Start();
+            this.isSendingLightTimeCommand = true;
+            try
+            {
+                lock (this.protocolLock)
+                {
+                    try
+                    {
+                        this.Connect();
+                        this.SetLightTestTime(this.protocol, this.newLightTestTimeValue);
+                    }
+                    catch (ReefStatusException ex)
+                    {
+                        this.HandelException(ex);
+                    }
+                }
+            }
+            finally
+            {
+                this.isSendingLightTimeCommand = false;
+            }
         }
 
         /// <summary>
@@ -2210,28 +2161,24 @@ namespace RedPoint.ReefStatus.Common.Commands
         {
             if (this.controller.Info.IsP3)
             {
-                new Thread(
-                    () =>
-                        {
-                            lock (this.protocolLock)
-                            {
-                                try
-                                {
-                                    this.Connect();
+                lock (this.protocolLock)
+                {
+                    try
+                    {
+                        this.Connect();
 
-                                    this.protocol.SetLightName(light.Channel, text);
-                                    var lightName = this.protocol.GetLightName(light.Channel);
-                                    if (!string.IsNullOrEmpty(lightName))
-                                    {
-                                        light.DisplayName = lightName;
-                                    }
-                                }
-                                catch (ReefStatusException ex)
-                                {
-                                    this.HandelException(ex);
-                                }
-                            }
-                        }).Start();
+                        this.protocol.SetLightName(light.Channel, text);
+                        var lightName = this.protocol.GetLightName(light.Channel);
+                        if (!string.IsNullOrEmpty(lightName))
+                        {
+                            light.DisplayName = lightName;
+                        }
+                    }
+                    catch (ReefStatusException ex)
+                    {
+                        this.HandelException(ex);
+                    }
+                }
             }
         }
 
@@ -2246,25 +2193,21 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </param>
         public void SendMaintenance(bool enable, Maintenance maintenance)
         {
-            new Thread(
-                () =>
-                    {
-                        lock (this.protocolLock)
-                        {
-                            try
-                            {
-                                this.Connect();
-                                this.protocol.Maintenace(enable, maintenance.Index);
-                                Logger.Instance.Log(new LogMessage(0, "Maintenance Mode" + " " + maintenance.Index + " " + (enable ? "Enabled" : "Disabled")));
-                                this.UpdateOperationMode(this.protocol.OpMode, null);
-                                this.UpdateMaintianceMode(this.protocol, null, maintenance.Index);
-                            }
-                            catch (ReefStatusException ex)
-                            {
-                                this.HandelException(ex);
-                            }
-                        }
-                    }).Start();
+            lock (this.protocolLock)
+            {
+                try
+                {
+                    this.Connect();
+                    this.protocol.Maintenace(enable, maintenance.Index);
+                    Logger.Instance.Log(new LogMessage(0, "Maintenance Mode" + " " + maintenance.Index + " " + (enable ? "Enabled" : "Disabled")));
+                    this.UpdateOperationMode(this.protocol.OpMode, null);
+                    this.UpdateMaintianceMode(this.protocol, null, maintenance.Index);
+                }
+                catch (ReefStatusException ex)
+                {
+                    this.HandelException(ex);
+                }
+            }
         }
 
         /// <summary>
@@ -2275,37 +2218,33 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </param>
         public void SendOperationMode(OperationMode mode)
         {
-            new Thread(
-                () =>
+            lock (this.protocolLock)
+            {
+                try
+                {
+                    this.Connect();
+                    var lastMode = this.protocol.OpMode;
+                    if (lastMode != mode)
                     {
-                        lock (this.protocolLock)
+                        this.protocol.OpMode = mode;
+                        Logger.Instance.Log(new LogMessage(0, "Set Operation Mode " + mode));
+                        this.UpdateOperationMode(this.protocol.OpMode, null);
+                        if (lastMode == OperationMode.ManualSockets)
                         {
-                            try
-                            {
-                                this.Connect();
-                                var lastMode = this.protocol.OpMode;
-                                if (lastMode != mode)
-                                {
-                                    this.protocol.OpMode = mode;
-                                    Logger.Instance.Log(new LogMessage(0, "Set Operation Mode " + mode));
-                                    this.UpdateOperationMode(this.protocol.OpMode, null);
-                                    if (lastMode == OperationMode.ManualSockets)
-                                    {
-                                        this.UpdateSPortsValues(this.protocol, null);
-                                    }
-                                    else if (lastMode == OperationMode.ManualIllumination)
-                                    {
-                                        this.UpdateLPortValues(this.protocol, null);
-                                        this.UpdateLightsValues(this.protocol, null);
-                                    }
-                                }
-                            }
-                            catch (ReefStatusException ex)
-                            {
-                                this.HandelException(ex);
-                            }
+                            this.UpdateSPortsValues(this.protocol, null);
                         }
-                    }).Start();
+                        else if (lastMode == OperationMode.ManualIllumination)
+                        {
+                            this.UpdateLPortValues(this.protocol, null);
+                            this.UpdateLightsValues(this.protocol, null);
+                        }
+                    }
+                }
+                catch (ReefStatusException ex)
+                {
+                    this.HandelException(ex);
+                }
+            }
         }
 
         /// <summary>
@@ -2321,27 +2260,23 @@ namespace RedPoint.ReefStatus.Common.Commands
         {
             if (this.controller.Info.IsP3)
             {
-                new Thread(
-                    () =>
+                lock (this.protocolLock)
+                {
+                    try
+                    {
+                        this.Connect();
+                        this.protocol.SetProbeName(probe.Index, value);
+                        var probeName = this.protocol.GetProbeName(probe.Index);
+                        if (!string.IsNullOrEmpty(probeName))
                         {
-                            lock (this.protocolLock)
-                            {
-                                try
-                                {
-                                    this.Connect();
-                                    this.protocol.SetProbeName(probe.Index, value);
-                                    var probeName = this.protocol.GetProbeName(probe.Index);
-                                    if (!string.IsNullOrEmpty(probeName))
-                                    {
-                                        probe.DisplayName = probeName;
-                                    }
-                                }
-                                catch (ReefStatusException ex)
-                                {
-                                    this.HandelException(ex);
-                                }
-                            }
-                        }).Start();
+                            probe.DisplayName = probeName;
+                        }
+                    }
+                    catch (ReefStatusException ex)
+                    {
+                        this.HandelException(ex);
+                    }
+                }
             }
         }
 
@@ -2353,23 +2288,19 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </param>
         public void SendResetOperationalHours(BaseInfo baseInfo)
         {
-            new Thread(
-                () =>
-                    {
-                        lock (this.protocolLock)
-                        {
-                            try
-                            {
-                                this.Connect();
-                                this.ResetOperationalHours(this.protocol, baseInfo);
-                                Logger.Instance.Log(new LogMessage(0, $"Operational Hours for {baseInfo.DisplayName} Reset"));
-                            }
-                            catch (ReefStatusException ex)
-                            {
-                                this.HandelException(ex);
-                            }
-                        }
-                    }).Start();
+            lock (this.protocolLock)
+            {
+                try
+                {
+                    this.Connect();
+                    this.ResetOperationalHours(this.protocol, baseInfo);
+                    Logger.Instance.Log(new LogMessage(0, $"Operational Hours for {baseInfo.DisplayName} Reset"));
+                }
+                catch (ReefStatusException ex)
+                {
+                    this.HandelException(ex);
+                }
+            }
         }
 
         /// <summary>
@@ -2380,23 +2311,19 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </param>
         public void SendResetReminder(Reminder reminder)
         {
-            new Thread(
-                () =>
-                    {
-                        lock (this.protocolLock)
-                        {
-                            try
-                            {
-                                this.Connect();
-                                this.ResetReminder(this.protocol, reminder);
-                                Logger.Instance.Log(new LogMessage(0, "Reminder" + " " + reminder.Text + " " + "Reset"));
-                            }
-                            catch (ReefStatusException ex)
-                            {
-                                this.HandelException(ex);
-                            }
-                        }
-                    }).Start();
+            lock (this.protocolLock)
+            {
+                try
+                {
+                    this.Connect();
+                    this.ResetReminder(this.protocol, reminder);
+                    Logger.Instance.Log(new LogMessage(0, "Reminder" + " " + reminder.Text + " " + "Reset"));
+                }
+                catch (ReefStatusException ex)
+                {
+                    this.HandelException(ex);
+                }
+            }
         }
 
         /// <summary>
@@ -2412,27 +2339,23 @@ namespace RedPoint.ReefStatus.Common.Commands
         {
             if (this.controller.Info.IsP3)
             {
-                new Thread(
-                    () =>
+                lock (this.protocolLock)
+                {
+                    try
+                    {
+                        this.Connect();
+                        this.protocol.SetSPortName(port.PortNumber, text);
+                        var lightName = this.protocol.GetSPortName(port.PortNumber);
+                        if (!string.IsNullOrEmpty(lightName))
                         {
-                            lock (this.protocolLock)
-                            {
-                                try
-                                {
-                                    this.Connect();
-                                    this.protocol.SetSPortName(port.PortNumber, text);
-                                    var lightName = this.protocol.GetSPortName(port.PortNumber);
-                                    if (!string.IsNullOrEmpty(lightName))
-                                    {
-                                        port.DisplayName = lightName;
-                                    }
-                                }
-                                catch (ReefStatusException ex)
-                                {
-                                    this.HandelException(ex);
-                                }
-                            }
-                        }).Start();
+                            port.DisplayName = lightName;
+                        }
+                    }
+                    catch (ReefStatusException ex)
+                    {
+                        this.HandelException(ex);
+                    }
+                }
             }
         }
 
@@ -2447,23 +2370,19 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </param>
         public void SendSocketState(SPort port, bool value)
         {
-            new Thread(
-                () =>
-                    {
-                        lock (this.protocolLock)
-                        {
-                            try
-                            {
-                                this.Connect();
-                                this.SetSocketState(this.protocol, port, value);
-                                this.UpdateSPortValue(this.protocol, port);
-                            }
-                            catch (ReefStatusException ex)
-                            {
-                                this.HandelException(ex);
-                            }
-                        }
-                    }).Start();
+            lock (this.protocolLock)
+            {
+                try
+                {
+                    this.Connect();
+                    this.SetSocketState(this.protocol, port, value);
+                    this.UpdateSPortValue(this.protocol, port);
+                }
+                catch (ReefStatusException ex)
+                {
+                    this.HandelException(ex);
+                }
+            }
         }
 
         /// <summary>
@@ -2474,23 +2393,19 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </param>
         public void SendStartWaterChange(LevelSensor levelSensor)
         {
-            new Thread(
-                () =>
-                    {
-                        lock (this.protocolLock)
-                        {
-                            try
-                            {
-                                this.Connect();
-                                this.WaterChange(this.protocol, levelSensor);
-                                Logger.Instance.Log(new LogMessage(0, "Water Change for" + levelSensor.DisplayName + "Started"));
-                            }
-                            catch (ReefStatusException ex)
-                            {
-                                this.HandelException(ex);
-                            }
-                        }
-                    }).Start();
+            lock (this.protocolLock)
+            {
+                try
+                {
+                    this.Connect();
+                    this.WaterChange(this.protocol, levelSensor);
+                    Logger.Instance.Log(new LogMessage(0, "Water Change for" + levelSensor.DisplayName + "Started"));
+                }
+                catch (ReefStatusException ex)
+                {
+                    this.HandelException(ex);
+                }
+            }
         }
 
         /// <summary>
@@ -2507,23 +2422,19 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </param>
         public void SendUpdateDosingRate(DosingPump pump, int rate, int perDay)
         {
-            new Thread(
-                () =>
-                    {
-                        lock (this.protocolLock)
-                        {
-                            try
-                            {
-                                this.Connect();
-                                this.UpdateDosingRate(this.protocol, pump, rate, perDay);
-                                Logger.Instance.Log(new LogMessage(0, "Updated" + " " + pump.DisplayName + " " + "Dosing Rate To" + (rate * perDay) + pump.Units));
-                            }
-                            catch (ReefStatusException ex)
-                            {
-                                this.HandelException(ex);
-                            }
-                        }
-                    }).Start();
+            lock (this.protocolLock)
+            {
+                try
+                {
+                    this.Connect();
+                    this.UpdateDosingRate(this.protocol, pump, rate, perDay);
+                    Logger.Instance.Log(new LogMessage(0, "Updated" + " " + pump.DisplayName + " " + "Dosing Rate To" + (rate * perDay) + pump.Units));
+                }
+                catch (ReefStatusException ex)
+                {
+                    this.HandelException(ex);
+                }
+            }
         }
 
         /// <summary>
@@ -2547,23 +2458,19 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </param>
         public void ThunderStorm(int duration)
         {
-            new Thread(
-                () =>
-                    {
-                        lock (this.protocolLock)
-                        {
-                            try
-                            {
-                                this.Connect();
-                                this.protocol.Thunderstorm(duration);
-                                Logger.Instance.Log(new LogMessage(0, "Thunderstorm Started " + duration));
-                            }
-                            catch (ReefStatusException ex)
-                            {
-                                this.HandelException(ex);
-                            }
-                        }
-                    }).Start();
+            lock (this.protocolLock)
+            {
+                try
+                {
+                    this.Connect();
+                    this.protocol.Thunderstorm(duration);
+                    Logger.Instance.Log(new LogMessage(0, "Thunderstorm Started " + duration));
+                }
+                catch (ReefStatusException ex)
+                {
+                    this.HandelException(ex);
+                }
+            }
         }
 
         /// <summary>
@@ -2596,23 +2503,19 @@ namespace RedPoint.ReefStatus.Common.Commands
         /// </param>
         public void UpdateMaintenance(Maintenance maintenance)
         {
-            new Thread(
-                () =>
-                    {
-                        lock (this.protocolLock)
-                        {
-                            try
-                            {
-                                this.Connect();
-                                this.UpdateOperationMode(this.protocol.OpMode, null);
-                                this.UpdateMaintianceMode(this.protocol, null, maintenance.Index);
-                            }
-                            catch (ReefStatusException ex)
-                            {
-                                this.HandelException(ex);
-                            }
-                        }
-                    }).Start();
+            lock (this.protocolLock)
+            {
+                try
+                {
+                    this.Connect();
+                    this.UpdateOperationMode(this.protocol.OpMode, null);
+                    this.UpdateMaintianceMode(this.protocol, null, maintenance.Index);
+                }
+                catch (ReefStatusException ex)
+                {
+                    this.HandelException(ex);
+                }
+            }
         }
 
         #region Methods
@@ -2677,6 +2580,25 @@ namespace RedPoint.ReefStatus.Common.Commands
                     this.connectionTimer.Dispose();
                     this.connectionTimer = null;
                 }
+            }
+        }
+
+        private void UpdateAssoications()
+        {
+            foreach (var logic in controller.ProgrammableLogic)
+            {
+                PortMode.UpdateAssociatedModeItem(logic.Input1, controller);
+                PortMode.UpdateAssociatedModeItem(logic.Input2, controller);
+            }
+
+            foreach (var sport in controller.SPorts)
+            {
+                PortMode.UpdateAssociatedModeItem(sport.Mode, controller);
+            }
+
+            foreach (var lport in controller.LPorts)
+            {
+                PortMode.UpdateAssociatedModeItem(lport.Mode, controller);
             }
         }
 

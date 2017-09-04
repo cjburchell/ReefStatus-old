@@ -16,6 +16,7 @@
         {
             this.SensorType = SensorType.DigitalInput;
             this.DefaultUnits = "State";
+            this.Units = this.DefaultUnits;
         }
 
         [JsonConverter(typeof(StringEnumConverter))]

@@ -9,6 +9,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
             : base("CurrentPump")
         {
             this.DefaultUnits = "%";
+            this.Units = this.DefaultUnits;
         }
 
         public int Value { get; set; }

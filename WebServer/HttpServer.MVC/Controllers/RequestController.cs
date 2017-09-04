@@ -379,6 +379,13 @@ namespace HttpServer.MVC.Controllers
             }
         }
         */
+
+        public static string ReplaceLastOccurrence(string source, string find, string replace)
+        {
+            var place = source.LastIndexOf(find, StringComparison.Ordinal);
+            return place == -1 ? source : source.Remove(place, find.Length).Insert(place, replace);
+        }
+
         /// <summary>
         /// This method goes through all methods in the controller and
         /// adds them to a dictionary. They are later used to invoke
@@ -399,8 +406,11 @@ namespace HttpServer.MVC.Controllers
                 else
                 {
                     ControllerName = GetType().Name;
-                    if (ControllerName.Contains("Controller"))
-                        ControllerName = ControllerName.Replace("Controller", "");
+                    if (ControllerName.EndsWith("Controller") && ControllerName != "Controller")
+                    {
+                        ControllerName = ReplaceLastOccurrence(ControllerName, "Controller", "");
+                    }
+
                     ControllerName = ControllerName.ToLower();
                 }
 

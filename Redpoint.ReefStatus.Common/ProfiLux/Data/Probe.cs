@@ -186,7 +186,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
         {
             var probeValue = this.ConvertFromInt(value);
 
-            if (this.SensorType != SensorType.AirTemperature || probeValue != 60.0)
+            if (this.SensorType != SensorType.AirTemperature || Math.Abs(probeValue - 60.0) > double.Epsilon)
             {
                 this.OldValue = this.Value;
                 this.Value = probeValue;
@@ -272,7 +272,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
 
             var salinity = (from value in conversionTable.Keys where value >= cond select cond * (conversionTable[value] / value)).FirstOrDefault();
 
-            if (salinity == 0)
+            if (Math.Abs(salinity) < double.Epsilon)
             {
                 salinity = cond * (conversionTable[60.0] / 60.0);
             }
@@ -335,7 +335,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
 
             var sg = (from value in conversionTable.Keys where value >= cond select cond * ((conversionTable[value] - 1.0) / value)).FirstOrDefault();
 
-            if (sg == 0)
+            if (Math.Abs(sg) < double.Epsilon)
             {
                 sg = cond * ((conversionTable[60] - 1.0) / 60.0);
             }

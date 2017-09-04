@@ -1,4 +1,4 @@
-﻿namespace RedPoint.ReefStatus.Common.ProfiLux
+﻿namespace RedPoint.ReefStatus.Common.ProfiLux.Data
 {
     /// <summary>
     /// Type of sensor
