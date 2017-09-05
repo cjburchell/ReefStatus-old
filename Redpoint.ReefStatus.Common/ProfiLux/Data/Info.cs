@@ -5,6 +5,7 @@
 namespace RedPoint.ReefStatus.Common.ProfiLux.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
     using Newtonsoft.Json;
@@ -15,8 +16,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
     /// </summary>
     public class Info
     {
-        [JsonIgnore]
-        public Maintenance[] Maintenance { get; set; } = { new Maintenance(0), new Maintenance(1), new Maintenance(2), new Maintenance(3) };
+        public List<Maintenance> Maintenance { get; set; } = new List<Maintenance>();
 
         /// <summary>
         ///     Gets or sets the operation mode.

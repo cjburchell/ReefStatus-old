@@ -7,14 +7,11 @@
 namespace RedPoint.ReefStatus.Common.Service
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
     using System.Threading;
 
     using RedPoint.ReefStatus.Common.Commands;
     using RedPoint.ReefStatus.Common.Database;
     using RedPoint.ReefStatus.Common.ProfiLux;
-    using RedPoint.ReefStatus.Common.ProfiLux.Data;
     using RedPoint.ReefStatus.Common.Settings;
 
     /// <summary>
@@ -26,18 +23,24 @@ namespace RedPoint.ReefStatus.Common.Service
 
         private readonly IProtocolCommands commands;
 
-        private readonly Controller controller;
+        private readonly IController controller;
+
+        private readonly IDataAccess dataBase;
+
+        private readonly IAlertService alertService;
 
         /// <summary>
         ///     The timer log.
         /// </summary>
         private Timer timerLog;
 
-        public DataService(LoggingSettings settings, IProtocolCommands commands, Controller controller)
+        public DataService(LoggingSettings settings, IProtocolCommands commands, IController controller, IDataAccess dataBase, IAlertService alertService)
         {
             this.settings = settings;
             this.commands = commands;
             this.controller = controller;
+            this.dataBase = dataBase;
+            this.alertService = alertService;
         }
 
         /// <summary>
@@ -74,27 +77,11 @@ namespace RedPoint.ReefStatus.Common.Service
         /// </param>
         private void TimerLogTick(object sender)
         {
-            this.commands.LogParameters();
-            this.LogData();
-        }
-
-        /// <summary>
-        ///     Logs the data.
-        /// </summary>
-        public void LogData()
-        {
             try
             {
-                using (var access = DatabaseConnectionFactory.Create())
-                {
-                    access?.AddLog(this.controller, DateTime.Now, null);
-                }
-
-                ReefStatusSettings.SaveControler(this.controller);
-            }
-            catch (IOException ex)
-            {
-                Logger.Instance.Log(new LogMessage(1001, "Error Archiving Data") { Exception = ex });
+                this.commands.LogParameters();
+                this.dataBase.AddLog(this.controller, DateTime.Now, null);
+                this.alertService.CheckAlarm();
             }
             catch (ReefStatusException ex)
             {

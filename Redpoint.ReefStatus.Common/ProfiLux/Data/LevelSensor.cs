@@ -20,6 +20,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
         {
             this.SensorType = SensorType.Level;
             this.DefaultUnits = "State";
+            this.Units = this.DefaultUnits;
         }
 
         /// <summary>

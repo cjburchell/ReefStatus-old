@@ -6,7 +6,6 @@
 
 namespace RedPoint.ReefStatus.Common.WebServer
 {
-    using System;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -18,11 +17,9 @@ namespace RedPoint.ReefStatus.Common.WebServer
     using Newtonsoft.Json;
 
     using RedPoint.ReefStatus.Common.Commands;
-    using RedPoint.ReefStatus.Common.Database;
     using RedPoint.ReefStatus.Common.ProfiLux;
     using RedPoint.ReefStatus.Common.ProfiLux.Data;
     using RedPoint.ReefStatus.Common.Service;
-    using RedPoint.ReefStatus.Common.Settings;
 
     /// <summary>
     ///     Command Controller
@@ -31,15 +28,15 @@ namespace RedPoint.ReefStatus.Common.WebServer
     {
         private readonly CommandThread commandThread;
 
-        private readonly Controller controller;
+        private readonly IAlertService alertService;
 
-        private readonly IReefStatusSettings settings;
+        private readonly IController controller;
 
-        public CommandController(IReefStatusSettings settings, Controller controller, CommandThread commandThread)
+        public CommandController(IController controller, CommandThread commandThread, IAlertService alertService)
         {
-            this.settings = settings;
             this.controller = controller;
             this.commandThread = commandThread;
+            this.alertService = alertService;
         }
 
         /// <summary>
@@ -86,7 +83,7 @@ namespace RedPoint.ReefStatus.Common.WebServer
         /// </returns>
         public override object Clone()
         {
-            return new CommandController(this.settings, this.controller, this.commandThread);
+            return new CommandController(this.controller, this.commandThread, this.alertService);
         }
 
         /// <summary>
@@ -183,11 +180,6 @@ namespace RedPoint.ReefStatus.Common.WebServer
             }
         }
 
-        public string Test()
-        {
-            return "Test";
-        }
-
         /// <summary>
         ///     Maintenances this instance.
         /// </summary>
@@ -201,10 +193,21 @@ namespace RedPoint.ReefStatus.Common.WebServer
                 throw new BadRequestException("Only post accepted");
             }
 
+            if (string.IsNullOrEmpty(this.Id))
+            {
+                throw new BadRequestException("Missing Id");
+            }
+
             try
             {
+                var maintenance = this.controller.Info.Maintenance.FirstOrDefault(item => item.Index.ToString() == this.Id);
+                if (maintenance == null)
+                {
+                    throw new BadRequestException("Id not found");
+                }
+
                 var enable = this.GetBody<bool>();
-                this.commandThread.SendMaintenance(enable, this.controller.Info.Maintenance[0]);
+                this.commandThread.SendMaintenance(enable, maintenance);
                 return this.FormatResult(true);
             }
             catch (ReefStatusException ex)
@@ -444,7 +447,7 @@ namespace RedPoint.ReefStatus.Common.WebServer
             {
                 var message = this.GetBody<string>();
 
-                AlertService.SendStatusEmail(message, this.controller, this.settings.Mail);
+                this.alertService.SendStatusEmail(message);
 
                 return this.FormatResult(true);
             }
@@ -520,50 +523,6 @@ namespace RedPoint.ReefStatus.Common.WebServer
         }
 
         /// <summary>
-        ///     Updates the user value.
-        /// </summary>
-        /// <returns>
-        ///     True or false
-        /// </returns>
-        public string UpdateUserValue()
-        {
-            if (this.Request.Method != Method.Put)
-            {
-                throw new BadRequestException("Only put accepted");
-            }
-
-            if (string.IsNullOrEmpty(this.Id))
-            {
-                throw new BadRequestException("Missing Id");
-            }
-
-            try
-            {
-                var value = this.GetBody<double>();
-
-                var userInfo = this.controller.UserInfo.FirstOrDefault(item => item.Id == this.Id);
-                if (userInfo == null)
-                {
-                    throw new BadRequestException("Id not found");
-                }
-                userInfo.Time = DateTime.Now;
-                userInfo.Value = value;
-
-                using (var access = DatabaseConnectionFactory.Create())
-                {
-                    access.InsertItem((double)userInfo.Value, userInfo.Time, userInfo.Id, false, null);
-                }
-
-                return this.FormatResult(true);
-            }
-            catch (ReefStatusException ex)
-            {
-                Logger.Instance.LogError(ex);
-                throw new InternalServerException(ex.Message);
-            }
-        }
-
-        /// <summary>
         ///     Formats the result.
         /// </summary>
         /// <param name="result">
@@ -572,9 +531,9 @@ namespace RedPoint.ReefStatus.Common.WebServer
         /// <returns>
         ///     the result in string format
         /// </returns>
-        private string FormatResult(bool result)
+        private string FormatResult<T>(T result)
         {
-            this.Response.ContentType = "text/javascript";
+            this.Response.ContentType = "application/json";
             var data = JsonConvert.SerializeObject(result, Formatting.None);
             return data;
         }

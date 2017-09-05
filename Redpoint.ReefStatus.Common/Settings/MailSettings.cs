@@ -6,10 +6,12 @@
 
 namespace RedPoint.ReefStatus.Common.Settings
 {
+    using RedPoint.ReefStatus.Common.Database;
+
     /// <summary>
     /// Mail Settings
     /// </summary>
-    public class MailSettings
+    public class MailSettings : CouchDocument
     {
         /// <summary>
         /// Gets or sets from time.

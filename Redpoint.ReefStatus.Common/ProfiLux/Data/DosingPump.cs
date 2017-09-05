@@ -23,6 +23,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
             : base("Dosing")
         {
             this.DefaultUnits = "ml/day";
+            this.Units = this.DefaultUnits;
         }
 
         [JsonIgnore]

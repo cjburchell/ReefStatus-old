@@ -1,42 +1,24 @@
-﻿namespace RedPoint.ReefStatus.Common.ProfiLux
+﻿namespace RedPoint.ReefStatus.Common.ProfiLux.Data
 {
     public class Maintenance
     {
-        private bool isActive;
-
         public Maintenance(int index)
         {
             this.Index = index;
+            this.DisplayName = "Maintenance" + (index+1);
         }
+
+        public Maintenance()
+        {
+        }
+
+        public string DisplayName { get; set; }
 
         public int Index { get; set; }
 
-        public bool IsActive
-        {
-            get
-            {
-                return this.isActive;
-            }
-
-            set
-            {
-                if (this.isActive == value)
-                {
-                    return;
-                }
-
-                if (value)
-                {
-                    this.TimeLeft = this.Duration;
-                }
-
-                this.isActive = value;
-            }
-        }
+        public bool IsActive { get; set; }
 
         public int Duration { get; set; }
-
-        public int TimeOn => this.Duration - this.TimeLeft;
 
         public int TimeLeft { get; set; }
     }

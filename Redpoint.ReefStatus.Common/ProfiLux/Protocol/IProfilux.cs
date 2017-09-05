@@ -14,6 +14,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
     using System.Collections.ObjectModel;
 
     using RedPoint.ReefStatus.Common.ProfiLux.Data;
+    using RedPoint.ReefStatus.Common.ProfiLux.Protocol;
 
     /// <summary>
     /// The Profilux interface

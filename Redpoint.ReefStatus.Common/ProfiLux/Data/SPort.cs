@@ -18,6 +18,8 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
         public SPort()
             : base("SPort")
         {
+            this.DefaultUnits = "State";
+            this.Units = this.DefaultUnits;
         }
 
         /// <summary>
@@ -60,22 +62,6 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
         ///     The old current value.
         /// </value>
         public double? OldCurrentValue { get; set; }
-
-        /// <summary>
-        ///     Updates the mode.
-        /// </summary>
-        /// <param name="mode">The mode.</param>
-        /// <param name="items">The items.</param>
-        /// <param name="logics">The logics.</param>
-        public void UpdateMode(PortMode mode, Controller controller)
-        {
-            this.DeviceMode = mode.DeviceMode;
-            this.Port = mode.Port;
-            this.Blackout = mode.BlackOut;
-            this.Invert = mode.Invert;
-            this.DefaultUnits = "State";
-            this.ModeItem = this.GetAssociatedModeItem(controller);
-        }
 
         /// <summary>
         ///     Converts the value.

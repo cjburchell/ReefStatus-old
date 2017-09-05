@@ -9,61 +9,59 @@
     using System.Net.Mime;
 
     using RedPoint.ReefStatus.Common.ProfiLux;
-    using RedPoint.ReefStatus.Common.ProfiLux.Data;
     using RedPoint.ReefStatus.Common.Settings;
 
-    public class AlertService
+    public class AlertService : IAlertService
     {
-        /// <summary>
-        ///     Gets or sets a value indicating whether [sent alarm email].
-        /// </summary>
-        /// <value><c>true</c> if [sent alarm email]; otherwise, <c>false</c>.</value>
-        public bool SentAlarmEmail { get; set; }
+        private readonly MailSettings settings;
 
-        /// <summary>
-        ///     Gets or sets the last status time.
-        /// </summary>
-        /// <value>The last status time.</value>
-        public DateTime LastStatusTime { get; set; }
+        private readonly IController controller;
+
+        private bool sentAlarmEmail;
+
+        private DateTime lastStatusTime;
+
+        public AlertService(MailSettings settings, IController controller)
+        {
+            this.settings = settings;
+            this.controller = controller;
+        }
 
         /// <summary>
         ///     Checks the alarm.
         /// </summary>
-        /// <param name="controller">
-        ///     The Controller.
-        /// </param>
-        public void CheckAlarm(Controller controller, MailSettings settings)
+        public void CheckAlarm()
         {
             try
             {
                 if (settings.SendOnAlarm)
                 {
-                    CheckReminders(controller.Info, settings);
+                    CheckReminders();
 
                     if (controller.Info.Alarm == CurrentState.On)
                     {
-                        if (!this.SentAlarmEmail)
+                        if (!this.sentAlarmEmail)
                         {
-                            SendAlarmEmail(controller, false, settings);
+                            SendAlarmEmail(false);
                         }
 
-                        this.SentAlarmEmail = true;
+                        this.sentAlarmEmail = true;
                     }
                     else
                     {
-                        if (this.SentAlarmEmail)
+                        if (this.sentAlarmEmail)
                         {
-                            SendAlarmEmail(controller, true, settings);
+                            SendAlarmEmail(true);
                         }
 
-                        this.SentAlarmEmail = false;
+                        this.sentAlarmEmail = false;
                     }
                 }
 
-                if (settings.SendStatus && GetNextTime(settings.SendStatusMode, settings.SendStatusDuration, this.LastStatusTime) < DateTime.Now)
+                if (settings.SendStatus && GetNextTime(settings.SendStatusMode, settings.SendStatusDuration, this.lastStatusTime) < DateTime.Now)
                 {
-                    SendStatusEmail(string.Empty, controller, settings);
-                    this.LastStatusTime = DateTime.Now;
+                    SendStatusEmail(string.Empty);
+                    this.lastStatusTime = DateTime.Now;
                 }
             }
             catch (ReefStatusException ex)
@@ -82,7 +80,7 @@
         /// <param name="message">
         ///     The message.
         /// </param>
-        public static void SendStatusEmail(string message, Controller controller, MailSettings settings)
+        public void SendStatusEmail(string message)
         {
             {
                 var htmlBody = string.Empty;
@@ -96,7 +94,7 @@
 
                 if (controller.Info.Alarm == CurrentState.On)
                 {
-                    var reason = FindAlarmReason(controller);
+                    var reason = FindAlarmReason();
 
                     htmlBody += "<h1>" + "Alarm Detected" + DateTime.Now + "</h1>";
                     htmlBody += "<br/>" + "Reason" + "<br/>" + reason.Replace("\n", "<br/>") + "<br/>";
@@ -107,10 +105,10 @@
 
                 var subject = "Status Update" + " " + "Controler";
 
-                htmlBody += HtmlStatusTable(controller);
-                body += CreateTextStatusTable(controller, settings);
+                htmlBody += HtmlStatusTable();
+                body += CreateTextStatusTable();
 
-                SendMailMessage(settings, subject, htmlBody, body);
+                SendMailMessage(subject, htmlBody, body);
             }
         }
 
@@ -129,7 +127,7 @@
         /// <param name="attachments">
         ///     The attachments.
         /// </param>
-        private static void SendMailMessage(MailSettings settings, string subject, string htmlBody, string textBody, Collection<Attachment> attachments = null)
+        private void SendMailMessage(string subject, string htmlBody, string textBody, Collection<Attachment> attachments = null)
         {
             try
             {
@@ -195,13 +193,10 @@
         /// <summary>
         ///     Sends the alarm email.
         /// </summary>
-        /// <param name="controller">
-        ///     The Controller.
-        /// </param>
         /// <param name="cleared">
         ///     if set to <c>true</c> [cleared].
         /// </param>
-        private static void SendAlarmEmail(Controller controller, bool cleared, MailSettings settings)
+        private void SendAlarmEmail(bool cleared)
         {
             string subject;
             string htmlBody;
@@ -213,7 +208,7 @@
                 htmlBody = "<h1>" + "Alarm Detected" + DateTime.Now + "</h1>";
                 body = "Alarm Detected" + DateTime.Now + "\n";
 
-                var reason = FindAlarmReason(controller);
+                var reason = FindAlarmReason();
                 htmlBody += "<br/>" + "Reason" + "<br/>" + reason.Replace("\n", "<br/>") + "<br/>";
                 body += "\n" + "Reason" + "\n" + reason + "\n";
             }
@@ -224,35 +219,30 @@
                 body = "Alarm Cleared" + " " + DateTime.Now + "\n";
             }
 
-            htmlBody += HtmlStatusTable(controller);
-            body += CreateTextStatusTable(controller, settings);
+            htmlBody += HtmlStatusTable();
+            body += CreateTextStatusTable();
 
-            SendMailMessage(settings, subject, htmlBody, body);
+            SendMailMessage(subject, htmlBody, body);
         }
 
         /// <summary>
         ///     HTMLs the status table.
         /// </summary>
-        /// <param name="Controller">
-        ///     The Controller.
-        /// </param>
         /// <returns>
         ///     the HTML Text
         /// </returns>
-        private static string HtmlStatusTable(Controller Controller)
+        private string HtmlStatusTable()
         {
             var htmlBody = "<table>";
             htmlBody += string.Format(CultureInfo.CurrentCulture, "<tr><td>Name</td><td>Mode</td><td>Value</td></tr>");
 
-            htmlBody = Controller.Probes.Aggregate(htmlBody, (current, probe) => current + string.Format(CultureInfo.CurrentCulture, "<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", probe.DisplayName, probe.Units, probe.ConvertedValue));
+            htmlBody = controller.Probes.Aggregate(htmlBody, (current, probe) => current + string.Format(CultureInfo.CurrentCulture, "<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", probe.DisplayName, probe.Units, probe.ConvertedValue));
 
-            htmlBody = Controller.LevelSensors.Aggregate(htmlBody, (current, probe) => current + string.Format(CultureInfo.CurrentCulture, "<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", probe.DisplayName, probe.Units, probe.Value));
+            htmlBody = controller.LevelSensors.Aggregate(htmlBody, (current, probe) => current + string.Format(CultureInfo.CurrentCulture, "<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", probe.DisplayName, probe.Units, probe.Value));
 
-            htmlBody = Controller.SPorts.Where(device => !device.IsConstant).Aggregate(htmlBody, (current, device) => current + string.Format(CultureInfo.CurrentCulture, "<tr><td>{0}</td><td>{1} ({2})</td><td>{3}</td></tr>", device.DisplayName, device.DeviceMode, device.Units, device.Value));
+            htmlBody = controller.SPorts.Where(device => !device.IsConstant).Aggregate(htmlBody, (current, device) => current + string.Format(CultureInfo.CurrentCulture, "<tr><td>{0}</td><td>{1} ({2})</td><td>{3}</td></tr>", device.DisplayName, device.Mode.DeviceMode, device.Units, device.Value));
 
-            htmlBody = Controller.LPorts.Where(device => !device.IsConstant).Aggregate(htmlBody, (current, device) => current + string.Format(CultureInfo.CurrentCulture, "<tr><td>{0}</td><td>{1} ({2})</td><td>{3}</td></tr>", device.DisplayName, device.DeviceMode, device.Units, device.Value));
-
-            htmlBody = Controller.UserInfo.Aggregate(htmlBody, (current, userValue) => current + string.Format(CultureInfo.CurrentCulture, "<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>", userValue.DisplayName, userValue.Units, userValue.Value));
+            htmlBody = controller.LPorts.Where(device => !device.IsConstant).Aggregate(htmlBody, (current, device) => current + string.Format(CultureInfo.CurrentCulture, "<tr><td>{0}</td><td>{1} ({2})</td><td>{3}</td></tr>", device.DisplayName, device.Mode.DeviceMode, device.Units, device.Value));
 
             htmlBody += "</table>";
             return htmlBody;
@@ -261,25 +251,20 @@
         /// <summary>
         ///     Creates the text status table.
         /// </summary>
-        /// <param name="Controller">
-        ///     The Controller.
-        /// </param>
         /// <returns>
         ///     the text version of the status table
         /// </returns>
-        private static string CreateTextStatusTable(Controller Controller, MailSettings reefStatusSettings)
+        private string CreateTextStatusTable()
         {
-            var body = Controller.Probes.Aggregate(string.Empty, (current, settings) => current + string.Format(CultureInfo.CurrentCulture, "{0}\t{1}\n", settings.DisplayName, settings.ConvertedValue));
+            var body = this.controller.Probes.Aggregate(string.Empty, (current, setting) => current + string.Format(CultureInfo.CurrentCulture, "{0}\t{1}\n", setting.DisplayName, setting.ConvertedValue));
 
-            if (!reefStatusSettings.SendShortMessage)
+            if (!this.settings.SendShortMessage)
             {
-                body = Controller.LevelSensors.Aggregate(body, (current, settings) => current + string.Format(CultureInfo.CurrentCulture, "{0}\t{1}\t{2}\n", settings.DisplayName, settings.OpertationMode, settings.Value));
+                body = this.controller.LevelSensors.Aggregate(body, (current, setting) => current + string.Format(CultureInfo.CurrentCulture, "{0}\t{1}\t{2}\n", setting.DisplayName, setting.OpertationMode, setting.Value));
 
-                body = Controller.SPorts.Aggregate(body, (current, settings) => current + string.Format(CultureInfo.CurrentCulture, "{0}\t{1}\t{2}\n", settings.DisplayName, settings.Units, settings.Value));
+                body = this.controller.SPorts.Aggregate(body, (current, setting) => current + string.Format(CultureInfo.CurrentCulture, "{0}\t{1}\t{2}\n", setting.DisplayName, setting.Units, setting.Value));
 
-                body = Controller.LPorts.Aggregate(body, (current, settings) => current + string.Format(CultureInfo.CurrentCulture, "{0}\t{1}\t{2}\n", settings.DisplayName, settings.DeviceMode, settings.Value));
-
-                body = Controller.UserInfo.Aggregate(body, (current, settings) => current + string.Format(CultureInfo.CurrentCulture, "{0}\t{1}\t{2}\n", settings.DisplayName, settings.Units, settings.Value));
+                body = this.controller.LPorts.Aggregate(body, (current, setting) => current + string.Format(CultureInfo.CurrentCulture, "{0}\t{1}\t{2}\n", setting.DisplayName, setting.Mode.DeviceMode, setting.Value));
             }
 
             return body;
@@ -288,19 +273,16 @@
         /// <summary>
         ///     Finds the alarm reason.
         /// </summary>
-        /// <param name="Controller">
-        ///     The Controller.
-        /// </param>
         /// <returns>
         ///     the string representation of the alarm
         /// </returns>
-        private static string FindAlarmReason(Controller Controller)
+        private string FindAlarmReason()
         {
             var reason = string.Empty;
 
-            foreach (var probe in Controller.Probes)
+            foreach (var probe in this.controller.Probes)
             {
-                if (probe.IsAlarmOn == CurrentState.On && probe.AlarmEnable)
+                if (probe.AlarmState == CurrentState.On && probe.AlarmEnable)
                 {
                     if (probe.Value > probe.NominalValue + probe.AlarmDeviation)
                     {
@@ -317,7 +299,7 @@
                 }
             }
 
-            reason = Controller.LevelSensors.Where(sensor => sensor.IsAlarmOn == CurrentState.On).Aggregate(reason, (current, sensor) => current + string.Format(CultureInfo.CurrentCulture, "Timeout" + "\n", sensor.DisplayName));
+            reason = this.controller.LevelSensors.Where(sensor => sensor.AlarmState == CurrentState.On).Aggregate(reason, (current, sensor) => current + string.Format(CultureInfo.CurrentCulture, "Timeout" + "\n", sensor.DisplayName));
 
             if (string.IsNullOrEmpty(reason))
             {
@@ -332,21 +314,21 @@
         /// </summary>
         /// <param name="exception">The exception.</param>
         /// <param name="isError">if set to <c>true</c> [is error].</param>
-        public void OnErrorInConnection(Exception exception, bool isError, IReefStatusSettings settings)
+        public void OnErrorInConnection(Exception exception, bool isError)
         {
             try
             {
-                if (settings.Mail.SendOnConnectionLost)
+                if (settings.SendOnConnectionLost)
                 {
                     if (isError)
                     {
                         var errorMessage = "Reef Status has lost connection to the Controller! : " + exception.Message;
-                        SendMailMessage(settings.Mail, "Lost Connection", errorMessage, errorMessage, null);
+                        SendMailMessage("Lost Connection", errorMessage, errorMessage);
                     }
                     else
                     {
                         var errorMessage = "Reef Status has regained connection to the Controller!";
-                        SendMailMessage(settings.Mail, "Connection Established", errorMessage, errorMessage, null);
+                        SendMailMessage("Connection Established", errorMessage, errorMessage);
                     }
                 }
             }
@@ -395,18 +377,15 @@
         /// <summary>
         ///     Checks the reminders.
         /// </summary>
-        /// <param name="info">
-        ///     The controller info.
-        /// </param>
-        private static void CheckReminders(Info info, MailSettings settings)
+        private void CheckReminders()
         {
-            foreach (var reminder in info.Reminders)
+            foreach (var reminder in this.controller.Info.Reminders)
             {
                 if (!reminder.SentMail && reminder.IsOverdue && settings.SendOnReminder)
                 {
                     var subject = "Reminder" + reminder.Text;
                     var body = string.Format(CultureInfo.CurrentCulture, "Reminder", reminder.Text);
-                    SendMailMessage(settings, subject, body, body);
+                    SendMailMessage(subject, body, body);
                     reminder.SentMail = true;
                 }
             }

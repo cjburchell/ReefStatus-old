@@ -3,7 +3,7 @@
     using log4net;
 
     using RedPoint.ReefStatus.Common.Commands;
-    using RedPoint.ReefStatus.Common.ProfiLux;
+    using RedPoint.ReefStatus.Common.Database;
     using RedPoint.ReefStatus.Common.ProfiLux.Data;
     using RedPoint.ReefStatus.Common.Service;
     using RedPoint.ReefStatus.Common.Settings;
@@ -22,26 +22,24 @@
         /// </summary>
         private WebInterface webServer;
 
-        private IReefStatusSettings settings;
-
-        private CommandThread commands;
-
-        private Controller controler;
-
         public void Initialize()
         {
             this.log.Debug("Starting Server");
 
+            var dataAccess = new CouchDataAccess();
+
             // create and start web server
-            this.settings = ReefStatusSettings.LoadSettings();
+            var settings = new ReefStatusSettings(dataAccess);
 
-            this.controler = ReefStatusSettings.LoadControler();
+            var controler = new Controller();
 
-            this.commands = new CommandThread(this.controler, this.settings.Connection) { Progress = new Progress() };
+            var alertService = new AlertService(settings.Mail, controler);
 
-            this.dataService = new DataService(this.settings.Logging, this.commands, this.controler);
+            var commands = new CommandThread(controler, settings.Connection) { Progress = new Progress() };
 
-            this.webServer = new WebInterface(this.settings, this.controler, this.commands);
+            this.dataService = new DataService(settings.Logging, commands, controler, dataAccess, alertService);
+
+            this.webServer = new WebInterface(settings, controler, commands, dataAccess, alertService);
 
             this.dataService.Start();
         }
@@ -51,8 +49,7 @@
             this.log.Debug("Stopping Server");
 
             this.dataService.Stop();
-            this.webServer = null;
-            this.dataService = null;
+            this.webServer.Stop();
         }
     }
 }

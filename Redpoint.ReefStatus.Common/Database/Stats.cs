@@ -5,8 +5,6 @@
 namespace RedPoint.ReefStatus.Common.Database
 {
     using System;
-
-    using RedPoint.ReefStatus.Common.ProfiLux;
     using RedPoint.ReefStatus.Common.ProfiLux.Data;
 
     /// <summary>
@@ -16,9 +14,9 @@ namespace RedPoint.ReefStatus.Common.Database
     {
         public void ApplyConverter(BaseInfo baseInfo)
         {
-            if (baseInfo is Probe)
+            var probe = baseInfo as Probe;
+            if (probe != null)
             {
-                var probe = (Probe)baseInfo;
                 this.Max = probe.ConvertValue(this.Max);
                 this.Min = probe.ConvertValue(this.Min);
                 this.Average = probe.ConvertValue(this.Average);

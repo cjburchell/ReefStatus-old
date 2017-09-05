@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RedPoint.ReefStatus.Common.Database
 {
@@ -19,20 +17,12 @@ namespace RedPoint.ReefStatus.Common.Database
         public static Stats GetStats(DateTime endTime, DateTime startTime, IEnumerable<DataLog> points, bool getStdDev = false)
         {
             var dataPoints = points as IList<DataLog> ?? points.ToList();
-            return getStdDev
-                       ? new Stats
+            return new Stats
                        {
                            Max = MaxDataPoint(endTime, startTime, dataPoints),
                            Min = MinDataPoint(endTime, startTime, dataPoints),
                            Average = AverageDataPoint(endTime, startTime, dataPoints),
-                           StdDeviation = StdDevDataPoint(endTime, startTime, dataPoints)
-                       }
-
-                       : new Stats
-                       {
-                           Max = MaxDataPoint(endTime, startTime, dataPoints),
-                           Min = MinDataPoint(endTime, startTime, dataPoints),
-                           Average = AverageDataPoint(endTime, startTime, dataPoints)
+                           StdDeviation = getStdDev ? StdDevDataPoint(endTime, startTime, dataPoints) : 0
                        };
         }
 
@@ -70,10 +60,7 @@ namespace RedPoint.ReefStatus.Common.Database
         {
             try
             {
-                var max = (from item in points
-                           where
-                               item.Time <= endTime && item.Time > startTime
-                           select (double?)item.Value).Max();
+                var max = (from item in points where item.Time <= endTime && item.Time > startTime select (double?)item.Value).Max();
                 return max ?? 0;
             }
             catch (Exception ex)
@@ -98,24 +85,6 @@ namespace RedPoint.ReefStatus.Common.Database
                            select (double?)item.Value).Min();
 
                 return min.HasValue ? min.Value : 0;
-            }
-            catch (Exception ex)
-            {
-                throw new DataAccessException(120, "Unable to Read Data Points", ex);
-            }
-        }
-
-        /// <summary>
-        /// Gets the min date.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <returns></returns>
-        public static DateTime GetMinDate(IEnumerable<DataLog> points)
-        {
-            try
-            {
-                return (from item in points
-                        select item.Time).Min();
             }
             catch (Exception ex)
             {

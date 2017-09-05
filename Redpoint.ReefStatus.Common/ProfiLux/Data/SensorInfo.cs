@@ -76,7 +76,8 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
         /// <value>
         ///     <c>true</c> if this instance is alarm on; otherwise, <c>false</c>.
         /// </value>
-        public CurrentState IsAlarmOn { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CurrentState AlarmState { get; set; }
 
         /// <summary>
         /// Updates the units.
@@ -127,6 +128,8 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
                     this.DefaultUnits = "V";
                     break;
             }
+
+            this.Units = this.DefaultUnits;
         }
     }
 }

@@ -12,10 +12,12 @@ namespace RedPoint.ReefStatus.Common.Settings
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
 
+    using RedPoint.ReefStatus.Common.Database;
+
     /// <summary>
     /// Connection Settings
     /// </summary>
-    public class ConnectionSettings
+    public class ConnectionSettings : CouchDocument
     {
         /// <summary>
         /// Gets or sets a value indicating whether [network connection].

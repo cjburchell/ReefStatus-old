@@ -16,6 +16,7 @@
             : base("Light")
         {
             this.DefaultUnits = "%";
+            this.Units = this.DefaultUnits;
         }
 
         public double Value { get; set; }
