@@ -1180,17 +1180,17 @@ namespace RedPoint.ReefStatus.Common.Commands
                         }
 
                         sensor.OpertationMode = mode;
-                        var state = basicProtocol.GetLevelSensorState(i);
-                        if (state.Alarm != sensor.AlarmState)
+
+                        this.UpdateLevelSensorsValue(basicProtocol, sensor);
+
+                        if (this.controller.Info.IsP3)
                         {
-                            sensor.AlarmState = state.Alarm;
-                            Logger.Instance.Log(new LogMessage(state.Alarm == CurrentState.On ? 1 : 0, "Level Sensor " + sensor.DisplayName + " Alarm is now " + state.Alarm));
+                            var portName = basicProtocol.GetLevelName(i);
+                            if (!string.IsNullOrEmpty(portName))
+                            {
+                                sensor.DisplayName = portName;
+                            }
                         }
-
-                        sensor.OldValue = sensor.Value;
-                        sensor.Value = state.State;
-
-                        sensor.WaterMode = state.WaterMode;
                     }
                     else
                     {
@@ -1225,8 +1225,20 @@ namespace RedPoint.ReefStatus.Common.Commands
                 Logger.Instance.Log(new LogMessage(state.Alarm == CurrentState.On ? 1 : 0, "Level Sensor " + sensor.DisplayName + " Alarm is now " + state.Alarm));
             }
 
+            var souce1 = basicProtocol.GetLevelSource1(sensor.Index);
+
+            var sensorState = basicProtocol.GetLevelSensorCurentState(souce1);
+
             sensor.OldValue = sensor.Value;
-            sensor.Value = state.State;
+            sensor.Value = sensorState.Undelayed;
+
+            if (sensor.HasTwoInputs)
+            {
+                var souce2 = basicProtocol.GetLevelSource2(sensor.Index);
+
+                var sensorState2 = basicProtocol.GetLevelSensorCurentState(souce2);
+                sensor.SecondSensor = sensorState2.Undelayed;
+            }
 
             sensor.WaterMode = state.WaterMode;
         }
@@ -1416,6 +1428,15 @@ namespace RedPoint.ReefStatus.Common.Commands
             maintenance.IsActive = basicProtocol.GetMaintenanceIsActive(index);
             maintenance.Duration = basicProtocol.GetMaintenanceDuration(index) * 60;
             maintenance.TimeLeft = basicProtocol.GetMaintenanceTimeLeft(index) * 60;
+
+            if (this.controller.Info.IsP3)
+            {
+                var name = basicProtocol.GetMaintName(index);
+                if (!string.IsNullOrEmpty(name))
+                {
+                    maintenance.DisplayName = name;
+                }
+            }
         }
 
         /// <summary>
@@ -2200,8 +2221,7 @@ namespace RedPoint.ReefStatus.Common.Commands
                     this.Connect();
                     this.protocol.Maintenace(enable, maintenance.Index);
                     Logger.Instance.Log(new LogMessage(0, "Maintenance Mode" + " " + maintenance.Index + " " + (enable ? "Enabled" : "Disabled")));
-                    this.UpdateOperationMode(this.protocol.OpMode, null);
-                    this.UpdateMaintianceMode(this.protocol, null, maintenance.Index);
+                    this.UpdateInfo(this.protocol, null);
                 }
                 catch (ReefStatusException ex)
                 {
@@ -2223,12 +2243,12 @@ namespace RedPoint.ReefStatus.Common.Commands
                 try
                 {
                     this.Connect();
-                    var lastMode = this.protocol.OpMode;
+                    var lastMode = this.controller.Info.OperationMode;
                     if (lastMode != mode)
                     {
                         this.protocol.OpMode = mode;
                         Logger.Instance.Log(new LogMessage(0, "Set Operation Mode " + mode));
-                        this.UpdateOperationMode(this.protocol.OpMode, null);
+                        this.UpdateInfo(this.protocol, null);
                         if (lastMode == OperationMode.ManualSockets)
                         {
                             this.UpdateSPortsValues(this.protocol, null);

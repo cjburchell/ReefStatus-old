@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace RedPoint.ReefStatus.Common.Database
 {
@@ -19,18 +20,19 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="value">The value.</param>
         /// <param name="time">The time.</param>
         /// <param name="type">the type of the value</param>
+        /// <param name="ttl">time to live in days</param>
         /// <param name="oldValue">the old value</param>
-        public override void InsertItem(double value, DateTime time, string type, double? oldValue = null)
+        public override void InsertItem(double value, DateTime time, string type, int ttl = 0, double? oldValue = null)
         {
             try
             {
-                var log = new DataLog { Time = time, Type = type, Value = value };
+                var log = new DataLog { Time = time, Type = type, Value = value, Ttl =  ttl};
 
                 var db = GetDatabase();
 
                 if (oldValue.HasValue && Math.Abs(oldValue.Value - log.Value) < double.Epsilon)
                 {
-                    var oldPoint = this.GetDataPoints(type, 1, true).FirstOrDefault();
+                    var oldPoint = this.GetRawDataPointsFromLastHour(type).Select(JsonConvert.DeserializeObject<DataLog>).OrderByDescending(item => item.Time).FirstOrDefault();
                     if (oldPoint != null)
                     {
                         oldPoint.Time = log.Time;
@@ -46,31 +48,46 @@ namespace RedPoint.ReefStatus.Common.Database
             }
         }
 
+        protected override double GetLastHourAvrage(string type)
+        {
+            return this.GetRawDataPointsFromLastHour(type)
+                .Select(JsonConvert.DeserializeObject<DataLog>)
+                .Average(item => item.Value);
+        }
+
+        protected override double GetLastDayAvrage(string type)
+        {
+            return this.GetDataPoints(type).Average(item => item.Value);
+        }
+
         /// <summary>
         /// Gets the data points.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <param name="count">The count.</param>
-        /// <param name="descending">if set to <c>true</c> [descending].</param>
         /// <returns>
         /// A list of datapoints
         /// </returns>
-        public IEnumerable<DataLog> GetDataPoints(string type, int? count = null, bool? descending = null)
+        public IEnumerable<DataLog> GetDataPoints(string type)
         {
-            var result = GetRawDataPoints(type, count, descending);
+            var result = GetRawDataPoints(type);
             return result.Select(JsonConvert.DeserializeObject<DataLog>);
         }
 
-        public IEnumerable<string> GetRawDataPoints(string type, int? count = null, bool? descending = null)
+        public IEnumerable<string> GetRawDataPoints(string type)
         {
             var db = GetDatabase();
-            var options = new ViewOptions();
-
+            var options = new ViewOptions {IncludeDocs = true};
             options.Key.Add(type);
-            options.Limit = count;
-            options.Descending = descending;
-            options.IncludeDocs = true;
-            var result = db.View<DataLog>("by_type", options, "log");
+            var result = db.View<DataLog>("active", options, "daylog");
+            return result.RawDocs;
+        }
+
+        public IEnumerable<string> GetRawDataPointsFromLastHour(string type)
+        {
+            var db = GetDatabase();
+            var options = new ViewOptions { IncludeDocs = true };
+            options.Key.Add(type);
+            var result = db.View<DataLog>("last_hour", options, "daylog");
             return result.RawDocs;
         }
 

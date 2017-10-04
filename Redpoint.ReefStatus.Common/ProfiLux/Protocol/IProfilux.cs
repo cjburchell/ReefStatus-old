@@ -334,6 +334,8 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// <returns>Sensor state</returns>
         LevelState GetLevelSensorState(int levelSensorIndex);
 
+        LevelInputState GetLevelSensorCurentState(int levelSensorIndex);
+
         /// <summary>
         /// Gets the L port value.
         /// </summary>
@@ -361,6 +363,9 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// <param name="sensorIndex">Index of the sensor.</param>
         /// <returns>The Opertational Mode</returns>
         LevelSensorOpertationMode GetLevelSensorMode(int sensorIndex);
+
+        int GetLevelSource1(int sensorIndex);
+        int GetLevelSource2(int sensorIndex);
 
         /// <summary>
         /// Gets the sensor alarm.
@@ -621,6 +626,10 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// <param name="i">The i.</param>
         /// <returns></returns>
         string GetSPortName(int i);
+
+        string GetLevelName(int i);
+
+        string GetMaintName(int i);
 
         /// <summary>
         /// Gets the name of the probe.

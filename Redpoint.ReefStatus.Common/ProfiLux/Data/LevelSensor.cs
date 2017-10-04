@@ -44,5 +44,16 @@ namespace RedPoint.ReefStatus.Common.ProfiLux.Data
         /// </value>
         [JsonConverter(typeof(StringEnumConverter))]
         public WaterMode WaterMode { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public CurrentState SecondSensor { get; set; }
+
+        public bool HasTwoInputs => OpertationMode == LevelSensorOpertationMode.AutoTopOffWith2Sensors ||
+                                    OpertationMode == LevelSensorOpertationMode.WaterChangeAndAutoTopOff ||
+                                    OpertationMode == LevelSensorOpertationMode.WaterChange ||
+                                    OpertationMode == LevelSensorOpertationMode.MinMaxControl;
+
+        public bool HasWaterChange => OpertationMode == LevelSensorOpertationMode.WaterChangeAndAutoTopOff ||
+                                      OpertationMode == LevelSensorOpertationMode.WaterChange;
     }
 }

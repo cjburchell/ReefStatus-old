@@ -64,7 +64,7 @@ namespace RedPoint.ReefStatus.Common.Database
                         }
                     }
 
-                    this.InsertItem(param.Value, time, param.Id, param.OldValue);
+                    this.InsertItem(param.Value, time, param.Id, 0, param.OldValue);
                 }
             }
             finally
@@ -76,6 +76,24 @@ namespace RedPoint.ReefStatus.Common.Database
             }
         }
 
+        public void AddHourLog(IController controller, DateTime time)
+        {
+            foreach (var param in controller.Probes)
+            {
+                var avrage = this.GetLastHourAvrage(param.Id);
+                this.InsertItem(avrage, time, param.Id, 7);
+            }
+        }
+
+        public void AddDayLog(IController controller, DateTime time)
+        {
+            foreach (var param in controller.Probes)
+            {
+                var avrage = this.GetLastDayAvrage(param.Id);
+                this.InsertItem(avrage, time, param.Id, 365);
+            }
+        }
+
         /// <summary>
         /// Inserts the item.
         /// </summary>
@@ -83,6 +101,10 @@ namespace RedPoint.ReefStatus.Common.Database
         /// <param name="time">The time.</param>
         /// <param name="type">The name.</param>
         /// <param name="oldValue">the old value</param>
-        public abstract void InsertItem(double value, DateTime time, string type, double? oldValue = null);
+        public abstract void InsertItem(double value, DateTime time, string type, int ttl = 0, double? oldValue = null);
+
+        protected abstract double GetLastHourAvrage(string type);
+
+        protected abstract double GetLastDayAvrage(string type);
     }
 }

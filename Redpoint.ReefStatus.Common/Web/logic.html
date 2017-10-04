@@ -1,1 +1,25 @@
-﻿
+﻿<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <div class="panel panel-default" style="{vertical-align: middle}">
+            <div class="panel-heading"><img ng-if="item.Icon" ng-src="{{item.Icon}}" height="32" width="32" /><b ng-if="item.PlInvert">(Not) </b>{{item.Item.DisplayName}}</div>
+        </div>
+    </div>
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+        <div class="row">
+            <div ng-repeat="item in item.Item.Input_list1">
+                <div ng-include="'logic.html'"></div>
+            </div>
+        </div>
+        <div class="row" style="{vertical-align: middle}">
+
+            <b>{{item.Item.Function.LogicMode}}</b>
+        </div>
+
+        <div class="row">
+            <div ng-repeat="item in item.Item.Input_list2">
+                <div ng-include="'logic.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

@@ -34,6 +34,10 @@ namespace RedPoint.ReefStatus.Common.Service
         /// </summary>
         private Timer timerLog;
 
+        private Timer hourLog;
+
+        private Timer dayLog;
+
         public DataService(LoggingSettings settings, IProtocolCommands commands, IController controller, IDataAccess dataBase, IAlertService alertService)
         {
             this.settings = settings;
@@ -50,6 +54,10 @@ namespace RedPoint.ReefStatus.Common.Service
         {
             var autoEvent = new AutoResetEvent(false);
             this.timerLog = new Timer(this.TimerLogTick, autoEvent, 0, this.settings.LogInterval * 60000);
+
+            this.hourLog = new Timer(this.TimerHourLogTick, autoEvent, 0, 3600000);
+
+            this.dayLog = new Timer(this.TimerDayLogTick, autoEvent, 0, 86400000);
         }
 
         /// <summary>
@@ -59,6 +67,12 @@ namespace RedPoint.ReefStatus.Common.Service
         {
             this.timerLog.Dispose();
             this.timerLog = null;
+
+            this.hourLog.Dispose();
+            this.hourLog = null;
+
+            this.dayLog.Dispose();
+            this.dayLog = null;
         }
 
         /// <summary>
@@ -92,5 +106,39 @@ namespace RedPoint.ReefStatus.Common.Service
                 Logger.Instance.LogError(ex);
             }
         }
+
+        private void TimerHourLogTick(object sender)
+        {
+            try
+            {
+                this.dataBase.AddHourLog(this.controller, DateTime.Now);
+            }
+            catch (ReefStatusException ex)
+            {
+                Logger.Instance.LogError(ex);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogError(ex);
+            }
+        }
+
+        private void TimerDayLogTick(object sender)
+        {
+            try
+            {
+                this.dataBase.AddDayLog(this.controller, DateTime.Now);
+            }
+            catch (ReefStatusException ex)
+            {
+                Logger.Instance.LogError(ex);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogError(ex);
+            }
+        }
+
+        
     }
 }

@@ -11,9 +11,11 @@
 <!-- Latest compiled JavaScript -->
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.1/Chart.min.js"></script>
-<script src="scrips/angular-chart/angular-chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/angular.chartjs/latest/angular-chart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.js"></script>
 
 <script src="scrips/controller.js"></script>
 <script src="scrips/display.js"></script>
@@ -21,294 +23,268 @@
 
 
 <style>
-    .affix  {
+    .affix {
         top: 0;
         width: 100%;
     }
 
-    .affix + .container-fluid {
-        padding-top: 70px;
-    }
+        .affix + .container-fluid {
+            padding-top: 70px;
+        }
 
     .btn {
         white-space: normal;
         margin-bottom: 20px;
     }
-
 </style>
 
 <head>
-    <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <title>Reef Status</title>
 </head>
 
 <body ng-app="myApp" ng-controller="controller">
 
-<nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="-3" style="z-index: 2">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Reef Status</a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="remote.html">Remote</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#" data-toggle="modal" data-target="#optionsDialog"><span class="glyphicon glyphicon-option-horizontal"></span> Options</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+    <nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="-3" style="z-index: 2">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Reef Status</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <!--<ul class="nav navbar-nav">
+                  <li class="active"><a href="#">Home</a></li>
+                  <li><a href="remote.html">Remote</a></li>
+                </ul>-->
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" data-toggle="modal" data-target="#optionsDialog"><span class="glyphicon glyphicon-option-horizontal"></span> Options</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-9 col-md-8 col-sm-6 col-xs-12">
-            <div ng-if="controller.probes.length">
-	            <h3><a href="#probes" data-toggle="collapse"><img src="icons/thermometer.svg" height="32" width="32"/> Probes</a> <span ng-if="controller.probes.IsAlarm" ng-class="controller.probes.IsAlarm | alarmToBadge">Alarm</span></h3>
-                <div id="probes" class="row collapse">
-                    <div ng-repeat="probe in controller.probes | orderBy : 'DisplayName' track by $index">
-                        <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-sm-block"></div>
-                        <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-md-block"></div>
-                        <div data-ng-if="$index != 0 && $index % 3 == 0" class="clearfix visible-lg-block"></div>
-	                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-		                    <a href="#" ng-click="probe.showGraph()" data-toggle="modal" data-target="#graphDialog">
-			                    <div ng-class="probe.AlarmState | stateToPannel">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-9 col-md-8 col-sm-6 col-xs-12">
+                <div ng-if="controller.probes.length">
+                    <h3><a href="#probes" data-toggle="collapse"><img src="icons/thermometer.svg" height="32" width="32" /> Probes</a> <span ng-if="controller.probes.IsAlarm" ng-class="controller.probes.IsAlarm | alarmToBadge">Alarm</span></h3>
+                    <div id="probes" class="row collapse">
+                        <div ng-repeat="probe in controller.probes | orderBy : 'DisplayName' track by $index">
+                            <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-sm-block"></div>
+                            <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-md-block"></div>
+                            <div data-ng-if="$index != 0 && $index % 3 == 0" class="clearfix visible-lg-block"></div>
+                            <div ng-include="'probe.html'"></div>
+                        </div>
+                    </div>
+                </div>
 
-				                    <div class="panel-heading">{{ probe.DisplayName }} </div>
-				                    <div class="panel-body">
-					                    <h3>{{probe.ConvertedValue}}{{probe.Units}}</h3>
-				                    </div>
-			                    </div></a>
-	                    </div>
+                <div ng-if="controller.levelSensors.length">
+                    <h3><a href="#levelSensors" data-toggle="collapse"><img src="icons/water_level.svg" height="32" width="32" /> Level Sensors</a> <span ng-if="controller.levelSensors.IsAlarm" ng-class="controller.levelSensors.IsAlarm | alarmToBadge">Alarm</span></h3>
+                    <div id="levelSensors" class="row collapse">
+                        <div ng-repeat="sensor in controller.levelSensors | orderBy : 'DisplayName' track by $index ">
+                            <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-sm-block"></div>
+                            <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-md-block"></div>
+                            <div data-ng-if="$index != 0 && $index % 3 == 0" class="clearfix visible-lg-block"></div>
+                            <div ng-include="'level.html'"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="controller.sports.length">
+                    <a href="#Sockets" data-toggle="collapse">
+                        <h3><img src="icons/socket.svg" height="32" width="32" /> Sockets</h3>
+                    </a>
+                    <div id="Sockets" class="row collapse">
+                        <div ng-repeat="port in controller.sports | orderBy : 'PortNumber' track by $index ">
+                            <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-sm-block"></div>
+                            <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-md-block"></div>
+                            <div data-ng-if="$index != 0 && $index % 3 == 0" class="clearfix visible-lg-block"></div>
+                            <div ng-include="'sport.html'"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="controller.lports.length">
+                    <a href="#lports" data-toggle="collapse">
+                        <h3><img src="icons/analog.svg" height="32" width="32" /> 1-10V Ports</h3>
+                    </a>
+                    <div id="lports" class="row collapse">
+                        <div ng-repeat="port in controller.lports | orderBy : 'DisplayName' track by $index ">
+                            <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-sm-block"></div>
+                            <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-md-block"></div>
+                            <div data-ng-if="$index != 0 && $index % 3 == 0" class="clearfix visible-lg-block"></div>
+                            <div ng-include="'lport.html'"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div ng-if="controller.info.Reminders.length">
+                    <h3><a href="#Reminders" data-toggle="collapse"><img src="icons/alarm_clock.svg" height="32" width="32" /> Reminders</a> <span ng-if="controller.info.Reminders.IsOverdue" ng-class="controller.info.Reminders.IsOverdue | boolToBadge">Overdue</span></h3>
+                    <div id="Reminders" class="row collapse">
+                        <div ng-repeat="reminder in controller.info.Reminders | orderBy : 'DisplayName' track by $index ">
+                            <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-sm-block"></div>
+                            <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-md-block"></div>
+                            <div data-ng-if="$index != 0 && $index % 3 == 0" class="clearfix visible-lg-block"></div>
+                            <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                                <div ng-class="reminder.IsOverdue | boolToPannel">
+                                    <div class="panel-heading">{{ reminder.Text }}</div>
+                                    <div class="panel-body">
+                                        <h5 data-ng-if="!reminder.IsOverdue">{{ reminder.timeLeft}} Days Left</h5>
+                                        <h5 data-ng-if="reminder.IsOverdue">{{ reminder.timeLeft * -1}} Days Overdue</h5>
+                                        <h5><b>Due Date</b> {{ reminder.Next | date: 'shortDate'}}</h5>
+                                        <button ng-if="reminder.IsOverdue" type="button" class="btn btn-default btn-sm" ng-click="reminder.reset()">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div data-spy="affix" data-offset-top="-3" style="width: auto; top: 70px">
+                    <div ng-class="controller.info.Alarm | stateToPannel" style="margin-right: 20px">
+                        <div class="panel-heading"><h3>{{controller.info.Model}}</h3></div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"><b>Version</b></div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">{{controller.info.SoftwareVersion}} {{controller.info.SoftwareDate | date: 'shortDate'}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"><b>Serial Number</b></div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">{{controller.info.SerialNumber}}</div>
+                            </div>
 
-            <div ng-if="controller.levelSensors.length">
-	            <h3><a href="#levelSensors" data-toggle="collapse"><img src="icons/water_level.svg" height="32" width="32"/> Level Sensors</a> <span ng-if="controller.levelSensors.IsAlarm" ng-class="controller.levelSensors.IsAlarm | alarmToBadge">Alarm</span></h3>
-                <div id="levelSensors" class="row collapse">
-                    <div ng-repeat="sensor in controller.levelSensors | orderBy : 'DisplayName' track by $index ">
-                        <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-sm-block"></div>
-                        <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-md-block"></div>
-                        <div data-ng-if="$index != 0 && $index % 3 == 0" class="clearfix visible-lg-block"></div>
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                            <div ng-class="sensor.AlarmState | stateToPannel">
-                                <div class="panel-heading">{{ sensor.DisplayName }}</div>
-                                <div class="panel-body">
-	                                <h5>{{ sensor.Value }} {{ sensor.OpertationMode }}</h5>
-	                                <button ng-if="sensor.AlarmState === 'On'" type="button" class="btn btn-default btn-sm" ng-click="sensor.clearAlarm()">Clear</button> 
-                                    <button ng-if="sensor.OpertationMode === 'WaterChangeAndAutoTopOff' || sensor.OpertationMode === 'WaterChange'" type="button" class="btn btn-default btn-sm" ng-click="sensor.startWaterChange()">Water Change</button>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"><b>Last Update</b></div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">{{controller.info.LastUpdate | date: 'short'}}</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"><b>Mode</b></div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">{{controller.info.OperationMode}}</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"><b>Moon Phase</b></div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">{{controller.info.MoonPhase}}%</div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="btn-group-justified">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <button type="button" class="btn btn-default btn-md btn-block" ng-click="controller.feedPause()"><img src="icons/food.svg" height="32" width="32" /> Feed Pause</button>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <button type="button" class="btn btn-default btn-md btn-block" ng-click="controller.thunderstorm()"><img src="icons/thunder.svg" height="32" width="32" /> Thunderstorm</button>
+                                    </div>
+                                    <!--<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <button type="button" ng-class="controller.info.OperationMode === 'ManualSockets' | toggleButton" ng-click="controller.manualSockets()"><img src="icons/socket.svg" height="32" width="32"/> Manual Socket</button>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <button type="button" ng-class="controller.info.OperationMode === 'ManualIllumination' | toggleButton" ng-click="controller.manualLights()"><img src="icons/bulb.svg" height="32" width="32"/> Manual Illumination</button>
+                                    </div>-->
+
+                                    <div ng-repeat="item in controller.info.Maintenance | orderBy : 'DisplayName'">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <button type="button" ng-class="item.IsActive | toggleButton" ng-click="item.toggle()"><img src="icons/wrench.svg" height="32" width="32" /> {{item.DisplayName}}</button>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
-                    </div></div>
-            </div>
-
-            <div ng-if="controller.sports.length">
-	            <a href="#Sockets" data-toggle="collapse">
-		            <h3><img src="icons/socket.svg" height="32" width="32"/> Sockets</h3></a>
-                <div id="Sockets" class="row collapse">
-                    <div ng-repeat="port in controller.sports | orderBy : 'DisplayName' track by $index ">
-                        <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-sm-block"></div>
-                        <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-md-block"></div>
-                        <div data-ng-if="$index != 0 && $index % 3 == 0" class="clearfix visible-lg-block"></div>
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><img ng-if="port.Mode.Icon" ng-src="{{port.Mode.Icon}}" height="32" width="32"/> {{port.DisplayName}}</div>
-                                <div class="panel-body">
-                                    <h5>State {{ port.Value }}</h5>
-	                                <h5>{{ port.Mode.Item.DisplayName}} {{port.Mode.ValueString}}</h5>
-                                    <button ng-if="port.Mode.DeviceMode === 'ProgrammableLogic'" type="button" class="btn btn-default btn-sm" ng-click="port.showLogic()" data-toggle="modal" data-target="#logicDialog">Show Logic</button> 
-                                </div>
-                            </div>
-                        </div>
-                    </div></div>
-            </div>
-
-            <div ng-if="controller.lports.length">
-	            <a href="#lports" data-toggle="collapse">
-		            <h3><img src="icons/analog.svg" height="32" width="32"/> 1-10V Ports</h3></a>
-                <div id="lports" class="row collapse">
-                    <div ng-repeat="port in controller.lports | orderBy : 'DisplayName' track by $index ">
-                        <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-sm-block"></div>
-                        <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-md-block"></div>
-                        <div data-ng-if="$index != 0 && $index % 3 == 0" class="clearfix visible-lg-block"></div>
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                            <div class="panel panel-default">
-                                <div class="panel-heading"><img ng-if="port.Mode.Icon" ng-src="{{port.Mode.Icon}}" height="32" width="32"/> {{port.DisplayName}}</div>
-                                <div class="panel-body">
-                                    <h5>Output {{ port.Value }}{{port.DefaultUnits}}</h5>
-	                                <h5>{{ port.Mode.Item.DisplayName }} {{port.Mode.ValueString}}</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div></div>
-            </div>
-
-            <div ng-if="controller.info.Reminders.length">
-	            <h3><a href="#Reminders" data-toggle="collapse"><img src="icons/alarm_clock.svg" height="32" width="32"/> Reminders</a> <span ng-if="controller.info.Reminders.IsOverdue" ng-class="controller.info.Reminders.IsOverdue | boolToBadge">Overdue</span></h3>
-                <div id="Reminders" class="row collapse">
-                    <div ng-repeat="reminder in controller.info.Reminders | orderBy : 'DisplayName' track by $index ">
-                        <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-sm-block"></div>
-                        <div data-ng-if="$index != 0 && $index % 2 == 0" class="clearfix visible-md-block"></div>
-                        <div data-ng-if="$index != 0 && $index % 3 == 0" class="clearfix visible-lg-block"></div>
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                            <div ng-class="reminder.IsOverdue | boolToPannel">
-                                <div class="panel-heading">{{ reminder.Text }}</div>
-                                <div class="panel-body">
-                                    <h5 data-ng-if="!reminder.IsOverdue">{{ reminder.timeLeft}} Days Left</h5>
-                                    <h5 data-ng-if="reminder.IsOverdue">{{ reminder.timeLeft * -1}} Days Overdue</h5>
-                                    <h5><b>Due Date</b> {{ reminder.Next | date: 'shortDate'}}</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div></div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-            <div data-spy="affix" data-offset-top="-3" style="width: auto; top: 70px">
-                <div ng-class="controller.info.Alarm | stateToPannel" style="margin-right: 20px">
-                    <div class="panel-heading"><h3>{{controller.info.Model}}</h3></div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"><b>Version</b></div>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">{{controller.info.SoftwareVersion}} {{controller.info.SoftwareDate | date: 'shortDate'}}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"><b>Serial Number</b></div>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">{{controller.info.SerialNumber}}</div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"><b>Last Update</b></div>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">{{controller.info.LastUpdate | date: 'short'}}</div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"><b>Mode</b></div>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">{{controller.info.OperationMode}}</div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"><b>Moon Phase</b></div>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">{{controller.info.MoonPhase}}%</div>
-                        </div>
-                    </div>
-                    <div class="panel-footer">
-	                    <div class="btn-group-justified">
-		                    <div class="row">
-			                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-				                    <button type="button" class="btn btn-default btn-md btn-block" ng-click="controller.feedPause()"><img src="icons/food.svg" height="32" width="32"/> Feed Pause</button>
-			                    </div>
-			                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-				                    <button type="button" class="btn btn-default btn-md btn-block" ng-click="controller.thunderstorm()"><img src="icons/thunder.svg" height="32" width="32"/> Thunderstorm</button>
-			                    </div>
-			                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-				                    <button type="button" ng-class="controller.info.OperationMode === 'ManualSockets' | toggleButton" ng-click="controller.manualSockets()"><img src="icons/socket.svg" height="32" width="32"/> Manual Socket</button>
-			                    </div>
-			                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-				                    <button type="button" ng-class="controller.info.OperationMode === 'ManualIllumination' | toggleButton" ng-click="controller.manualLights()"><img src="icons/bulb.svg" height="32" width="32"/> Manual Illumination</button>
-			                    </div>
-
-			                    <div ng-repeat="item in controller.info.Maintenance | orderBy : 'DisplayName'">
-				                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					                    <button type="button" ng-class="item.IsActive | toggleButton" ng-click="item.toggle()"><img src="icons/wrench.svg" height="32" width="32"/> {{item.DisplayName}}</button>
-				                    </div>
-			                    </div>
-		                    </div>
-	                    </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Modal -->
-<div class="modal fade" id="optionsDialog" role="dialog">
-	<div class="modal-dialog">
+    <!-- Modal -->
+    <div class="modal fade" id="optionsDialog" role="dialog">
+        <div class="modal-dialog">
 
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" ng-click="settings.setData()">&times;</button>
-				<h4 class="modal-title">Options</h4>
-			</div>
-			<div class="modal-body">
-				<ul class="nav nav-tabs">
-					<li class="active"><a data-toggle="tab" href="#connection">Connection</a></li>
-					<li><a data-toggle="tab" href="#logging">Logging</a></li>
-				</ul>
-				<div class="tab-content">
-					<div id="connection" class="tab-pane fade in active">
-						<h3>Connection</h3>
-						<div class="form-group">
-							<label for="usr">Host Address:</label>
-							<input type="text" class="form-control" ng-model="settings.connection.Address"/>
-						</div>
-						<div class="form-group">
-							<label for="usr">Port:</label>
-							<input type="number" class="form-control" ng-model="settings.connection.Port"/>
-						</div>
-						<div class="form-group">
-							<label for="usr">Device Address:</label>
-							<input type="number" class="form-control" ng-model="settings.connection.ControllerAddress" min="1" max="16"/>
-						</div>
-					</div>
-					<div id="logging" class="tab-pane fade">
-						<h3>Logging</h3>
-						<div class="form-group">
-							<label for="usr">Log Every:</label>
-							<input type="number" class="form-control" ng-model="settings.logging.LogInterval" min="1" max="100"/>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal" ng-click="settings.setData()">Close</button>
-			</div>
-		</div>
-
-	</div>
-</div>
-
-<div class="modal fade" id="logicDialog" role="dialog">
-	<div class="modal-dialog">
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">{{controller.SelectedPort.DisplayName}}</h4>
-			</div>
-			<div class="modal-body" nm>
-				
-				<div ng-include="'logic.html'"></div>
-			</div>
-		</div>
-	</div>
-</div>
-
- <div class="modal fade" id="graphDialog" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{{controller.SelectedProbe.DisplayName}}</h4>
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="settings.setData()">&times;</button>
+                    <h4 class="modal-title">Options</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#connection">Connection</a></li>
+                        <li><a data-toggle="tab" href="#logging">Logging</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="connection" class="tab-pane fade in active">
+                            <h3>Connection</h3>
+                            <div class="form-group">
+                                <label for="usr">Host Address:</label>
+                                <input type="text" class="form-control" ng-model="settings.connection.Address" />
+                            </div>
+                            <div class="form-group">
+                                <label for="usr">Port:</label>
+                                <input type="number" class="form-control" ng-model="settings.connection.Port" />
+                            </div>
+                            <div class="form-group">
+                                <label for="usr">Device Address:</label>
+                                <input type="number" class="form-control" ng-model="settings.connection.ControllerAddress" min="1" max="16" />
+                            </div>
+                        </div>
+                        <div id="logging" class="tab-pane fade">
+                            <h3>Logging</h3>
+                            <div class="form-group">
+                                <label for="usr">Log Every:</label>
+                                <input type="number" class="form-control" ng-model="settings.logging.LogInterval" min="1" max="100" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="settings.setData()">Close</button>
+                </div>
             </div>
-            <div class="modal-body">
-	            <canvas id="line" class="chart chart-line" chart-data="controller.SelectedData" chart-options=""></canvas>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="logicDialog" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{{controller.SelectedPort.DisplayName}}</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div ng-repeat="item in controller.SelectedLogic">
+                        <div ng-include="'logic.html'"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
+    <div class="modal fade" id="graphDialog" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{{controller.SelectedProbe.DisplayName}}</h4>
+                </div>
+                <div class="modal-body">
+                    <canvas id="lineChart" style="max-height: 200px; margin-top: 20px"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
     var app = angular.module('myApp', []);
     app.filter('stateToPannel',
             function() {
@@ -361,6 +337,6 @@
         });
         $('.btn-group-justified .btn').height(highestBox);
     });
-</script>
+    </script>
 </body>
 </html>

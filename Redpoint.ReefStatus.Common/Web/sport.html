@@ -1,0 +1,11 @@
+﻿<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+    <div class="panel panel-default">
+        <div class="panel-heading"><img ng-if="port.Mode.Icon" ng-src="{{port.Mode.Icon}}" height="32" width="32" />S{{port.PortNumber}} {{port.DisplayName}}</div>
+        <div class="panel-body">
+            <h5 ng-if="controller.info.OperationMode !== 'ManualSockets'">State: {{ port.Value }}</h5>
+            <button ng-if="controller.info.OperationMode === 'ManualSockets'" type="button" ng-class="port.Value === 'On' | toggleButton" ng-click="port.toggle()">{{ port.Value }}</button>
+            <h5>{{ port.Mode.Item.DisplayName}} {{port.Mode.ValueString}}</h5>
+            <button ng-if="port.Mode.DeviceMode === 'ProgrammableLogic'" type="button" class="btn btn-default btn-sm" ng-click="port.showLogic()" data-toggle="modal" data-target="#logicDialog">Show Logic</button>
+        </div>
+    </div>
+</div>

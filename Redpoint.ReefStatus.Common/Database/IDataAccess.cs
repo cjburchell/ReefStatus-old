@@ -17,11 +17,14 @@ namespace RedPoint.ReefStatus.Common.Database
     {
         void AddLog(IController controller, DateTime now, IUpdateProgress callback);
 
-        void InsertItem(double value, DateTime time, string type, double? oldValue = null);
+        void AddDayLog(IController controller, DateTime now);
+        void AddHourLog(IController controller, DateTime now);
 
-        IEnumerable<DataLog> GetDataPoints(string type, int? count = null, bool? descending = null);
+        void InsertItem(double value, DateTime time, string type, int ttl = 0, double? oldValue = null);
 
-        IEnumerable<string> GetRawDataPoints(string type, int? count = null, bool? descending = null);
+        IEnumerable<DataLog> GetDataPoints(string type);
+
+        IEnumerable<string> GetRawDataPoints(string type);
 
         MailSettings LoadMailSettings();
         ConnectionSettings LoadConnectionSettings();

@@ -50,7 +50,7 @@
 
             var paramaters = this.GetParamaters();
 
-            var infoItem = this.dataAccess.GetRawDataPoints(paramaters.Id, paramaters.Limit, paramaters.Descending);
+            var infoItem = this.dataAccess.GetRawDataPoints(paramaters.Id);
             if (infoItem == null)
             {
                 throw new BadRequestException("Missing Id");

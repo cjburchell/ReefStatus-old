@@ -1422,12 +1422,12 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
             /// <summary>
             /// The leve l 1_ props.
             /// </summary>
-            LEVEL1_PROPS = 927, 
+            LEVEL1_PROPS = 927,
 
             /// <summary>
             /// The leve l 1_ reactduration.
             /// </summary>
-            LEVEL1_REACTDURATION = 928, 
+            LEVEL1_SOURCES = 928, 
 
             /// <summary>
             /// The leve l 1_ maxduration.
@@ -1642,12 +1642,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
             /// <summary>
             /// The leve l 2_ actstate.
             /// </summary>
-            LEVEL2_ACTSTATE = 10071, 
-
-            /// <summary>
-            /// The leve l 3_ actstate.
-            /// </summary>
-            LEVEL3_ACTSTATE = 10072, 
+            LEVEL1_INPUT_STATE = 10074, 
 
             // neu seit 3.06: Akt. Werte Pumpen
 
@@ -2198,6 +2193,10 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
 
             SWITCHPLUG1_NAME = 18064,
 
+            LEVEL_NAME = 18128,
+
+            MAINT_NAME = 18144,
+
             /// <summary>
             /// The multiplecodeinf o_0.
             /// </summary>
@@ -2220,25 +2219,13 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// Gets the alarm.
         /// </summary>
         /// <value>The alarm.</value>
-        public CurrentState Alarm
-        {
-            get
-            {
-                return (CurrentState)this.Protocol.GetData((int)Code5.ISALARM);
-            }
-        }
+        public CurrentState Alarm => (CurrentState)this.Protocol.GetData((int)Code5.ISALARM);
 
         /// <summary>
         /// Gets the device address.
         /// </summary>
         /// <value>The device address.</value>
-        public int DeviceAddress
-        {
-            get
-            {
-                return this.Protocol.GetData((int)Code5.ADDRESS);
-            }
-        }
+        public int DeviceAddress => this.Protocol.GetData((int)Code5.ADDRESS);
 
         /// <summary>
         /// Gets the digital input count.
@@ -2317,25 +2304,13 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// Gets the display line1.
         /// </summary>
         /// <value>The display line1.</value>
-        protected override string DisplayLine1
-        {
-            get
-            {
-                return this.Protocol.GetDataText((int)Code5.GETDISPLAYLINE1);
-            }
-        }
+        protected override string DisplayLine1 => this.Protocol.GetDataText((int)Code5.GETDISPLAYLINE1);
 
         /// <summary>
         /// Gets the display line2.
         /// </summary>
         /// <value>The display line2.</value>
-        protected override string DisplayLine2
-        {
-            get
-            {
-                return this.Protocol.GetDataText((int)Code5.GETDISPLAYLINE2);
-            }
-        }
+        protected override string DisplayLine2 => this.Protocol.GetDataText((int)Code5.GETDISPLAYLINE2);
 
         /// <summary>
         /// Gets the L port count.
@@ -2426,25 +2401,13 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// Gets the module count.
         /// </summary>
         /// <value>The module count.</value>
-        public int ModuleCount
-        {
-            get
-            {
-                return 3;
-            }
-        }
+        public int ModuleCount => 3;
 
         /// <summary>
         /// Gets the moon phase.
         /// </summary>
         /// <value>The moon phase.</value>
-        public double MoonPhase
-        {
-            get
-            {
-                return this.Protocol.GetData((int)Code5.MOON_ACTPHASE);
-            }
-        }
+        public double MoonPhase => this.Protocol.GetData((int)Code5.MOON_ACTPHASE);
 
         /// <summary>
         /// Gets or sets the op mode.
@@ -2467,13 +2430,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// Gets the product id.
         /// </summary>
         /// <value>The product id.</value>
-        public ProductId ProductId
-        {
-            get
-            {
-                return (ProductId)this.Protocol.GetData((int)Code5.PRODUCTID);
-            }
-        }
+        public ProductId ProductId => (ProductId)this.Protocol.GetData((int)Code5.PRODUCTID);
 
         /// <summary>
         /// Gets the reminder count.
@@ -2530,25 +2487,13 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// Gets the serial number.
         /// </summary>
         /// <value>The serial number.</value>
-        public int SerialNumber
-        {
-            get
-            {
-                return this.Protocol.GetData((int)Code5.SERIALNUMBER);
-            }
-        }
+        public int SerialNumber => this.Protocol.GetData((int)Code5.SERIALNUMBER);
 
         /// <summary>
         /// Gets the software date.
         /// </summary>
         /// <value>The software date.</value>
-        public DateTime SoftwareDate
-        {
-            get
-            {
-                return BasicProtocol.ConvertToDate(this.Protocol.GetData((int)Code5.SOFTWAREDATE));
-            }
-        }
+        public DateTime SoftwareDate => BasicProtocol.ConvertToDate(this.Protocol.GetData((int)Code5.SOFTWAREDATE));
 
         /// <summary>
         /// Gets the timer count.
@@ -2584,25 +2529,13 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// Gets the view text line.
         /// </summary>
         /// <value>The view text line.</value>
-        public override string ViewTextLine
-        {
-            get
-            {
-                return this.Protocol.GetDataText((int)Code5.PROFILUXVIEW);
-            }
-        }
+        public override string ViewTextLine => this.Protocol.GetDataText((int)Code5.PROFILUXVIEW);
 
         /// <summary>
         /// Gets the web server port.
         /// </summary>
         /// <value>The web server port.</value>
-        public int WebServerPort
-        {
-            get
-            {
-                return this.Protocol.GetData((int)Code5.WEBSERVERPORT);
-            }
-        }
+        public int WebServerPort => this.Protocol.GetData((int)Code5.WEBSERVERPORT);
 
         #endregion
 
@@ -2692,6 +2625,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
 
             var sensorColumns = new Collection<Probe>();
 
+            var enumerable = probes as IList<Probe> ?? probes.ToList();
             if (this.Version < 5.01)
             {
                 int sourceMask = this.Protocol.GetData((int)Code5.MEASUREMENT_SAMPLESOURCEMASK);
@@ -2704,7 +2638,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
                     {
                         columns += sourceMask & 0x01;
                         var index = sensorIndex;
-                        var probe = probes.FirstOrDefault(p => p.Index == index) ?? new Probe { Id = "Null" };
+                        var probe = enumerable.FirstOrDefault(p => p.Index == index) ?? new Probe { Id = "Null" };
 
                         sensorColumns.Add(probe);
 
@@ -2729,7 +2663,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
                     }
 
                     var index = i;
-                    var probe = probes.FirstOrDefault(p => p.Index == index) ?? new Probe { Id = "Null" };
+                    var probe = enumerable.FirstOrDefault(p => p.Index == index) ?? new Probe { Id = "Null" };
                     sensorColumns.Add(probe);
                 }
             }
@@ -2936,9 +2870,22 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// </returns>
         public LevelSensorOpertationMode GetLevelSensorMode(int sensorIndex)
         {
-            int data = this.Protocol.GetData((int)Code5.LEVEL1_PROPS + GetOffset(sensorIndex, 3, 3));
+            var data = this.Protocol.GetData((int)Code5.LEVEL1_PROPS + GetOffset(sensorIndex, 3, 3));
             data >>= 13;
             return (LevelSensorOpertationMode)data;
+        }
+
+        public int GetLevelSource1(int sensorIndex)
+        {
+            var data = this.Protocol.GetData((int)Code5.LEVEL1_SOURCES + GetOffset(sensorIndex, 3, 3));
+            return data & 0xF;
+        }
+
+        public int GetLevelSource2(int sensorIndex)
+        {
+            var data = this.Protocol.GetData((int)Code5.LEVEL1_SOURCES + GetOffset(sensorIndex, 3, 3));
+            data >>= 4;
+            return data & 0xF;
         }
 
         /// <summary>
@@ -2952,32 +2899,43 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// </returns>
         public LevelState GetLevelSensorState(int levelSensorIndex)
         {
-            // 5432 1098 7654 3210
-            // AIPD SWWW WRRR RRRR
+            // 7654 3210
+            // AFDW WWWR
             // A - Alarm
-            // I
-            // P
-            // D
-            // S - 
+            // F - Fill
+            // D - Drain
             // W - Water State
             // R - Reserverd
             var levelState = new LevelState();
             int state = this.Protocol.GetData((int)Code5.LEVEL1_ACTSTATE + GetOffset(levelSensorIndex, 3, 1));
-            state >>= 7;
+            state >>= 1;
             levelState.WaterMode = (WaterMode)(state & 0xF);
             state >>= 4;
-
-            ////bool switchState = (state & 0x1) == 1;
+            levelState.Drain = (state & 0x1) == 1 ? CurrentState.On : CurrentState.Off;
             state >>= 1;
-
-            ////bool delyaedState = (state & 0x1) == 1;
-            state >>= 1;
-
-            ////bool previousDirectState = (state & 0x1) == 1;
-            state >>= 1;
-            levelState.State = (state & 0x1) == 1 ? CurrentState.On : CurrentState.Off;
+            levelState.Fill = (state & 0x1) == 1 ? CurrentState.On : CurrentState.Off;
             state >>= 1;
             levelState.Alarm = (state & 0x1) == 1 ? CurrentState.On : CurrentState.Off;
+
+            return levelState;
+        }
+
+        public LevelInputState GetLevelSensorCurentState(int levelSensorIndex)
+        {
+            // 7654 3210
+            // UPDR RRRR
+            // U - undelayed
+            // P-  Previous
+            // D - Delayed
+            // R - Reserverd
+            var levelState = new LevelInputState();
+            var state = this.Protocol.GetData((int)Code5.LEVEL1_INPUT_STATE + GetOffset(levelSensorIndex, 4, 1));
+            state >>= 5;
+            levelState.Delayed = (state & 0x1) == 1 ? CurrentState.On : CurrentState.Off;
+            state >>= 1;
+            levelState.Previous = (state & 0x1) == 1 ? CurrentState.On : CurrentState.Off;
+            state >>= 1;
+            levelState.Undelayed = (state & 0x1) == 1 ? CurrentState.On : CurrentState.Off;
 
             return levelState;
         }
@@ -3080,8 +3038,9 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// Gets the program logic input1.
         /// </summary>
         /// <param name="portIndex">Index of the port.</param>
+        /// <param name="input">input</param>
         /// <returns></returns>
-         public PortMode GetProgramLogicInput(int input, int portIndex)
+        public PortMode GetProgramLogicInput(int input, int portIndex)
          {
              var mode = this.Protocol.GetData((int)Code5.PROGLOGIC1_INPUT1 + input + GetOffset(portIndex, 8, 4));
 
@@ -3709,7 +3668,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
                 var dataByteArray =
                     this.Protocol.GetDataTwoByteArray((int)Code5.SP_ALL_CURRENT + (MegablockSize * (portIndex / 24)));
 
-                if (dataByteArray.Count() == 24)
+                if (dataByteArray.Length == 24)
                 {
                     var current = dataByteArray[portIndex % 24] * 0.1;
 
@@ -3766,6 +3725,26 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
             return string.Empty;
         }
 
+        public string GetLevelName(int i)
+        {
+            if (this.Version >= 5.09)
+            {
+                return this.Protocol.GetDataText((int)Code5.LEVEL_NAME + GetOffset(i, 64, 1));
+            }
+
+            return string.Empty;
+        }
+
+        public string GetMaintName(int i)
+        {
+            if (this.Version >= 5.09)
+            {
+                return this.Protocol.GetDataText((int)Code5.MAINT_NAME + GetOffset(i, 64, 1));
+            }
+
+            return string.Empty;
+        }
+
         /// <summary>
         /// Sets the name of the S port.
         /// </summary>
@@ -3798,6 +3777,7 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// Gets the name of the probe.
         /// </summary>
         /// <param name="i">The i.</param>
+        /// <param name="text">the text to set</param>
         /// <returns></returns>
         public void SetProbeName(int i, string text)
         {
@@ -3850,12 +3830,6 @@ namespace RedPoint.ReefStatus.Common.ProfiLux
         /// <summary>
         /// Gets the light test time.
         /// </summary>
-        public int LightTestTime
-        {
-            get
-            {
-                return this.Protocol.GetData((int)Code5.LIGHTSCENETESTTIME);
-            }
-        }
+        public int LightTestTime => this.Protocol.GetData((int)Code5.LIGHTSCENETESTTIME);
     }
 }

@@ -27,5 +27,7 @@ namespace RedPoint.ReefStatus.Common.Database
         /// The value.
         /// </value>
         public double Value { get; set; }
+
+        public int Ttl { get; set; }
     }
 }
